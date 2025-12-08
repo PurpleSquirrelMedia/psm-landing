@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purple Squirrel Media - Watch</title>
+    <meta name="description" content="Stream your favorite content on Purple Squirrel Media">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #1a0a2e;
+            --accent-pink: #e91e63;
+            --accent-blue: #3b82f6;
+            --bg-dark: #0f0518;
+            --bg-card: #1e1028;
+            --text-primary: #ffffff;
+            --text-muted: #a1a1aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(26, 10, 46, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .logo-text {
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .logo-text small {
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .header-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .header-nav a:hover,
+        .header-nav a.active {
+            color: white;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 8px 15px;
+            gap: 10px;
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 13px;
+            width: 200px;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+        .app-sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            bottom: 0;
+            width: 240px;
+            background: var(--primary-dark);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            padding: 0 20px;
+            margin-bottom: 25px;
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+            border-radius: 8px;
+            margin: 2px 10px;
+        }
+
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
+            color: white;
+            background: rgba(124, 58, 237, 0.2);
+        }
+
+        .sidebar-menu li a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .app-main {
+            margin-left: 240px;
+            padding: 90px 30px 30px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            position: relative;
+            height: 450px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .hero-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(15, 5, 24, 0.95) 0%, rgba(15, 5, 24, 0.5) 50%, transparent 100%);
+        }
+
+        .hero-content {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            max-width: 500px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent-pink);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .hero-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 15px;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .hero-description {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6d28d9;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .see-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .content-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+
+        .card-image {
+            position: relative;
+            aspect-ratio: 2/3;
+            background: #2d1b4e;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .content-card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .card-info {
+            padding: 12px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Live Badge */
+        .live-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ef4444;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Login Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+        }
+
+        .modal h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .modal p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .modal .btn {
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(124, 58, 237, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .app-sidebar {
+                display: none;
+            }
+            .app-main {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+            .search-box {
+                display: none;
+            }
+            .hero-banner {
+                height: 300px;
+            }
+            .hero-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Purple Squirrel Media">
+            <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+        </a>
+
+        <nav class="header-nav">
+            <a href="#" class="active">Home</a>
+            <a href="#">Movies</a>
+            <a href="#">TV Shows</a>
+            <a href="#">Live</a>
+            <a href="#">My List</a>
+        </nav>
+
+        <div class="header-actions">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: var(--text-muted)"></i>
+                <input type="text" placeholder="Search..." id="searchInput">
+            </div>
+            <div class="user-avatar" id="userBtn">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Menu</div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#"><i class="fas fa-fire"></i> Trending</a></li>
+                <li><a href="#"><i class="fas fa-clock"></i> New Releases</a></li>
+                <li><a href="#"><i class="fas fa-heart"></i> My List</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Categories</div>
+            <ul class="sidebar-menu">
+                <li><a href="#"><i class="fas fa-film"></i> Movies</a></li>
+                <li><a href="#"><i class="fas fa-tv"></i> TV Shows</a></li>
+                <li><a href="#"><i class="fas fa-broadcast-tower"></i> Live</a></li>
+                <li><a href="#"><i class="fas fa-dumbbell"></i> Fitness</a></li>
+                <li><a href="#"><i class="fas fa-theater-masks"></i> Theatre</a></li>
+                <li><a href="#"><i class="fas fa-graduation-cap"></i> Education</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Libraries</div>
+            <ul class="sidebar-menu" id="librariesMenu">
+                <!-- Populated by Plex -->
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Hero Banner -->
+        <div class="hero-banner" id="heroBanner">
+            <img src="images/hero-bg.jpg" alt="Featured">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-badge">FEATURED</span>
+                <h1 class="hero-title">Welcome to Purple Squirrel Media</h1>
+                <div class="hero-meta">
+                    <span><i class="fas fa-star"></i> 4.8</span>
+                    <span>2024</span>
+                    <span>HD</span>
+                </div>
+                <p class="hero-description">Stream your favorite movies, TV shows, live content and more. Created by the community for the community.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary"><i class="fas fa-play"></i> Watch Now</button>
+                    <button class="btn btn-secondary"><i class="fas fa-plus"></i> Add to List</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continue Watching -->
+        <section class="content-section" id="continueWatching" style="display: none;">
+            <div class="section-header">
+                <h2 class="section-title">Continue Watching</h2>
+                <a href="#" class="see-all">See All</a>
+            </div>
+            <div class="content-grid" id="onDeckGrid">
+                <!-- Populated by Plex -->
+            </div>
+        </section>
+
+        <!-- Recently Added -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Recently Added</h2>
+                <a href="#" class="see-all">See All</a>
+            </div>
+            <div class="content-grid" id="recentGrid">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </section>
+
+        <!-- Live Channels -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Live Channels</h2>
+                <a href="#" class="see-all">See All</a>
+            </div>
+            <div class="content-grid" id="liveGrid">
+                <!-- Mock live content -->
+                <div class="content-card">
+                    <div class="card-image">
+                        <img src="images/squirrel-cool.jpg" alt="Fitness Camp">
+                        <div class="live-indicator"><span class="live-dot"></span> LIVE</div>
+                        <div class="card-overlay"><div class="play-btn"><i class="fas fa-play"></i></div></div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-title">Fitness Camp</div>
+                        <div class="card-meta">1.2k watching</div>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="card-image">
+                        <img src="images/squirrel-happy.jpg" alt="Theatre Arts">
+                        <div class="live-indicator"><span class="live-dot"></span> LIVE</div>
+                        <div class="card-overlay"><div class="play-btn"><i class="fas fa-play"></i></div></div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-title">Theatre Arts</div>
+                        <div class="card-meta">856 watching</div>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="card-image">
+                        <img src="images/squirrel-education.jpg" alt="Education">
+                        <div class="live-indicator"><span class="live-dot"></span> LIVE</div>
+                        <div class="card-overlay"><div class="play-btn"><i class="fas fa-play"></i></div></div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-title">Educate</div>
+                        <div class="card-meta">2.1k watching</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <img src="images/logo.png" alt="Purple Squirrel Media" class="modal-logo">
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your content</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Plex Token</label>
+                    <input type="password" id="plexToken" placeholder="Enter your Plex token">
+                </div>
+                <button type="submit" class="btn btn-primary">Connect</button>
+            </form>
+            <p style="margin-top: 20px; font-size: 12px;">
+                <a href="https://plex.tv/claim" target="_blank" style="color: var(--primary);">Get your Plex token</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        /* ========================================
+           Purple Squirrel Media - Streaming App
+           White-labeled Plex Frontend
+           ======================================== */
+
+        const PSM = {
+            plexUrl: 'http://localhost:32400',
+            token: localStorage.getItem('psmToken') || '',
+
+            headers() {
+                return {
+                    'Accept': 'application/json',
+                    'X-Plex-Token': this.token,
+                    'X-Plex-Client-Identifier': 'purple-squirrel-media',
+                    'X-Plex-Product': 'Purple Squirrel Media',
+                    'X-Plex-Version': '1.0.0'
+                };
+            },
+
+            async connect(token) {
+                this.token = token;
+                localStorage.setItem('psmToken', token);
+                return await this.checkConnection();
+            },
+
+            async checkConnection() {
+                try {
+                    const response = await fetch(`${this.plexUrl}/identity`, {
+                        headers: this.headers()
+                    });
+                    return response.ok;
+                } catch (e) {
+                    return false;
+                }
+            },
+
+            async getLibraries() {
+                const response = await fetch(`${this.plexUrl}/library/sections`, {
+                    headers: this.headers()
+                });
+                const data = await response.json();
+                return data.MediaContainer?.Directory || [];
+            },
+
+            async getRecentlyAdded(limit = 20) {
+                const response = await fetch(
+                    `${this.plexUrl}/library/recentlyAdded?X-Plex-Container-Size=${limit}`,
+                    { headers: this.headers() }
+                );
+                const data = await response.json();
+                return data.MediaContainer?.Metadata || [];
+            },
+
+            async getOnDeck() {
+                const response = await fetch(`${this.plexUrl}/library/onDeck`, {
+                    headers: this.headers()
+                });
+                const data = await response.json();
+                return data.MediaContainer?.Metadata || [];
+            },
+
+            async getLibraryContent(sectionId) {
+                const response = await fetch(
+                    `${this.plexUrl}/library/sections/${sectionId}/all`,
+                    { headers: this.headers() }
+                );
+                const data = await response.json();
+                return data.MediaContainer?.Metadata || [];
+            },
+
+            async search(query) {
+                const response = await fetch(
+                    `${this.plexUrl}/search?query=${encodeURIComponent(query)}`,
+                    { headers: this.headers() }
+                );
+                const data = await response.json();
+                return data.MediaContainer?.Metadata || [];
+            },
+
+            getThumbUrl(thumb) {
+                if (!thumb) return 'images/squirrel-pro.jpg';
+                return `${this.plexUrl}${thumb}?X-Plex-Token=${this.token}`;
+            },
+
+            getStreamUrl(key) {
+                return `${this.plexUrl}${key}?X-Plex-Token=${this.token}`;
+            }
+        };
+
+        /* ========================================
+           UI Functions
+           ======================================== */
+
+        function renderContentCard(item) {
+            const thumb = PSM.getThumbUrl(item.thumb || item.art);
+            const year = item.year || '';
+            const type = item.type || 'movie';
+
+            return `
+                <div class="content-card" data-key="${item.key}">
+                    <div class="card-image">
+                        <img src="${thumb}" alt="${item.title}" loading="lazy">
+                        <div class="card-overlay">
+                            <div class="play-btn"><i class="fas fa-play"></i></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-title">${item.title}</div>
+                        <div class="card-meta">${year} • ${type}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLibraryMenu(libraries) {
+            const menu = document.getElementById('librariesMenu');
+            menu.innerHTML = libraries.map(lib => `
+                <li><a href="#" data-section="${lib.key}">
+                    <i class="fas fa-${lib.type === 'movie' ? 'film' : 'tv'}"></i>
+                    ${lib.title}
+                </a></li>
+            `).join('');
+        }
+
+        async function loadContent() {
+            // Check if connected
+            const connected = await PSM.checkConnection();
+
+            if (!connected) {
+                // Show login modal if no token
+                if (!PSM.token) {
+                    document.getElementById('loginModal').classList.add('active');
+                }
+                document.getElementById('recentGrid').innerHTML = `
+                    <p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">
+                        Connect to Plex to view your content
+                    </p>
+                `;
+                return;
+            }
+
+            // Load libraries
+            const libraries = await PSM.getLibraries();
+            renderLibraryMenu(libraries);
+
+            // Load recently added
+            const recent = await PSM.getRecentlyAdded(12);
+            document.getElementById('recentGrid').innerHTML = recent.map(renderContentCard).join('');
+
+            // Load on deck (continue watching)
+            const onDeck = await PSM.getOnDeck();
+            if (onDeck.length > 0) {
+                document.getElementById('continueWatching').style.display = 'block';
+                document.getElementById('onDeckGrid').innerHTML = onDeck.map(renderContentCard).join('');
+            }
+
+            // Update hero with featured content
+            if (recent.length > 0) {
+                const featured = recent[0];
+                document.querySelector('.hero-title').textContent = featured.title;
+                document.querySelector('.hero-description').textContent = featured.summary || 'Watch now on Purple Squirrel Media';
+                if (featured.art) {
+                    document.querySelector('.hero-banner img').src = PSM.getThumbUrl(featured.art);
+                }
+            }
+        }
+
+        /* ========================================
+           Event Handlers
+           ======================================== */
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = document.getElementById('plexToken').value;
+
+            if (token) {
+                const connected = await PSM.connect(token);
+                if (connected) {
+                    document.getElementById('loginModal').classList.remove('active');
+                    loadContent();
+                } else {
+                    alert('Invalid token or Plex not available');
+                }
+            }
+        });
+
+        // User button - show login or logout
+        document.getElementById('userBtn').addEventListener('click', () => {
+            if (PSM.token) {
+                if (confirm('Disconnect from Plex?')) {
+                    localStorage.removeItem('psmToken');
+                    PSM.token = '';
+                    location.reload();
+                }
+            } else {
+                document.getElementById('loginModal').classList.add('active');
+            }
+        });
+
+        // Close modal on overlay click
+        document.getElementById('loginModal').addEventListener('click', (e) => {
+            if (e.target.id === 'loginModal') {
+                document.getElementById('loginModal').classList.remove('active');
+            }
+        });
+
+        // Search
+        document.getElementById('searchInput').addEventListener('keyup', async (e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                const results = await PSM.search(e.target.value);
+                if (results.length > 0) {
+                    document.getElementById('recentGrid').innerHTML = results.map(renderContentCard).join('');
+                    document.querySelector('.section-title').textContent = `Search: "${e.target.value}"`;
+                }
+            }
+        });
+
+        // Content card click - play
+        document.addEventListener('click', (e) => {
+            const card = e.target.closest('.content-card');
+            if (card) {
+                const key = card.dataset.key;
+                if (key) {
+                    // Open in Plex web or custom player
+                    window.open(`http://localhost:32400/web/index.html#!/server/${key}`, '_blank');
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadContent);
+
+        console.log('Purple Squirrel Media - Streaming App Loaded');
+    </script>
+</body>
+</html>
