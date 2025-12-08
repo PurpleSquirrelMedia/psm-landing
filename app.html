@@ -706,10 +706,15 @@
         </div>
     </div>
 
+    <!-- INSIDE™ Tool Suite -->
+    <script src="js/inside-tools.js"></script>
+    <!-- Solana NFT Integration -->
+    <script src="js/solana-nft.js"></script>
+
     <script>
         /* ========================================
            Purple Squirrel Media - Streaming App
-           White-labeled Plex Frontend
+           dOTT Platform with D>E>M Framework
            ======================================== */
 
         const PSM = {
@@ -938,9 +943,41 @@
         });
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', loadContent);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent();
 
-        console.log('Purple Squirrel Media - Streaming App Loaded');
+            // Initialize INSIDE™ Suite
+            if (window.INSIDE) {
+                INSIDE.init();
+
+                // Demo: Show a poll after 10 seconds
+                setTimeout(() => {
+                    INSIDE.Polls.create('What content do you want more of?', [
+                        'Live Fitness',
+                        'Theatre Shows',
+                        'Educational',
+                        'Gaming'
+                    ]);
+                }, 10000);
+
+                // Track page view
+                INSIDE.Analytics.trackPageView('/app');
+            }
+
+            // Initialize Solana NFT connect button
+            if (window.SolanaNFT) {
+                // Add wallet button to header
+                const headerActions = document.querySelector('.header-actions');
+                if (headerActions) {
+                    const walletDiv = document.createElement('div');
+                    walletDiv.id = 'walletContainer';
+                    headerActions.insertBefore(walletDiv, headerActions.firstChild);
+                    SolanaNFT.renderConnectButton('walletContainer');
+                }
+            }
+        });
+
+        console.log('Purple Squirrel Media - dOTT Platform Loaded');
     </script>
 </body>
 </html>
