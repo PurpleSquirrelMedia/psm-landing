@@ -333,46 +333,175 @@ const API = {
 };
 
 /* ========================================
-   Plex Integration (Optional)
+   Plex Backend Integration
    ======================================== */
-const PlexIntegration = {
+const PlexBackend = {
     baseUrl: 'http://localhost:32400',
+    token: localStorage.getItem('plexToken') || '',
+
+    headers() {
+        return {
+            'Accept': 'application/json',
+            'X-Plex-Token': this.token,
+            'X-Plex-Client-Identifier': 'purple-squirrel-media'
+        };
+    },
+
+    setToken(token) {
+        this.token = token;
+        localStorage.setItem('plexToken', token);
+    },
+
+    async checkConnection() {
+        try {
+            const response = await fetch(`${this.baseUrl}/identity`, {
+                headers: this.headers()
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Plex connected:', data.MediaContainer.machineIdentifier);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('Plex not available');
+            return false;
+        }
+    },
 
     async getLibraries() {
         try {
             const response = await fetch(`${this.baseUrl}/library/sections`, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Plex-Token': localStorage.getItem('plexToken') || ''
-                }
+                headers: this.headers()
             });
-            return await response.json();
+            const data = await response.json();
+            return data.MediaContainer?.Directory || [];
         } catch (error) {
-            console.log('Plex not available');
-            return null;
+            console.log('Failed to get libraries');
+            return [];
         }
     },
 
-    async getRecentlyAdded() {
+    async getLibraryContent(sectionId, type = 'all') {
         try {
-            const response = await fetch(`${this.baseUrl}/library/recentlyAdded`, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Plex-Token': localStorage.getItem('plexToken') || ''
-                }
+            const response = await fetch(`${this.baseUrl}/library/sections/${sectionId}/${type}`, {
+                headers: this.headers()
             });
-            return await response.json();
+            const data = await response.json();
+            return data.MediaContainer?.Metadata || [];
         } catch (error) {
-            console.log('Plex not available');
-            return null;
+            console.log('Failed to get library content');
+            return [];
         }
+    },
+
+    async getRecentlyAdded(limit = 20) {
+        try {
+            const response = await fetch(`${this.baseUrl}/library/recentlyAdded?X-Plex-Container-Start=0&X-Plex-Container-Size=${limit}`, {
+                headers: this.headers()
+            });
+            const data = await response.json();
+            return data.MediaContainer?.Metadata || [];
+        } catch (error) {
+            console.log('Failed to get recently added');
+            return [];
+        }
+    },
+
+    async getOnDeck() {
+        try {
+            const response = await fetch(`${this.baseUrl}/library/onDeck`, {
+                headers: this.headers()
+            });
+            const data = await response.json();
+            return data.MediaContainer?.Metadata || [];
+        } catch (error) {
+            console.log('Failed to get on deck');
+            return [];
+        }
+    },
+
+    async search(query) {
+        try {
+            const response = await fetch(`${this.baseUrl}/search?query=${encodeURIComponent(query)}`, {
+                headers: this.headers()
+            });
+            const data = await response.json();
+            return data.MediaContainer?.Metadata || [];
+        } catch (error) {
+            console.log('Search failed');
+            return [];
+        }
+    },
+
+    async getSessions() {
+        try {
+            const response = await fetch(`${this.baseUrl}/status/sessions`, {
+                headers: this.headers()
+            });
+            const data = await response.json();
+            return data.MediaContainer?.Metadata || [];
+        } catch (error) {
+            console.log('Failed to get sessions');
+            return [];
+        }
+    },
+
+    getThumbUrl(thumbPath) {
+        if (!thumbPath) return null;
+        return `${this.baseUrl}${thumbPath}?X-Plex-Token=${this.token}`;
+    },
+
+    getStreamUrl(mediaKey) {
+        return `${this.baseUrl}${mediaKey}?X-Plex-Token=${this.token}`;
     }
 };
+
+/* ========================================
+   Initialize Plex Connection
+   ======================================== */
+async function initPlexBackend() {
+    const connected = await PlexBackend.checkConnection();
+
+    if (connected) {
+        console.log('Plex backend connected!');
+
+        // Load libraries and populate UI
+        const libraries = await PlexBackend.getLibraries();
+        console.log('Libraries:', libraries.map(l => l.title));
+
+        // Load recently added
+        const recent = await PlexBackend.getRecentlyAdded(10);
+        console.log('Recently Added:', recent.length, 'items');
+
+        // Update UI with real content
+        updateContentFromPlex(libraries, recent);
+    } else {
+        console.log('Using mock data - Plex not connected');
+    }
+}
+
+function updateContentFromPlex(libraries, recentItems) {
+    // Map Plex libraries to content categories
+    const contentSection = document.querySelector('.content-section .category-cards');
+
+    if (recentItems.length > 0 && contentSection) {
+        // Could dynamically update content cards here
+        console.log('Plex content ready to display');
+    }
+}
+
+// Auto-connect on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Existing init functions run first, then try Plex
+    setTimeout(initPlexBackend, 1000);
+});
 
 // Export for use in other modules
 window.PurpleSquirrel = {
     API,
-    PlexIntegration
+    Plex: PlexBackend,
+    initPlex: initPlexBackend
 };
 
 console.log('Purple Squirrel Media - Landing Page Loaded');
