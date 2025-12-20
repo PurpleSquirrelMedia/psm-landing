@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch - Purple Squirrel Media</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <style>
+        /* Watch Portal Styles */
+        .watch-hero {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(16, 16, 32, 0.95)),
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1920') center/cover;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .access-gate {
+            background: rgba(16, 16, 32, 0.95);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 500px;
+            backdrop-filter: blur(20px);
+        }
+
+        .access-gate h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .wallet-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .wallet-btn img {
+            width: 28px;
+            height: 28px;
+        }
+
+        .nft-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .nft-status.verified {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            color: #22c55e;
+        }
+
+        .nft-status.pending {
+            background: rgba(234, 179, 8, 0.2);
+            border: 1px solid rgba(234, 179, 8, 0.5);
+            color: #eab308;
+        }
+
+        .nft-status.none {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+
+        /* Content Library */
+        .content-library {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .library-header h2 {
+            font-size: 2rem;
+        }
+
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tier-badge.basic { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .tier-badge.pro { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .tier-badge.creator { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+        .category-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .category-tab {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #a78bfa;
+            padding: 10px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab:hover, .category-tab.active {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border-color: transparent;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .content-card {
+            background: rgba(30, 30, 50, 0.8);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .content-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+        }
+
+        .content-poster {
+            position: relative;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+        }
+
+        .content-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .content-card:hover .content-poster img {
+            transform: scale(1.1);
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .content-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(139, 92, 246, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-left: 4px;
+        }
+
+        .content-info {
+            padding: 1.25rem;
+        }
+
+        .content-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .content-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .content-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .quality-badge {
+            background: rgba(139, 92, 246, 0.3);
+            color: #a78bfa;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .locked-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .locked-overlay svg {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 8px;
+            opacity: 0.6;
+        }
+
+        /* Player Modal */
+        .player-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-modal.active {
+            display: flex;
+        }
+
+        .player-container {
+            width: 90%;
+            max-width: 1200px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .close-player {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 10;
+        }
+
+        /* NFT Pass Card */
+        .nft-pass {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(30, 30, 50, 0.9));
+            border: 2px solid rgba(139, 92, 246, 0.5);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .nft-pass-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 16px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .nft-pass h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .nft-pass .tier {
+            color: #a78bfa;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .nft-pass .wallet {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .access-gate {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            .access-gate h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🐿️</span>
+                Purple Squirrel Media
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="watch.html" class="active">Watch</a>
+                <a href="plans.html">Plans</a>
+                <a href="about.html">About</a>
+            </div>
+            <div class="nav-actions">
+                <button id="walletBtn" class="btn btn-primary">Connect Wallet</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Access Gate (shown when not connected/verified) -->
+    <section class="watch-hero" id="accessGate">
+        <div class="access-gate">
+            <h1>🎬 Access Your Content</h1>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">
+                Connect your wallet to verify your PSM membership NFT and unlock exclusive streaming content.
+            </p>
+
+            <button class="wallet-btn" id="connectWallet">
+                <img src="https://phantom.app/img/phantom-logo.svg" alt="Phantom">
+                Connect Phantom Wallet
+            </button>
+
+            <div id="nftStatus" class="nft-status none" style="display: none;">
+                <span id="statusIcon">❌</span>
+                <span id="statusText">No membership NFT found</span>
+            </div>
+
+            <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem; margin-top: 1.5rem;">
+                Don't have a membership? <a href="plans.html" style="color: #a78bfa;">Get your NFT pass</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Content Library (shown after verification) -->
+    <section class="content-library" id="contentLibrary" style="display: none;">
+        <div class="library-header">
+            <div>
+                <h2>Your Library</h2>
+                <p style="color: rgba(255,255,255,0.6);">Stream unlimited content with your NFT pass</p>
+            </div>
+            <div id="userTierBadge" class="tier-badge pro">
+                <span>⚡</span> Pro Member
+            </div>
+        </div>
+
+        <!-- NFT Pass Display -->
+        <div class="nft-pass" id="nftPassCard">
+            <div class="nft-pass-image">🐿️</div>
+            <h3>Purple Squirrel Pass</h3>
+            <p class="tier" id="passTier">Pro Membership</p>
+            <p class="wallet" id="passWallet">0x1234...5678</p>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <button class="category-tab active" data-category="all">All Content</button>
+            <button class="category-tab" data-category="movies">Movies</button>
+            <button class="category-tab" data-category="series">Series</button>
+            <button class="category-tab" data-category="documentaries">Documentaries</button>
+            <button class="category-tab" data-category="live">Live Events</button>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid" id="contentGrid">
+            <!-- Content loaded dynamically -->
+        </div>
+    </section>
+
+    <!-- Video Player Modal -->
+    <div class="player-modal" id="playerModal">
+        <button class="close-player" onclick="closePlayer()">&times;</button>
+        <div class="player-container">
+            <video id="videoPlayer" controls style="width: 100%; height: 100%;">
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/solana-pay.js"></script>
+    <script>
+        // Watch Portal Controller
+        const WatchPortal = {
+            API_URL: 'http://163.192.105.31:8080',
+            JELLYFIN_AUTH_URL: 'http://163.192.105.31:3002',
+
+            userTier: null,
+            walletAddress: null,
+
+            async init() {
+                // Check if already connected
+                if (window.solana?.isConnected) {
+                    await this.checkAccess();
+                }
+
+                // Setup wallet button
+                document.getElementById('connectWallet').addEventListener('click', () => this.connectWallet());
+                document.getElementById('walletBtn').addEventListener('click', () => this.connectWallet());
+
+                // Category tabs
+                document.querySelectorAll('.category-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => this.filterContent(e.target.dataset.category));
+                });
+            },
+
+            async connectWallet() {
+                try {
+                    if (!window.solana?.isPhantom) {
+                        window.open('https://phantom.app/', '_blank');
+                        return;
+                    }
+
+                    const response = await window.solana.connect();
+                    this.walletAddress = response.publicKey.toString();
+
+                    document.getElementById('walletBtn').textContent =
+                        this.walletAddress.slice(0, 4) + '...' + this.walletAddress.slice(-4);
+
+                    await this.checkAccess();
+                } catch (error) {
+                    console.error('Wallet connection failed:', error);
+                }
+            },
+
+            async checkAccess() {
+                if (!this.walletAddress && window.solana?.publicKey) {
+                    this.walletAddress = window.solana.publicKey.toString();
+                }
+
+                if (!this.walletAddress) return;
+
+                const statusDiv = document.getElementById('nftStatus');
+                statusDiv.style.display = 'flex';
+                statusDiv.className = 'nft-status pending';
+                document.getElementById('statusIcon').textContent = '⏳';
+                document.getElementById('statusText').textContent = 'Verifying membership...';
+
+                try {
+                    // Check NFT membership
+                    const membership = await PSM_NFT.checkMembership(this.walletAddress);
+
+                    if (membership.hasMembership) {
+                        this.userTier = membership.tier;
+                        this.unlockContent(membership);
+                    } else {
+                        statusDiv.className = 'nft-status none';
+                        document.getElementById('statusIcon').textContent = '❌';
+                        document.getElementById('statusText').textContent = 'No membership NFT found';
+                    }
+                } catch (error) {
+                    console.error('Access check failed:', error);
+                    statusDiv.className = 'nft-status none';
+                    document.getElementById('statusText').textContent = 'Verification failed';
+                }
+            },
+
+            unlockContent(membership) {
+                // Update status
+                const statusDiv = document.getElementById('nftStatus');
+                statusDiv.className = 'nft-status verified';
+                document.getElementById('statusIcon').textContent = '✅';
+                document.getElementById('statusText').textContent = `${membership.tier.toUpperCase()} membership verified!`;
+
+                // Show content library
+                setTimeout(() => {
+                    document.getElementById('accessGate').style.display = 'none';
+                    document.getElementById('contentLibrary').style.display = 'block';
+
+                    // Update tier badge
+                    const badge = document.getElementById('userTierBadge');
+                    badge.className = `tier-badge ${membership.tier}`;
+                    badge.innerHTML = `<span>${this.getTierEmoji(membership.tier)}</span> ${membership.tier.charAt(0).toUpperCase() + membership.tier.slice(1)} Member`;
+
+                    // Update NFT pass card
+                    document.getElementById('passTier').textContent = `${membership.tier.charAt(0).toUpperCase() + membership.tier.slice(1)} Membership`;
+                    document.getElementById('passWallet').textContent =
+                        this.walletAddress.slice(0, 6) + '...' + this.walletAddress.slice(-4);
+
+                    // Load content
+                    this.loadContent(membership.tier);
+                }, 1000);
+            },
+
+            getTierEmoji(tier) {
+                const emojis = { basic: '🌟', pro: '⚡', creator: '👑' };
+                return emojis[tier] || '🎬';
+            },
+
+            async loadContent(tier) {
+                const grid = document.getElementById('contentGrid');
+
+                try {
+                    // Fetch from API
+                    const response = await fetch(`${this.API_URL}/api/v1/videos`);
+                    const videos = await response.json();
+
+                    grid.innerHTML = videos.map(video => this.createContentCard(video, tier)).join('');
+                } catch (error) {
+                    // Fallback demo content
+                    grid.innerHTML = this.getDemoContent(tier);
+                }
+
+                // Add click handlers
+                grid.querySelectorAll('.content-card').forEach(card => {
+                    if (!card.classList.contains('locked')) {
+                        card.addEventListener('click', () => this.playContent(card.dataset.id));
+                    }
+                });
+            },
+
+            createContentCard(video, tier) {
+                const isLocked = this.isContentLocked(video.tier, tier);
+                return `
+                    <div class="content-card ${isLocked ? 'locked' : ''}" data-id="${video.id}" data-category="${video.category}">
+                        <div class="content-poster">
+                            <img src="${video.thumbnail || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400'}" alt="${video.title}">
+                            ${isLocked ? `
+                                <div class="locked-overlay">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                    <span>Upgrade to ${video.tier}</span>
+                                </div>
+                            ` : `
+                                <div class="play-overlay">
+                                    <div class="play-btn">
+                                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                            `}
+                        </div>
+                        <div class="content-info">
+                            <h3>${video.title}</h3>
+                            <div class="content-meta">
+                                <span>${video.duration || '1h 30m'}</span>
+                                <span class="quality-badge">${video.quality || '4K'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            isContentLocked(contentTier, userTier) {
+                const tierOrder = ['basic', 'pro', 'creator'];
+                return tierOrder.indexOf(contentTier) > tierOrder.indexOf(userTier);
+            },
+
+            getDemoContent(tier) {
+                const content = [
+                    { id: 1, title: 'Cosmic Horizons', category: 'movies', duration: '2h 15m', quality: '4K HDR', tier: 'basic' },
+                    { id: 2, title: 'Digital Dreams', category: 'series', duration: '8 Episodes', quality: '4K', tier: 'basic' },
+                    { id: 3, title: 'Beyond the Code', category: 'documentaries', duration: '1h 45m', quality: '4K', tier: 'pro' },
+                    { id: 4, title: 'Neon Nights', category: 'movies', duration: '1h 58m', quality: '4K HDR', tier: 'basic' },
+                    { id: 5, title: 'The Blockchain Revolution', category: 'documentaries', duration: '2h 10m', quality: '4K', tier: 'pro' },
+                    { id: 6, title: 'Metaverse Chronicles', category: 'series', duration: '10 Episodes', quality: '4K HDR', tier: 'creator' },
+                    { id: 7, title: 'AI Awakening', category: 'movies', duration: '2h 05m', quality: '4K', tier: 'pro' },
+                    { id: 8, title: 'Web3 Pioneers', category: 'documentaries', duration: '1h 30m', quality: 'HD', tier: 'basic' },
+                ];
+
+                return content.map(video => this.createContentCard(video, tier)).join('');
+            },
+
+            filterContent(category) {
+                document.querySelectorAll('.category-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.category === category);
+                });
+
+                document.querySelectorAll('.content-card').forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            },
+
+            async playContent(id) {
+                const modal = document.getElementById('playerModal');
+                const player = document.getElementById('videoPlayer');
+
+                try {
+                    // Get stream URL from API
+                    const response = await fetch(`${this.API_URL}/api/v1/stream/${id}`, {
+                        headers: {
+                            'X-Wallet': this.walletAddress
+                        }
+                    });
+                    const data = await response.json();
+
+                    player.src = data.streamUrl;
+                } catch (error) {
+                    // Demo fallback
+                    player.src = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+                }
+
+                modal.classList.add('active');
+                player.play();
+            }
+        };
+
+        function closePlayer() {
+            const modal = document.getElementById('playerModal');
+            const player = document.getElementById('videoPlayer');
+            player.pause();
+            modal.classList.remove('active');
+        }
+
+        // ESC to close player
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePlayer();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => WatchPortal.init());
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 4rem;">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Purple Squirrel Media</h3>
+                <p>Web3-native streaming powered by Solana NFTs</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="plans.html">Plans</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="mailto:support@purplesquirrel.media">support@purplesquirrel.media</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
