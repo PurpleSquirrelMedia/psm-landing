@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertise with Purple Squirrel Media - OTT/CTV Advertising Platform</title>
+    <meta name="description" content="Reach cord-cutters on Connected TV. Buy OTT ad placements with Solana. Zero middlemen, transparent pricing, instant settlements.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .adv-hero {
+            min-height: 90vh;
+            background: linear-gradient(135deg, #1a0a2e 0%, #0f172a 50%, #1a0a2e 100%);
+            display: flex;
+            align-items: center;
+            padding: 120px 20px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .adv-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(ellipse at 70% 50%, rgba(20, 241, 149, 0.1) 0%, transparent 60%);
+        }
+        .adv-hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .adv-hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .adv-hero-content h1 span {
+            background: linear-gradient(135deg, #14F195, #9945FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .adv-hero-content p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .hero-stat {
+            text-align: center;
+        }
+        .hero-stat .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #14F195;
+        }
+        .hero-stat .label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn-solana {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #14F195 0%, #9945FF 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-solana:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(20, 241, 149, 0.3);
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover {
+            border-color: #14F195;
+            background: rgba(20, 241, 149, 0.1);
+        }
+
+        /* TV Mockup */
+        .tv-mockup {
+            position: relative;
+        }
+        .tv-frame {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+        }
+        .tv-screen {
+            background: linear-gradient(135deg, #2d1b4e 0%, #1a0a2e 100%);
+            border-radius: 10px;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .tv-content {
+            text-align: center;
+            color: white;
+            z-index: 1;
+        }
+        .tv-content i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            color: #14F195;
+        }
+        .ad-overlay {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(20, 241, 149, 0.9);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .tv-stand {
+            width: 120px;
+            height: 30px;
+            background: #1a1a2e;
+            margin: 0 auto;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Features Section */
+        .adv-features {
+            padding: 100px 20px;
+            background: #fff;
+        }
+        .features-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+        .features-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        .features-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 35px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(107, 45, 139, 0.15);
+        }
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .feature-icon.purple { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+        .feature-icon.green { background: linear-gradient(135deg, #14F195, #10b981); }
+        .feature-icon.pink { background: linear-gradient(135deg, #e91e63, #ec4899); }
+        .feature-icon.blue { background: linear-gradient(135deg, #3b82f6, #0ea5e9); }
+        .feature-icon.orange { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+        .feature-icon.teal { background: linear-gradient(135deg, #14b8a6, #06b6d4); }
+        .feature-card h3 {
+            font-size: 1.3rem;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 100%);
+        }
+        .pricing-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+            color: white;
+        }
+        .pricing-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .pricing-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+        }
+        .pricing-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .pricing-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(20, 241, 149, 0.5);
+        }
+        .pricing-card.featured {
+            background: linear-gradient(135deg, rgba(20, 241, 149, 0.1), rgba(153, 69, 255, 0.1));
+            border-color: #14F195;
+        }
+        .pricing-card h3 {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        .pricing-card .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #14F195;
+            margin: 20px 0;
+        }
+        .pricing-card .price small {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.6);
+        }
+        .pricing-card .cpm {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+        .pricing-card ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .pricing-card li {
+            color: rgba(255,255,255,0.8);
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pricing-card li i {
+            color: #14F195;
+        }
+        .pricing-card .btn-solana {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Ad Formats */
+        .formats-section {
+            padding: 100px 20px;
+            background: #fff;
+        }
+        .formats-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+        .formats-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        .formats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .format-card {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .format-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(107, 45, 139, 0.1);
+        }
+        .format-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        .format-card h4 {
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .format-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Why Solana */
+        .why-solana {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a0a2e 100%);
+        }
+        .solana-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .solana-text h2 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .solana-text h2 i {
+            color: #14F195;
+        }
+        .solana-text p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        .solana-benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .solana-benefit {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .solana-benefit i {
+            font-size: 1.5rem;
+            color: #14F195;
+        }
+        .solana-benefit div strong {
+            color: white;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .solana-benefit div span {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        .solana-visual {
+            display: flex;
+            justify-content: center;
+        }
+        .transaction-card {
+            background: linear-gradient(135deg, #14F195 0%, #9945FF 100%);
+            padding: 40px;
+            border-radius: 24px;
+            color: white;
+            width: 320px;
+            box-shadow: 0 30px 60px rgba(20, 241, 149, 0.3);
+        }
+        .transaction-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .transaction-card .header span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .transaction-card .amount {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .transaction-card .amount .value {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        .transaction-card .amount .currency {
+            font-size: 1.5rem;
+        }
+        .transaction-card .amount .usd {
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        .transaction-card .details {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 12px;
+        }
+        .transaction-card .details div {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+        .transaction-card .details div:not(:last-child) {
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 20px;
+            background: var(--primary);
+            text-align: center;
+        }
+        .cta-section h2 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .cta-section p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        .cta-section .btn-solana {
+            background: white;
+            color: var(--primary);
+        }
+        .cta-section .btn-solana:hover {
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 968px) {
+            .adv-hero-container,
+            .solana-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-stats {
+                justify-content: center;
+            }
+            .cta-buttons {
+                justify-content: center;
+            }
+            .tv-mockup {
+                order: -1;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="free-tv.html">Free TV</a>
+                <a href="advertise.html" class="active">Advertise</a>
+                <a href="plans.html">Plans</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="adv-hero">
+        <div class="adv-hero-container">
+            <div class="adv-hero-content">
+                <h1>OTT Advertising<br><span>Powered by Solana</span></h1>
+                <p>Reach cord-cutters on Connected TV with transparent, blockchain-verified ad placements. Pay with SOL or USDC. No middlemen, instant settlements.</p>
+
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="number">50M+</div>
+                        <div class="label">Monthly Impressions</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="number">$8</div>
+                        <div class="label">Avg CPM</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="number">0%</div>
+                        <div class="label">Hidden Fees</div>
+                    </div>
+                </div>
+
+                <div class="cta-buttons">
+                    <a href="#pricing" class="btn-solana">
+                        <i class="fas fa-rocket"></i> Start Campaign
+                    </a>
+                    <a href="#demo" class="btn-outline">
+                        <i class="fas fa-play"></i> Watch Demo
+                    </a>
+                </div>
+            </div>
+
+            <div class="tv-mockup">
+                <div class="tv-frame">
+                    <div class="tv-screen">
+                        <div class="tv-content">
+                            <i class="fas fa-tv"></i>
+                            <p>Your Ad Here</p>
+                        </div>
+                        <div class="ad-overlay">
+                            <i class="fas fa-bolt"></i> Paid with SOL
+                        </div>
+                    </div>
+                </div>
+                <div class="tv-stand"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="adv-features">
+        <div class="features-header">
+            <h2>Why Advertise With Us?</h2>
+            <p>Programmatic OTT advertising meets Web3 transparency. Every impression verified on-chain.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon green">
+                    <i class="fas fa-link"></i>
+                </div>
+                <h3>On-Chain Verification</h3>
+                <p>Every ad impression is recorded on Solana. Transparent, auditable, and fraud-proof advertising.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon purple">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3>Precision Targeting</h3>
+                <p>Target by genre, time slot, geography, device type, and viewer demographics.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon pink">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Instant Settlement</h3>
+                <p>No NET-60 invoices. Campaigns go live instantly when funded. Real-time spend tracking.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon blue">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Real-Time Analytics</h3>
+                <p>Live dashboard with impressions, completion rates, and engagement metrics.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon orange">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <h3>Lower CPMs</h3>
+                <p>No ad tech middlemen taking 50%+ margins. Direct to publisher pricing.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon teal">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Brand Safe</h3>
+                <p>Curated content channels only. No user-generated content risks.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ad Formats -->
+    <section class="formats-section">
+        <div class="formats-header">
+            <h2>Ad Formats</h2>
+            <p>High-impact placements designed for the big screen experience</p>
+        </div>
+
+        <div class="formats-grid">
+            <div class="format-card">
+                <i class="fas fa-play-circle"></i>
+                <h4>Pre-Roll</h4>
+                <p>15-30 second spots before content</p>
+            </div>
+            <div class="format-card">
+                <i class="fas fa-pause-circle"></i>
+                <h4>Mid-Roll</h4>
+                <p>Natural breaks during content</p>
+            </div>
+            <div class="format-card">
+                <i class="fas fa-rectangle-ad"></i>
+                <h4>Overlay Banner</h4>
+                <p>Non-intrusive L-bar displays</p>
+            </div>
+            <div class="format-card">
+                <i class="fas fa-images"></i>
+                <h4>Sponsored Tiles</h4>
+                <p>Featured placement in browse UI</p>
+            </div>
+            <div class="format-card">
+                <i class="fas fa-qrcode"></i>
+                <h4>Interactive QR</h4>
+                <p>Scan-to-engage second screen</p>
+            </div>
+            <div class="format-card">
+                <i class="fas fa-film"></i>
+                <h4>Branded Content</h4>
+                <p>Custom show sponsorships</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-header">
+            <h2>Transparent Pricing</h2>
+            <p>No hidden fees. No minimum commitments. Pay only for verified impressions.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">1 SOL <small>/campaign</small></div>
+                <div class="cpm">~$8-12 CPM</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> 10,000+ impressions</li>
+                    <li><i class="fas fa-check"></i> Pre-roll placements</li>
+                    <li><i class="fas fa-check"></i> Basic targeting</li>
+                    <li><i class="fas fa-check"></i> Real-time dashboard</li>
+                    <li><i class="fas fa-check"></i> On-chain receipts</li>
+                </ul>
+                <a href="#" class="btn-solana">
+                    <i class="fas fa-wallet"></i> Pay with SOL
+                </a>
+            </div>
+
+            <div class="pricing-card featured">
+                <h3>Growth</h3>
+                <div class="price">10 SOL <small>/campaign</small></div>
+                <div class="cpm">~$6-8 CPM</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> 150,000+ impressions</li>
+                    <li><i class="fas fa-check"></i> All ad formats</li>
+                    <li><i class="fas fa-check"></i> Advanced targeting</li>
+                    <li><i class="fas fa-check"></i> A/B testing</li>
+                    <li><i class="fas fa-check"></i> Priority support</li>
+                </ul>
+                <a href="#" class="btn-solana">
+                    <i class="fas fa-wallet"></i> Pay with SOL
+                </a>
+            </div>
+
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">Custom</div>
+                <div class="cpm">Volume discounts</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> Unlimited impressions</li>
+                    <li><i class="fas fa-check"></i> Exclusive sponsorships</li>
+                    <li><i class="fas fa-check"></i> Custom integrations</li>
+                    <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                    <li><i class="fas fa-check"></i> USDC/fiat invoicing</li>
+                </ul>
+                <a href="contact.html" class="btn-solana">
+                    <i class="fas fa-envelope"></i> Contact Sales
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Solana -->
+    <section class="why-solana">
+        <div class="solana-content">
+            <div class="solana-text">
+                <h2><i class="fas fa-bolt"></i> Why Pay with Solana?</h2>
+                <p>Traditional ad buying involves wire transfers, NET-60 payment terms, and opaque fee structures. With Solana, your campaign goes live in seconds with complete transparency.</p>
+
+                <div class="solana-benefits">
+                    <div class="solana-benefit">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>400ms Finality</strong>
+                            <span>Campaign live in under a second</span>
+                        </div>
+                    </div>
+                    <div class="solana-benefit">
+                        <i class="fas fa-coins"></i>
+                        <div>
+                            <strong>$0.00025 Transaction Fee</strong>
+                            <span>Virtually free payments</span>
+                        </div>
+                    </div>
+                    <div class="solana-benefit">
+                        <i class="fas fa-eye"></i>
+                        <div>
+                            <strong>100% Transparent</strong>
+                            <span>Every transaction on-chain</span>
+                        </div>
+                    </div>
+                    <div class="solana-benefit">
+                        <i class="fas fa-globe"></i>
+                        <div>
+                            <strong>No Borders</strong>
+                            <span>Advertise globally, pay instantly</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solana-visual">
+                <div class="transaction-card">
+                    <div class="header">
+                        <span><i class="fas fa-check-circle"></i> Confirmed</span>
+                        <span>Just now</span>
+                    </div>
+                    <div class="amount">
+                        <div class="value">10</div>
+                        <div class="currency">SOL</div>
+                        <div class="usd">~ $2,000 USD</div>
+                    </div>
+                    <div class="details">
+                        <div><span>Campaign</span><span>Growth Plan</span></div>
+                        <div><span>Impressions</span><span>150,000+</span></div>
+                        <div><span>Network Fee</span><span>$0.00025</span></div>
+                        <div><span>Status</span><span>Live</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Reach Cord-Cutters?</h2>
+        <p>Join the future of advertising. Transparent, instant, and crypto-native.</p>
+        <a href="#pricing" class="btn-solana">
+            <i class="fas fa-rocket"></i> Launch Your Campaign
+        </a>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Advertisers</h4>
+                <a href="advertise.html">OTT Advertising</a>
+                <a href="#pricing">Pricing</a>
+                <a href="contact.html">Contact Sales</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="terms.html">Terms of Service</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="dmca.html">DMCA</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
