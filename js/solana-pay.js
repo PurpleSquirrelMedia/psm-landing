@@ -180,9 +180,12 @@ const PSM_PAY = {
         };
     },
 
-    // Record payment in backend
+    // Record payment and mint NFT
     async recordPayment(signature, tier, amount, currency) {
         try {
+            const wallet = this.provider.publicKey.toString();
+
+            // 1. Record payment in backend
             const response = await fetch('http://163.192.105.31:8080/api/v1/payments/record', {
                 method: 'POST',
                 headers: {
@@ -194,13 +197,28 @@ const PSM_PAY = {
                     tier,
                     amount,
                     currency,
-                    wallet: this.provider.publicKey.toString()
+                    wallet
                 })
             });
 
             if (!response.ok) {
                 console.error('Failed to record payment');
             }
+
+            // 2. Trigger NFT minting
+            console.log('Payment recorded, minting membership NFT...');
+            const nftResult = await PSM_NFT.mintMembershipNFT(tier, signature);
+
+            if (nftResult.success) {
+                console.log('NFT minted:', nftResult.nftMint);
+                // Store NFT info
+                localStorage.setItem('psmNFT', JSON.stringify({
+                    mint: nftResult.nftMint,
+                    tier: nftResult.tier,
+                    mintedAt: new Date().toISOString()
+                }));
+            }
+
         } catch (error) {
             console.error('Payment recording error:', error);
         }
@@ -258,30 +276,75 @@ const PSM_PAY = {
     }
 };
 
-// NFT Membership Check
+// NFT Membership System
 const PSM_NFT = {
-    // NFT Collection address (create your own on Metaplex)
-    COLLECTION_MINT: 'YOUR_NFT_COLLECTION_ADDRESS',
+    // NFT Minter service URL (runs alongside main API)
+    MINTER_URL: 'http://163.192.105.31:3001',
+    API_URL: 'http://163.192.105.31:8080',
 
     // Check if wallet holds membership NFT
     async checkMembership(walletAddress) {
         try {
-            const response = await fetch(`http://163.192.105.31:8080/api/v1/nft/check?wallet=${walletAddress}`);
-            const data = await response.json();
+            // Check both backend and on-chain
+            const [apiCheck, chainCheck] = await Promise.all([
+                fetch(`${this.API_URL}/api/v1/nft/check?wallet=${walletAddress}`).then(r => r.json()),
+                fetch(`${this.MINTER_URL}/check-membership?wallet=${walletAddress}`).then(r => r.json()).catch(() => null)
+            ]);
+
             return {
-                hasMembership: data.hasMembership,
-                tier: data.tier,
-                tokenId: data.tokenId
+                hasMembership: apiCheck.hasMembership || chainCheck?.hasMembership,
+                tier: apiCheck.tier || chainCheck?.tier,
+                nftMint: chainCheck?.nftMint
             };
         } catch (error) {
             return { hasMembership: false, error: error.message };
         }
     },
 
-    // Mint membership NFT after payment
-    async mintMembershipNFT(tier) {
+    // Verify payment and mint NFT
+    async mintMembershipNFT(tier, paymentSignature) {
+        const wallet = window.solana?.publicKey?.toString();
+        if (!wallet) {
+            return { success: false, error: 'Wallet not connected' };
+        }
+
         try {
-            const response = await fetch('http://163.192.105.31:8080/api/v1/nft/mint', {
+            // 1. Verify payment on-chain
+            console.log('Verifying payment on-chain...');
+            const verifyRes = await fetch(`${this.MINTER_URL}/verify-payment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    signature: paymentSignature,
+                    tier
+                })
+            });
+            const verifyData = await verifyRes.json();
+
+            if (!verifyData.verified) {
+                return { success: false, error: verifyData.error || 'Payment verification failed' };
+            }
+
+            console.log('Payment verified, minting NFT...');
+
+            // 2. Mint the NFT
+            const mintRes = await fetch(`${this.MINTER_URL}/mint`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    recipientWallet: wallet,
+                    tier,
+                    paymentSignature
+                })
+            });
+            const mintData = await mintRes.json();
+
+            if (!mintData.success) {
+                return { success: false, error: mintData.error || 'Minting failed' };
+            }
+
+            // 3. Update backend user record
+            await fetch(`${this.API_URL}/api/v1/nft/mint`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -289,15 +352,33 @@ const PSM_NFT = {
                 },
                 body: JSON.stringify({
                     tier,
-                    wallet: window.solana?.publicKey?.toString()
+                    wallet,
+                    nftMint: mintData.nftMint
                 })
             });
 
-            const data = await response.json();
-            return { success: true, ...data };
+            return {
+                success: true,
+                nftMint: mintData.nftMint,
+                tier: mintData.tier,
+                explorer: mintData.explorer,
+                metadata: mintData.metadata
+            };
+
         } catch (error) {
+            console.error('NFT minting error:', error);
             return { success: false, error: error.message };
         }
+    },
+
+    // Get NFT image for display
+    getNFTImage(tier) {
+        const images = {
+            basic: 'https://purplesquirrel.media/nft/basic.png',
+            pro: 'https://purplesquirrel.media/nft/pro.png',
+            creator: 'https://purplesquirrel.media/nft/creator.png'
+        };
+        return images[tier] || images.basic;
     }
 };
 
