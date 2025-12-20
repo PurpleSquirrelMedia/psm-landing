@@ -1033,3 +1033,526 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ========================================
+   Phone Mockup
+   ======================================== */
+.hero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.hero-phone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.phone-mockup {
+    width: 280px;
+    height: 560px;
+    background: #1a1a1a;
+    border-radius: 40px;
+    padding: 12px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.phone-notch {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 25px;
+    background: #1a1a1a;
+    border-radius: 15px;
+    z-index: 10;
+}
+
+.phone-screen {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px 30px;
+    gap: 20px;
+}
+
+.phone-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: white;
+}
+
+.phone-logo i {
+    font-size: 48px;
+}
+
+.phone-logo span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.phone-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.phone-video-thumb {
+    width: 100%;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+.phone-enter {
+    padding: 12px 40px;
+    background: white;
+    color: var(--primary);
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.phone-enter:hover {
+    transform: scale(1.05);
+}
+
+/* ========================================
+   Web3 Badge & Section
+   ======================================== */
+.web3-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #14F195 0%, #9945FF 100%);
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.web3-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 100%);
+}
+
+.web3-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.web3-text {
+    color: white;
+}
+
+.web3-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.web3-text h2 i {
+    color: #14F195;
+}
+
+.web3-text .subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 20px;
+}
+
+.web3-text p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: transform 0.3s;
+}
+
+.payment-option:hover {
+    transform: translateX(10px);
+}
+
+.payment-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.payment-icon.sol {
+    background: linear-gradient(135deg, #14F195 0%, #9945FF 100%);
+    color: white;
+}
+
+.payment-icon.usdc {
+    background: #2775CA;
+    color: white;
+}
+
+.payment-icon.nft {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FFE66D 100%);
+    color: white;
+}
+
+.payment-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.payment-details strong {
+    color: white;
+    font-size: 16px;
+}
+
+.payment-details span {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+}
+
+.web3-visual {
+    display: flex;
+    justify-content: center;
+}
+
+.crypto-card {
+    background: linear-gradient(135deg, #14F195 0%, #9945FF 100%);
+    padding: 30px;
+    border-radius: 20px;
+    width: 300px;
+    color: white;
+    box-shadow: 0 20px 60px rgba(20, 241, 149, 0.3);
+}
+
+.crypto-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.crypto-card-header i {
+    color: #10b981;
+}
+
+.crypto-card-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.crypto-card-amount .amount {
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.crypto-card-amount .currency {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.crypto-card-usd {
+    opacity: 0.8;
+    margin-bottom: 20px;
+}
+
+.crypto-card-savings {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+/* ========================================
+   Waitlist Section
+   ======================================== */
+.waitlist-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+
+.waitlist-content {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+}
+
+.waitlist-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.waitlist-content > p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+}
+
+.waitlist-form {
+    margin-bottom: 40px;
+}
+
+.waitlist-form .form-group {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto 15px;
+}
+
+.waitlist-form input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.waitlist-form input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.waitlist-form input:focus {
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 30px;
+    background: white;
+    color: var(--primary);
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.btn-submit:hover {
+    transform: scale(1.05);
+}
+
+.form-note {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-note i {
+    margin-right: 5px;
+}
+
+.waitlist-stats {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* ========================================
+   Navigation Actions
+   ======================================== */
+.nav-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-login {
+    padding: 8px 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: opacity 0.3s;
+}
+
+.btn-login:hover {
+    opacity: 0.8;
+}
+
+.btn-signup {
+    padding: 10px 25px;
+    background: linear-gradient(135deg, #14F195 0%, #9945FF 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.3s;
+}
+
+.btn-signup:hover {
+    transform: scale(1.05);
+}
+
+/* ========================================
+   Wave Separator
+   ======================================== */
+.wave-separator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.wave-separator svg {
+    width: 100%;
+    height: 80px;
+}
+
+/* ========================================
+   Footer Payment Badges
+   ======================================== */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 40px;
+}
+
+.payment-badges {
+    display: flex;
+    gap: 15px;
+}
+
+.payment-badges span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ========================================
+   Feature Icons (Updated)
+   ======================================== */
+.feature-card .feature-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* ========================================
+   Responsive - Phone Mockup
+   ======================================== */
+@media (max-width: 968px) {
+    .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .hero-phone {
+        order: -1;
+    }
+    
+    .phone-mockup {
+        width: 220px;
+        height: 440px;
+    }
+    
+    .web3-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .payment-options {
+        max-width: 400px;
+        margin: 0 auto 30px;
+    }
+    
+    .payment-option:hover {
+        transform: none;
+    }
+    
+    .nav-actions {
+        display: none;
+    }
+    
+    .waitlist-form .form-group {
+        flex-direction: column;
+    }
+    
+    .waitlist-stats {
+        gap: 30px;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}

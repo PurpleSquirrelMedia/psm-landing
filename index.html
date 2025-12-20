@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purple Squirrel Media - New Content Experience</title>
-    <meta name="description" content="Created by the community for the community. Live channels, fitness, theatre, education and more.">
+    <meta name="description" content="Created by the community for the community. Live channels, fitness, theatre, education and more. Pay with Solana - zero fees!">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,17 +33,19 @@
                 <li><a href="app.html">Watch</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-login">Sign In</a>
+                <a href="plans.html" class="btn-signup">Get Started</a>
+            </div>
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with Phone Mockup -->
     <section id="home" class="hero">
-        <!-- Hero Background Image -->
         <div class="hero-bg">
-            <img src="images/hero-bg.jpg" alt="Purple Squirrel Media" class="hero-bg-image">
             <div class="hero-overlay"></div>
         </div>
 
@@ -54,6 +56,13 @@
                     <span class="title-line">Experience</span>
                 </h1>
                 <p class="hero-subtitle">Created by the community for the community for enrichment and engagement.</p>
+
+                <!-- Web3 Badge -->
+                <div class="web3-badge">
+                    <i class="fas fa-wallet"></i>
+                    <span>Pay with Solana - Zero Fees!</span>
+                </div>
+
                 <div class="app-buttons">
                     <a href="#" class="app-btn google-play">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
@@ -76,21 +85,38 @@
                 </div>
             </div>
 
+            <!-- Phone Mockup -->
+            <div class="hero-phone">
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="phone-logo">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Purple Squirrel</span>
+                        </div>
+                        <div class="phone-content">
+                            <div class="phone-video-thumb"></div>
+                            <div class="phone-video-thumb"></div>
+                            <div class="phone-video-thumb"></div>
+                        </div>
+                        <button class="phone-enter">Enter</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Scroll Indicator -->
-        <div class="scroll-indicator">
-            <svg viewBox="0 0 24 24" width="30" height="30" fill="white" opacity="0.7">
-                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
+        <!-- Wave Separator -->
+        <div class="wave-separator">
+            <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+                <path d="M0,50 Q360,100 720,50 T1440,50 L1440,100 L0,100 Z" fill="#ffffff"/>
             </svg>
         </div>
     </section>
 
-    <!-- Experience Section (White background) -->
+    <!-- Experience Section -->
     <section id="experience" class="experience">
         <div class="container">
             <div class="experience-content">
-                <!-- Mascot Image -->
                 <div class="experience-illustration">
                     <img src="images/squirrel-education.jpg" alt="Purple Squirrel Education" class="mascot-image">
                 </div>
@@ -102,7 +128,6 @@
                 </div>
             </div>
 
-            <!-- Accent Lines (Purple & Blue) -->
             <div class="accent-lines">
                 <span class="line-purple"></span>
                 <span class="line-blue"></span>
@@ -110,7 +135,76 @@
         </div>
     </section>
 
-    <!-- Live Channels Section (Dark purple background with curve) -->
+    <!-- Web3 Payments Section -->
+    <section id="web3-payments" class="web3-section">
+        <div class="container">
+            <div class="web3-content">
+                <div class="web3-text">
+                    <h2><i class="fas fa-coins"></i> Zero-Fee Payments</h2>
+                    <p class="subtitle">Pay with Solana - Keep More of Your Money</p>
+                    <p>Unlike traditional payment processors that charge 3-5% fees, we accept <strong>Solana</strong> and <strong>USDC</strong> for near-zero transaction costs. Your subscription money goes to creators, not banks.</p>
+
+                    <div class="payment-options">
+                        <div class="payment-option">
+                            <div class="payment-icon sol">
+                                <svg viewBox="0 0 397.7 311.7" width="32" height="32">
+                                    <path fill="currentColor" d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7z"/>
+                                    <path fill="currentColor" d="M64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8z"/>
+                                    <path fill="currentColor" d="M333.1 120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z"/>
+                                </svg>
+                            </div>
+                            <div class="payment-details">
+                                <strong>Solana (SOL)</strong>
+                                <span>Fast & eco-friendly</span>
+                            </div>
+                        </div>
+                        <div class="payment-option">
+                            <div class="payment-icon usdc">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="payment-details">
+                                <strong>USDC Stablecoin</strong>
+                                <span>Price stability</span>
+                            </div>
+                        </div>
+                        <div class="payment-option">
+                            <div class="payment-icon nft">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <div class="payment-details">
+                                <strong>NFT Membership</strong>
+                                <span>Lifetime access</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="plans.html" class="btn-primary">
+                        <i class="fas fa-wallet"></i> View Plans
+                    </a>
+                </div>
+
+                <div class="web3-visual">
+                    <div class="crypto-card">
+                        <div class="crypto-card-header">
+                            <span>Subscription Payment</span>
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="crypto-card-amount">
+                            <span class="amount">0.1</span>
+                            <span class="currency">SOL</span>
+                        </div>
+                        <div class="crypto-card-usd">~ $20 USD</div>
+                        <div class="crypto-card-savings">
+                            <i class="fas fa-piggy-bank"></i>
+                            You save ~$0.60 vs credit card fees
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Channels Section -->
     <section id="live-channels" class="live-channels">
         <div class="section-curve top">
             <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
@@ -125,7 +219,6 @@
                     <p>Watch and don't miss any of the live shows, you can also chat and share your opinion with each channel.</p>
                 </div>
 
-                <!-- Mascot Image -->
                 <div class="channels-image">
                     <img src="images/squirrel-live.jpg" alt="Purple Squirrel Live Channels" class="mascot-image">
                 </div>
@@ -143,25 +236,24 @@
 
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-image">
-                        <img src="images/squirrel-cool.jpg" alt="Cool Features">
-                    </div>
-                    <h3>Be Cool</h3>
-                    <p>Join the coolest streaming community with exclusive content and unique features.</p>
+                    <div class="feature-icon"><i class="fas fa-tv"></i></div>
+                    <h3>4K Streaming</h3>
+                    <p>Crystal clear video quality on any device, anywhere in the world.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-image">
-                        <img src="images/squirrel-happy.jpg" alt="Happy Community">
-                    </div>
-                    <h3>Stay Happy</h3>
-                    <p>Discover endless entertainment that keeps you engaged and entertained.</p>
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>Community First</h3>
+                    <p>Built by creators, for creators. Your voice matters here.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-image">
-                        <img src="images/squirrel-pro.jpg" alt="Professional Quality">
-                    </div>
-                    <h3>Go Pro</h3>
-                    <p>Professional-grade streaming with premium quality and exclusive perks.</p>
+                    <div class="feature-icon"><i class="fas fa-wallet"></i></div>
+                    <h3>Zero-Fee Payments</h3>
+                    <p>Pay with Solana and keep more money in your pocket.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-closed-captioning"></i></div>
+                    <h3>AI Captions</h3>
+                    <p>Automatic captions powered by IBM Watson for accessibility.</p>
                 </div>
             </div>
         </div>
@@ -178,13 +270,13 @@
                     <h2>Become a Creator</h2>
                     <p class="subtitle">Share your passion with the world</p>
                     <p>Join our growing community of creators and start streaming your content today. Whether it's fitness, theatre, education, or entertainment - there's a place for you.</p>
-                    <a href="#" class="btn-primary">Start Creating</a>
+                    <a href="plans.html" class="btn-primary">Start Creating</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Content Section (White background) -->
+    <!-- Content Section -->
     <section id="content" class="content-section">
         <div class="container">
             <div class="section-header">
@@ -197,27 +289,20 @@
                 <button class="tab-btn active">Shows</button>
             </div>
 
-            <!-- Content Categories matching PDF layout -->
             <div class="content-row">
                 <div class="category-block">
                     <h3>Unique Fitness</h3>
                     <div class="category-cards">
                         <div class="content-card">
-                            <div class="card-image fitness-1">
-                                <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=300&h=200&fit=crop" alt="Fitness">
-                            </div>
+                            <div class="card-image"><img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=300&h=200&fit=crop" alt="Fitness"></div>
                             <span class="card-label">Do Exercise 01</span>
                         </div>
                         <div class="content-card">
-                            <div class="card-image fitness-2">
-                                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=300&h=200&fit=crop" alt="Fitness">
-                            </div>
+                            <div class="card-image"><img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=300&h=200&fit=crop" alt="Fitness"></div>
                             <span class="card-label">Do Exercise 02</span>
                         </div>
                         <div class="content-card">
-                            <div class="card-image fitness-3">
-                                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=300&h=200&fit=crop" alt="Fitness">
-                            </div>
+                            <div class="card-image"><img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=300&h=200&fit=crop" alt="Fitness"></div>
                             <span class="card-label">Do Exercise 03</span>
                         </div>
                     </div>
@@ -227,21 +312,15 @@
                     <h3>Theatre Arts</h3>
                     <div class="category-cards">
                         <div class="content-card">
-                            <div class="card-image theatre-1">
-                                <img src="https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=300&h=200&fit=crop" alt="Theatre">
-                            </div>
+                            <div class="card-image"><img src="https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=300&h=200&fit=crop" alt="Theatre"></div>
                             <span class="card-label">Theatre 01</span>
                         </div>
                         <div class="content-card">
-                            <div class="card-image theatre-2">
-                                <img src="https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=300&h=200&fit=crop" alt="Theatre">
-                            </div>
+                            <div class="card-image"><img src="https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=300&h=200&fit=crop" alt="Theatre"></div>
                             <span class="card-label">Theatre 02</span>
                         </div>
                         <div class="content-card">
-                            <div class="card-image theatre-3">
-                                <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?w=300&h=200&fit=crop" alt="Theatre">
-                            </div>
+                            <div class="card-image"><img src="https://images.unsplash.com/photo-1547153760-18fc86324498?w=300&h=200&fit=crop" alt="Theatre"></div>
                             <span class="card-label">Theatre 03</span>
                         </div>
                     </div>
@@ -253,22 +332,17 @@
                     <h3>Education</h3>
                     <div class="category-cards">
                         <div class="content-card">
-                            <div class="card-image education-1">
-                                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=300&h=200&fit=crop" alt="Education">
-                            </div>
+                            <div class="card-image"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=300&h=200&fit=crop" alt="Education"></div>
                             <span class="card-label">Learn 01</span>
                         </div>
                         <div class="content-card">
-                            <div class="card-image education-2">
-                                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=300&h=200&fit=crop" alt="Education">
-                            </div>
+                            <div class="card-image"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=300&h=200&fit=crop" alt="Education"></div>
                             <span class="card-label">Learn 02</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Accent Lines Right Side -->
             <div class="accent-lines right">
                 <span class="line-purple"></span>
                 <span class="line-blue"></span>
@@ -276,7 +350,45 @@
         </div>
     </section>
 
-    <!-- Footer with curved top -->
+    <!-- Waitlist Section -->
+    <section id="waitlist" class="waitlist-section">
+        <div class="container">
+            <div class="waitlist-content">
+                <h2>Join the Waitlist</h2>
+                <p>Be the first to know when we launch new features and exclusive content.</p>
+
+                <form class="waitlist-form" id="waitlistForm">
+                    <div class="form-group">
+                        <input type="email" id="waitlistEmail" placeholder="Enter your email" required>
+                        <button type="submit" class="btn-submit">
+                            <span>Join Waitlist</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <p class="form-note">
+                        <i class="fas fa-lock"></i> We respect your privacy. Unsubscribe anytime.
+                    </p>
+                </form>
+
+                <div class="waitlist-stats">
+                    <div class="stat">
+                        <span class="stat-number">2,500+</span>
+                        <span class="stat-label">Early Adopters</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Creators</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Community Owned</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer id="contact" class="footer">
         <div class="footer-curve">
             <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
@@ -303,17 +415,17 @@
                         <div class="footer-col">
                             <h4>Platform</h4>
                             <ul>
-                                <li><a href="#">Live Channels</a></li>
-                                <li><a href="#">Browse Content</a></li>
-                                <li><a href="#">Categories</a></li>
+                                <li><a href="app.html">Watch Now</a></li>
+                                <li><a href="#content">Browse Content</a></li>
+                                <li><a href="plans.html">Pricing</a></li>
                             </ul>
                         </div>
                         <div class="footer-col">
                             <h4>Company</h4>
                             <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Careers</a></li>
-                                <li><a href="#">Contact</a></li>
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="contact.html">Contact</a></li>
                             </ul>
                         </div>
                         <div class="footer-col">
@@ -328,11 +440,48 @@
                 </div>
                 <div class="footer-bottom">
                     <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
+                    <div class="payment-badges">
+                        <span><i class="fas fa-wallet"></i> Solana</span>
+                        <span><i class="fas fa-dollar-sign"></i> USDC</span>
+                    </div>
                 </div>
             </div>
         </div>
     </footer>
 
+    <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
+    <script>
+        // Waitlist form handling
+        document.getElementById('waitlistForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('waitlistEmail').value;
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('http://163.192.105.31:8080/api/v1/waitlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                if (response.ok) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    btn.style.background = '#10b981';
+                    document.getElementById('waitlistEmail').value = '';
+                } else {
+                    throw new Error('Failed to join');
+                }
+            } catch (error) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Could not join waitlist. Please try again.');
+            }
+        });
+    </script>
 </body>
 </html>
