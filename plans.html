@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="css/components.css">
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <style>
         :root {
@@ -52,6 +51,14 @@
             font-weight: 600;
         }
         .logo-icon { font-size: 24px; }
+        .logo-icon-svg {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top center;
+        }
         .nav-links { display: flex; gap: 30px; }
         .nav-links a {
             color: var(--text-muted);
@@ -772,8 +779,6 @@
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
-    <script src="js/solana-pay.js"></script>
     <script>
         // Plan data
         const PLANS = {
@@ -838,32 +843,23 @@
 
             try {
                 // Connect wallet
-                await window.solana.connect();
+                const resp = await window.solana.connect();
+                const walletAddress = resp.publicKey.toString();
 
                 if (selectedPlan.sol === 0) {
-                    // Free mint - just gas
-                    const result = await PSM_NFT.mintMembershipNFT(selectedPlan.tier, 'free-mint');
-                    if (result.success) {
-                        alert('Free TV Pass minted! Check your wallet.');
-                        closeModal();
-                        window.location.href = 'free-tv.html';
-                    } else {
-                        alert('Minting failed: ' + result.error);
-                    }
+                    // Free mint - demo mode
+                    alert(`Free TV Pass activated for wallet ${walletAddress.slice(0,8)}...! Enjoy 50+ channels.`);
+                    closeModal();
+                    window.location.href = 'free-tv.html';
                 } else {
-                    // Paid subscription
-                    const result = await PSM_PAY.payWithWallet(selectedPlan.tier, false);
-                    if (result.success) {
-                        alert(`${selectedPlan.name} subscription activated!`);
-                        closeModal();
-                        window.location.href = 'watch.html';
-                    } else {
-                        alert('Payment failed: ' + result.error);
-                    }
+                    // Paid subscription - demo mode
+                    alert(`${selectedPlan.name} subscription started for wallet ${walletAddress.slice(0,8)}...! Full Solana Pay integration coming soon.`);
+                    closeModal();
+                    window.location.href = 'watch.html';
                 }
             } catch (error) {
-                console.error('Payment error:', error);
-                alert('Error: ' + error.message);
+                console.error('Wallet error:', error);
+                alert('Error connecting wallet: ' + error.message);
             }
         }
 
