@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
         :root {
             --primary: #7c3aed;
@@ -303,23 +304,27 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <a href="index.html" class="logo">
-            <img src="images/logo.png" alt="Purple Squirrel Media">
-            <span class="logo-text">Purple Squirrel Media</span>
-        </a>
-        <nav class="nav">
-            <a href="index.html">Home</a>
-            <a href="app.html">Watch</a>
-            <a href="plans.html">Pricing</a>
-            <a href="contact.html">Contact</a>
-            <a href="about.html" class="active">About</a>
-        </nav>
-        <div class="header-actions">
-            <a href="login.html" class="btn btn-outline">Sign In</a>
-            <a href="login.html" class="btn btn-primary">Get Started</a>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="free-tv.html">Free TV</a>
+                <a href="watch.html">Premium</a>
+                <a href="plans.html">Plans</a>
+                <a href="advertise.html">Advertise</a>
+                <a href="about.html" class="active">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-login">Sign In</a>
+                <a href="plans.html" class="btn-signup">Get Started</a>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <section class="hero">
         <h1>Democratizing Media</h1>
@@ -479,37 +484,30 @@
     </section>
 
     <footer class="footer">
-        <div class="footer-grid">
-            <div class="footer-col">
+        <div class="footer-content">
+            <div class="footer-section">
                 <h4>Product</h4>
-                <a href="app.html">Watch</a>
-                <a href="plans.html">Pricing</a>
-                <a href="#">Creators</a>
-                <a href="#">API</a>
+                <a href="watch.html">Premium</a>
+                <a href="free-tv.html">Free TV</a>
+                <a href="radio.html">Radio</a>
+                <a href="plans.html">Plans</a>
             </div>
-            <div class="footer-col">
+            <div class="footer-section">
                 <h4>Company</h4>
-                <a href="about.html">About Us</a>
-                <a href="#">Careers</a>
+                <a href="about.html">About</a>
                 <a href="contact.html">Contact</a>
-                <a href="login.html">Sign In</a>
+                <a href="advertise.html">Advertise</a>
+                <a href="blog.html">Blog</a>
             </div>
-            <div class="footer-col">
-                <h4>Resources</h4>
-                <a href="#">Documentation</a>
-                <a href="#">Help Center</a>
-                <a href="#">Community</a>
-                <a href="#">Status</a>
-            </div>
-            <div class="footer-col">
+            <div class="footer-section">
                 <h4>Legal</h4>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Cookie Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="dmca.html">DMCA</a>
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2024 Purple Squirrel Media. All rights reserved.
+            <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
         </div>
     </footer>
 </body>

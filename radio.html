@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
         :root {
             --primary: #7c3aed;
@@ -424,19 +425,27 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <a href="index.html" class="logo">
-            <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
-            <span class="logo-text">Purple Squirrel<br><small>Radio</small></span>
-        </a>
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="radio.html" class="active">Radio</a>
-            <a href="free-tv.html">Free TV</a>
-            <a href="watch.html">Premium</a>
-            <a href="radio-submit.html">Submit Music</a>
-        </nav>
-    </header>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="free-tv.html">Free TV</a>
+                <a href="watch.html">Premium</a>
+                <a href="radio.html" class="active">Radio</a>
+                <a href="plans.html">Plans</a>
+                <a href="radio-submit.html">Submit Music</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-login">Sign In</a>
+                <a href="plans.html" class="btn-signup">Get Started</a>
+            </div>
+        </div>
+    </nav>
 
     <!-- Main Player -->
     <section class="player-section">
