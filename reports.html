@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Reports - Purple Squirrel Media</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(20, 20, 40, 0.95);
+            border-right: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+            text-decoration: none;
+        }
+
+        .sidebar-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .sidebar-logo span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 0.75rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1rem;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Date Range Selector */
+        .date-range-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.05);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .date-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .date-btn:hover {
+            color: #fff;
+        }
+
+        .date-btn.active {
+            background: rgba(139, 92, 246, 0.3);
+            color: #fff;
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(30, 30, 50, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .chart-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #a78bfa;
+        }
+
+        .chart-change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chart-change.positive { color: #10b981; }
+        .chart-change.negative { color: #ef4444; }
+
+        /* Mock Chart */
+        .chart-area {
+            height: 200px;
+            position: relative;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 100%;
+            padding-top: 20px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 10px;
+            transition: all 0.3s;
+        }
+
+        .chart-bar:hover {
+            background: linear-gradient(180deg, #a78bfa 0%, #8b5cf6 100%);
+        }
+
+        .chart-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .chart-bar:hover::after {
+            opacity: 1;
+        }
+
+        /* Pie Chart */
+        .pie-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #8b5cf6 0deg 144deg,
+                #06b6d4 144deg 234deg,
+                #10b981 234deg 288deg,
+                #f59e0b 288deg 324deg,
+                #ef4444 324deg 360deg
+            );
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .pie-chart::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: rgba(30, 30, 50, 1);
+            border-radius: 50%;
+        }
+
+        .pie-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: rgba(30, 30, 50, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .kpi-label {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .kpi-subtext {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.25rem;
+        }
+
+        /* Campaign Performance Table */
+        .table-card {
+            background: rgba(30, 30, 50, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        tr:hover {
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .campaign-name {
+            font-weight: 500;
+        }
+
+        .format-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .format-preroll { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+        .format-midroll { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
+        .format-overlay { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .format-display { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+
+        .vtr-bar {
+            width: 80px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .vtr-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #06b6d4);
+            border-radius: 3px;
+        }
+
+        .performance-good { color: #10b981; }
+        .performance-avg { color: #f59e0b; }
+        .performance-poor { color: #ef4444; }
+
+        /* Heatmap Section */
+        .heatmap-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .heatmap-card {
+            background: rgba(30, 30, 50, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .heatmap-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .heatmap-cell.level-1 { background: rgba(139, 92, 246, 0.2); }
+        .heatmap-cell.level-2 { background: rgba(139, 92, 246, 0.4); }
+        .heatmap-cell.level-3 { background: rgba(139, 92, 246, 0.6); }
+        .heatmap-cell.level-4 { background: rgba(139, 92, 246, 0.8); }
+        .heatmap-cell.level-5 { background: #8b5cf6; }
+
+        .heatmap-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.5rem;
+        }
+
+        /* Top Performing */
+        .top-list {
+            list-style: none;
+        }
+
+        .top-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .top-item:last-child {
+            border-bottom: none;
+        }
+
+        .top-rank {
+            width: 24px;
+            height: 24px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-right: 12px;
+        }
+
+        .top-name {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .top-value {
+            font-weight: 600;
+            color: #a78bfa;
+        }
+
+        @media (max-width: 1200px) {
+            .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+            .heatmap-section { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="index.html" class="sidebar-logo">
+                <img src="img/logo.png" alt="PSM">
+                <span>PSM Ads</span>
+            </a>
+
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-th-large"></i>
+                        Dashboard
+                    </a>
+                    <a href="reports.html" class="nav-link active">
+                        <i class="fas fa-chart-line"></i>
+                        Reports
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Campaigns</div>
+                    <a href="dashboard.html#campaigns" class="nav-link">
+                        <i class="fas fa-bullhorn"></i>
+                        All Campaigns
+                    </a>
+                    <a href="dashboard.html#create" class="nav-link">
+                        <i class="fas fa-plus"></i>
+                        Create New
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Assets</div>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-video"></i>
+                        Creatives
+                    </a>
+                    <a href="dashboard.html#vast" class="nav-link">
+                        <i class="fas fa-code"></i>
+                        VAST Tags
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Billing</div>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-wallet"></i>
+                        Payments
+                    </a>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-file-invoice"></i>
+                        Invoices
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Campaign Reports</h1>
+                <div class="header-actions">
+                    <div class="date-range-selector">
+                        <button class="date-btn">Today</button>
+                        <button class="date-btn active">7 Days</button>
+                        <button class="date-btn">30 Days</button>
+                        <button class="date-btn">90 Days</button>
+                    </div>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Impressions</div>
+                    <div class="kpi-value">2.4M</div>
+                    <div class="kpi-subtext" style="color: #10b981;">+18.2% vs last period</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Viewable Impressions</div>
+                    <div class="kpi-value">1.9M</div>
+                    <div class="kpi-subtext">79.2% viewability rate</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Video Completions</div>
+                    <div class="kpi-value">847K</div>
+                    <div class="kpi-subtext">VTR: 68.4%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Clicks</div>
+                    <div class="kpi-value">42.3K</div>
+                    <div class="kpi-subtext">CTR: 1.76%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Revenue Generated</div>
+                    <div class="kpi-value" style="color: #10b981;">$18,420</div>
+                    <div class="kpi-subtext">eCPM: $7.68</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Impressions Over Time</div>
+                            <div class="chart-value">2,423,891</div>
+                            <div class="chart-change positive">
+                                <i class="fas fa-arrow-up"></i> 18.2% from last week
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-area">
+                        <div class="chart-bars">
+                            <div class="chart-bar" style="height: 65%;" data-value="285K"></div>
+                            <div class="chart-bar" style="height: 78%;" data-value="342K"></div>
+                            <div class="chart-bar" style="height: 45%;" data-value="198K"></div>
+                            <div class="chart-bar" style="height: 89%;" data-value="389K"></div>
+                            <div class="chart-bar" style="height: 72%;" data-value="315K"></div>
+                            <div class="chart-bar" style="height: 95%;" data-value="412K"></div>
+                            <div class="chart-bar" style="height: 82%;" data-value="358K"></div>
+                            <div class="chart-bar" style="height: 58%;" data-value="254K"></div>
+                            <div class="chart-bar" style="height: 91%;" data-value="398K"></div>
+                            <div class="chart-bar" style="height: 75%;" data-value="328K"></div>
+                            <div class="chart-bar" style="height: 68%;" data-value="297K"></div>
+                            <div class="chart-bar" style="height: 84%;" data-value="367K"></div>
+                            <div class="chart-bar" style="height: 79%;" data-value="345K"></div>
+                            <div class="chart-bar" style="height: 92%;" data-value="402K"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Ad Format Distribution</div>
+                    </div>
+                    <div class="pie-chart"></div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #8b5cf6;"></div>
+                            Pre-roll (40%)
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #06b6d4;"></div>
+                            Mid-roll (25%)
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #10b981;"></div>
+                            Overlay (15%)
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #f59e0b;"></div>
+                            Display (10%)
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #ef4444;"></div>
+                            Other (10%)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaign Performance Table -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h2 class="table-title">Campaign Performance</h2>
+                    <div class="table-actions">
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-filter"></i>
+                            Filter
+                        </button>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-columns"></i>
+                            Columns
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campaign</th>
+                            <th>Format</th>
+                            <th>Impressions</th>
+                            <th>Viewable</th>
+                            <th>VTR</th>
+                            <th>Clicks</th>
+                            <th>CTR</th>
+                            <th>Spent</th>
+                            <th>eCPM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="campaign-name">Summer Sale 2024</td>
+                            <td><span class="format-badge format-preroll">Pre-roll</span></td>
+                            <td>892,450</td>
+                            <td>738,412</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="vtr-bar"><div class="vtr-fill" style="width: 82%;"></div></div>
+                                    <span class="performance-good">82%</span>
+                                </div>
+                            </td>
+                            <td>15,234</td>
+                            <td class="performance-good">1.71%</td>
+                            <td>$6,847</td>
+                            <td>$7.67</td>
+                        </tr>
+                        <tr>
+                            <td class="campaign-name">Brand Awareness Q4</td>
+                            <td><span class="format-badge format-midroll">Mid-roll</span></td>
+                            <td>654,230</td>
+                            <td>498,542</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="vtr-bar"><div class="vtr-fill" style="width: 76%;"></div></div>
+                                    <span class="performance-good">76%</span>
+                                </div>
+                            </td>
+                            <td>11,892</td>
+                            <td class="performance-good">1.82%</td>
+                            <td>$5,234</td>
+                            <td>$8.00</td>
+                        </tr>
+                        <tr>
+                            <td class="campaign-name">New Product Launch</td>
+                            <td><span class="format-badge format-overlay">Overlay</span></td>
+                            <td>421,890</td>
+                            <td>342,156</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="vtr-bar"><div class="vtr-fill" style="width: 81%;"></div></div>
+                                    <span class="performance-good">81%</span>
+                                </div>
+                            </td>
+                            <td>8,456</td>
+                            <td class="performance-avg">2.01%</td>
+                            <td>$3,156</td>
+                            <td>$7.48</td>
+                        </tr>
+                        <tr>
+                            <td class="campaign-name">Retargeting - Cart</td>
+                            <td><span class="format-badge format-display">Display</span></td>
+                            <td>312,456</td>
+                            <td>245,890</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="vtr-bar"><div class="vtr-fill" style="width: 67%;"></div></div>
+                                    <span class="performance-avg">67%</span>
+                                </div>
+                            </td>
+                            <td>5,234</td>
+                            <td class="performance-avg">1.67%</td>
+                            <td>$2,345</td>
+                            <td>$7.50</td>
+                        </tr>
+                        <tr>
+                            <td class="campaign-name">Holiday Special</td>
+                            <td><span class="format-badge format-preroll">Pre-roll</span></td>
+                            <td>142,865</td>
+                            <td>98,456</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="vtr-bar"><div class="vtr-fill" style="width: 58%;"></div></div>
+                                    <span class="performance-poor">58%</span>
+                                </div>
+                            </td>
+                            <td>1,487</td>
+                            <td class="performance-poor">1.04%</td>
+                            <td>$838</td>
+                            <td>$5.87</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Heatmaps & Top Performing -->
+            <div class="heatmap-section">
+                <div class="heatmap-card">
+                    <h3 class="heatmap-title">Engagement by Hour (Last 7 Days)</h3>
+                    <div class="heatmap-grid">
+                        <!-- 24 hours x 7 days = 168 cells, simplified here -->
+                        <div class="heatmap-cell level-1"></div>
+                        <div class="heatmap-cell level-2"></div>
+                        <div class="heatmap-cell level-3"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <div class="heatmap-cell level-5"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <div class="heatmap-cell level-3"></div>
+                        <div class="heatmap-cell level-2"></div>
+                        <div class="heatmap-cell level-3"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <div class="heatmap-cell level-5"></div>
+                        <div class="heatmap-cell level-5"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <div class="heatmap-cell level-3"></div>
+                        <div class="heatmap-cell level-1"></div>
+                        <div class="heatmap-cell level-2"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <div class="heatmap-cell level-5"></div>
+                        <div class="heatmap-cell level-5"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <div class="heatmap-cell level-2"></div>
+                        <div class="heatmap-cell level-2"></div>
+                        <div class="heatmap-cell level-3"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <div class="heatmap-cell level-5"></div>
+                        <div class="heatmap-cell level-4"></div>
+                        <div class="heatmap-cell level-3"></div>
+                        <div class="heatmap-cell level-2"></div>
+                    </div>
+                    <div class="heatmap-labels">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.5);">
+                        Peak engagement: Thursday 8-10 PM EST
+                    </p>
+                </div>
+
+                <div class="heatmap-card">
+                    <h3 class="heatmap-title">Top Performing Content</h3>
+                    <ul class="top-list">
+                        <li class="top-item">
+                            <span class="top-rank">1</span>
+                            <span class="top-name">Action Movies</span>
+                            <span class="top-value">412K imp</span>
+                        </li>
+                        <li class="top-item">
+                            <span class="top-rank">2</span>
+                            <span class="top-name">Comedy Series</span>
+                            <span class="top-value">356K imp</span>
+                        </li>
+                        <li class="top-item">
+                            <span class="top-rank">3</span>
+                            <span class="top-name">Music Videos</span>
+                            <span class="top-value">298K imp</span>
+                        </li>
+                        <li class="top-item">
+                            <span class="top-rank">4</span>
+                            <span class="top-name">Documentary</span>
+                            <span class="top-value">234K imp</span>
+                        </li>
+                        <li class="top-item">
+                            <span class="top-rank">5</span>
+                            <span class="top-name">Live Sports</span>
+                            <span class="top-value">198K imp</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Date range selector
+        document.querySelectorAll('.date-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Export functionality
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            if (this.textContent.includes('Export')) {
+                alert('Generating CSV report...\n\nIn production, this would download a detailed campaign performance report.');
+            }
+        });
+    </script>
+</body>
+</html>
