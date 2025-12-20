@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Article - Purple Squirrel Media</title>
+    <meta name="description" content="Explore premium content on Purple Squirrel Media">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .article-hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .article-hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            filter: blur(2px) brightness(0.4);
+            transform: scale(1.1);
+        }
+        .article-hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 800px;
+        }
+        .article-category {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .article-hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+        .article-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+        }
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .article-content {
+            background: white;
+            padding: 80px 20px;
+        }
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .article-body {
+            color: #333;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        .article-body p {
+            margin-bottom: 25px;
+        }
+        .article-body h2 {
+            color: var(--primary-dark);
+            font-size: 28px;
+            margin: 40px 0 20px;
+        }
+        .article-body h3 {
+            color: var(--primary-dark);
+            font-size: 22px;
+            margin: 30px 0 15px;
+        }
+        .article-body ul, .article-body ol {
+            margin: 20px 0 25px 30px;
+        }
+        .article-body li {
+            margin-bottom: 10px;
+        }
+        .article-body blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 25px;
+            margin: 30px 0;
+            font-style: italic;
+            color: #555;
+        }
+        .article-media {
+            margin: 40px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .article-media img, .article-media video {
+            width: 100%;
+            display: block;
+        }
+        .article-video-player {
+            position: relative;
+            padding-top: 56.25%;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 40px 0;
+        }
+        .article-video-player video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .play-overlay:hover {
+            background: rgba(0,0,0,0.4);
+        }
+        .play-overlay i {
+            font-size: 80px;
+            color: white;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .play-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .article-tags a {
+            background: #f5f5f5;
+            color: #666;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .article-tags a:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .article-author {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 50px;
+            padding: 30px;
+            background: #f9f9f9;
+            border-radius: 15px;
+        }
+        .author-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-pink) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+        }
+        .author-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+        .author-info p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+        .related-content {
+            background: var(--bg-dark);
+            padding: 80px 20px;
+        }
+        .related-content h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .related-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            text-decoration: none;
+        }
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+        .related-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .related-card-content {
+            padding: 20px;
+        }
+        .related-card h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .related-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .watch-cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-pink) 100%);
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .watch-cta h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        .watch-cta p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+        }
+        .watch-cta .btn-primary {
+            background: white;
+            color: var(--primary);
+            padding: 15px 40px;
+            font-size: 16px;
+        }
+        .watch-cta .btn-primary:hover {
+            background: rgba(255,255,255,0.9);
+        }
+        @media (max-width: 768px) {
+            .article-hero h1 { font-size: 32px; }
+            .article-meta { flex-direction: column; gap: 15px; }
+            .article-body { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#live-channels">Live Channels</a></li>
+                <li><a href="index.html#content">Content</a></li>
+                <li><a href="plans.html">Plans</a></li>
+                <li><a href="app.html">Watch</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-login">Sign In</a>
+                <a href="plans.html" class="btn-signup">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Article Hero -->
+    <section class="article-hero">
+        <div class="article-hero-bg" id="heroBg"></div>
+        <div class="article-hero-content">
+            <span class="article-category" id="articleCategory">Loading...</span>
+            <h1 id="articleTitle">Loading...</h1>
+            <div class="article-meta">
+                <span><i class="far fa-calendar"></i> <span id="articleDate">Dec 20, 2025</span></span>
+                <span><i class="far fa-clock"></i> <span id="articleDuration">5 min read</span></span>
+                <span><i class="far fa-eye"></i> <span id="articleViews">1.2K views</span></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Article Content -->
+    <section class="article-content">
+        <div class="article-container">
+            <!-- Video Player (if applicable) -->
+            <div class="article-video-player" id="videoPlayer" style="display: none;">
+                <video id="articleVideo" poster="" preload="metadata">
+                    <source src="" type="video/mp4">
+                </video>
+                <div class="play-overlay" id="playOverlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+            </div>
+
+            <div class="article-body" id="articleBody">
+                <!-- Content loads dynamically -->
+            </div>
+
+            <div class="article-tags" id="articleTags">
+                <!-- Tags load dynamically -->
+            </div>
+
+            <div class="article-author">
+                <div class="author-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="author-info">
+                    <h4 id="authorName">Purple Squirrel Team</h4>
+                    <p id="authorBio">Creating content for the community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Content -->
+    <section class="related-content">
+        <div class="container">
+            <h2>More Like This</h2>
+            <div class="related-grid" id="relatedGrid">
+                <!-- Related content loads dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Watch CTA -->
+    <section class="watch-cta">
+        <h2>Ready to Watch?</h2>
+        <p>Access all our premium content with a subscription.</p>
+        <a href="app.html" class="btn-primary"><i class="fas fa-play"></i> Start Watching</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-curve">
+            <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+                <path d="M0,0 Q360,100 720,50 T1440,0 L1440,100 L0,100 Z" fill="#1a0a2e"/>
+            </svg>
+        </div>
+        <div class="footer-content">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <div class="logo">
+                            <div class="logo-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+                        </div>
+                        <p>Created by the community for the community.</p>
+                    </div>
+                    <div class="footer-links">
+                        <div class="footer-col">
+                            <h4>Platform</h4>
+                            <ul>
+                                <li><a href="app.html">Watch Now</a></li>
+                                <li><a href="index.html#content">Browse</a></li>
+                                <li><a href="plans.html">Pricing</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Company</h4>
+                            <ul>
+                                <li><a href="about.html">About</a></li>
+                                <li><a href="blog.html">Blog</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Purple Squirrel Media. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Article content database
+        const articles = {
+            'fitness-01': {
+                title: 'Full Body HIIT Workout',
+                category: 'Fitness',
+                image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=600&fit=crop',
+                duration: '45 min workout',
+                views: '12.5K',
+                date: 'Dec 15, 2025',
+                author: 'Coach Sarah',
+                authorBio: 'Certified personal trainer with 10+ years experience.',
+                tags: ['HIIT', 'Cardio', 'Full Body', 'Weight Loss'],
+                hasVideo: true,
+                body: `
+                    <p>Welcome to our most popular full-body HIIT workout! This high-intensity interval training session is designed to burn maximum calories while building lean muscle.</p>
+
+                    <h2>What You'll Need</h2>
+                    <ul>
+                        <li>Exercise mat</li>
+                        <li>Water bottle</li>
+                        <li>Comfortable workout clothes</li>
+                        <li>Optional: Light dumbbells (5-10 lbs)</li>
+                    </ul>
+
+                    <h2>The Workout Structure</h2>
+                    <p>This workout consists of 4 circuits, each lasting 10 minutes. You'll work for 40 seconds and rest for 20 seconds between exercises.</p>
+
+                    <h3>Circuit 1: Warm-Up & Activation</h3>
+                    <ol>
+                        <li>Jumping jacks</li>
+                        <li>High knees</li>
+                        <li>Butt kicks</li>
+                        <li>Arm circles</li>
+                        <li>Bodyweight squats</li>
+                    </ol>
+
+                    <h3>Circuit 2: Lower Body Blast</h3>
+                    <ol>
+                        <li>Jump squats</li>
+                        <li>Alternating lunges</li>
+                        <li>Glute bridges</li>
+                        <li>Sumo squats</li>
+                        <li>Wall sit</li>
+                    </ol>
+
+                    <blockquote>
+                        "The only bad workout is the one that didn't happen. Push yourself, but listen to your body."
+                    </blockquote>
+
+                    <h3>Circuit 3: Upper Body & Core</h3>
+                    <ol>
+                        <li>Push-ups</li>
+                        <li>Mountain climbers</li>
+                        <li>Plank holds</li>
+                        <li>Tricep dips</li>
+                        <li>Bicycle crunches</li>
+                    </ol>
+
+                    <h3>Circuit 4: Full Body Finisher</h3>
+                    <ol>
+                        <li>Burpees</li>
+                        <li>Jump lunges</li>
+                        <li>Plank to push-up</li>
+                        <li>Squat jumps</li>
+                        <li>Mountain climbers (fast)</li>
+                    </ol>
+
+                    <h2>Cool Down</h2>
+                    <p>Don't skip the cool down! Spend 5 minutes stretching all major muscle groups. Focus on deep breathing and allow your heart rate to return to normal.</p>
+
+                    <p>Ready to take your fitness to the next level? Subscribe to access our full library of workout videos with real-time guidance!</p>
+                `,
+                related: ['fitness-02', 'fitness-03']
+            },
+            'fitness-02': {
+                title: 'Core Strength & Stability',
+                category: 'Fitness',
+                image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&h=600&fit=crop',
+                duration: '30 min workout',
+                views: '8.3K',
+                date: 'Dec 12, 2025',
+                author: 'Coach Mike',
+                authorBio: 'Core training specialist and yoga instructor.',
+                tags: ['Core', 'Abs', 'Stability', 'Strength'],
+                hasVideo: true,
+                body: `
+                    <p>Build a rock-solid core with this comprehensive stability workout. A strong core is the foundation for all athletic performance and daily activities.</p>
+
+                    <h2>Why Core Training Matters</h2>
+                    <p>Your core is more than just your abs. It includes your obliques, lower back, hip flexors, and pelvic floor muscles. Training these muscles improves posture, prevents injuries, and enhances athletic performance.</p>
+
+                    <h2>The Core Stability Workout</h2>
+
+                    <h3>Section 1: Plank Variations (8 minutes)</h3>
+                    <ul>
+                        <li>Standard plank - 60 seconds</li>
+                        <li>Side plank (right) - 45 seconds</li>
+                        <li>Side plank (left) - 45 seconds</li>
+                        <li>Plank with shoulder taps - 60 seconds</li>
+                        <li>Reverse plank - 45 seconds</li>
+                    </ul>
+
+                    <h3>Section 2: Dynamic Core (10 minutes)</h3>
+                    <ul>
+                        <li>Dead bugs - 20 reps</li>
+                        <li>Bird dogs - 16 reps (alternating)</li>
+                        <li>Russian twists - 30 reps</li>
+                        <li>Leg raises - 15 reps</li>
+                        <li>Flutter kicks - 40 seconds</li>
+                    </ul>
+
+                    <blockquote>
+                        "Your core is the powerhouse of your body. Train it daily, even just for 10 minutes."
+                    </blockquote>
+
+                    <h3>Section 3: Stability Challenges (12 minutes)</h3>
+                    <ul>
+                        <li>Single-leg glute bridges - 12 each side</li>
+                        <li>Pallof press (or resistance band hold) - 30 seconds each side</li>
+                        <li>Hollow body holds - 45 seconds</li>
+                        <li>Superman holds - 45 seconds</li>
+                        <li>V-ups - 15 reps</li>
+                    </ul>
+
+                    <h2>Tips for Success</h2>
+                    <p>Focus on quality over quantity. Engage your core throughout each movement and breathe steadily. If you feel strain in your lower back, modify the exercise or take a break.</p>
+                `,
+                related: ['fitness-01', 'fitness-03']
+            },
+            'fitness-03': {
+                title: 'Yoga Flow for Flexibility',
+                category: 'Fitness',
+                image: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=1200&h=600&fit=crop',
+                duration: '35 min session',
+                views: '6.1K',
+                date: 'Dec 10, 2025',
+                author: 'Instructor Maya',
+                authorBio: 'RYT-500 certified yoga teacher and wellness coach.',
+                tags: ['Yoga', 'Flexibility', 'Mindfulness', 'Stretching'],
+                hasVideo: true,
+                body: `
+                    <p>Find your flow with this gentle yet effective yoga session designed to improve flexibility and reduce stress. Perfect for all levels.</p>
+
+                    <h2>Benefits of Regular Yoga Practice</h2>
+                    <ul>
+                        <li>Improved flexibility and range of motion</li>
+                        <li>Better posture and body awareness</li>
+                        <li>Reduced stress and anxiety</li>
+                        <li>Enhanced balance and stability</li>
+                        <li>Better sleep quality</li>
+                    </ul>
+
+                    <h2>Today's Flow Sequence</h2>
+
+                    <h3>Opening (5 minutes)</h3>
+                    <p>Begin in a comfortable seated position. Close your eyes and focus on your breath. Set an intention for your practice.</p>
+
+                    <h3>Sun Salutations (10 minutes)</h3>
+                    <p>We'll move through 5 rounds of Sun Salutation A, linking breath with movement. Each round takes about 2 minutes.</p>
+
+                    <blockquote>
+                        "Yoga is not about touching your toes. It's about what you learn on the way down."
+                    </blockquote>
+
+                    <h3>Standing Poses (10 minutes)</h3>
+                    <ul>
+                        <li>Warrior I - 5 breaths each side</li>
+                        <li>Warrior II - 5 breaths each side</li>
+                        <li>Triangle Pose - 5 breaths each side</li>
+                        <li>Extended Side Angle - 5 breaths each side</li>
+                        <li>Tree Pose - 8 breaths each side</li>
+                    </ul>
+
+                    <h3>Floor Sequence (8 minutes)</h3>
+                    <ul>
+                        <li>Pigeon Pose - 10 breaths each side</li>
+                        <li>Seated Forward Fold - 10 breaths</li>
+                        <li>Supine Twist - 8 breaths each side</li>
+                        <li>Happy Baby - 8 breaths</li>
+                    </ul>
+
+                    <h3>Savasana (2 minutes)</h3>
+                    <p>Rest in final relaxation. Let go of any tension and allow your body to absorb the benefits of your practice.</p>
+
+                    <p>Namaste. Return to this practice anytime you need to reconnect with yourself.</p>
+                `,
+                related: ['fitness-01', 'fitness-02']
+            },
+            'theatre-01': {
+                title: 'Introduction to Method Acting',
+                category: 'Theatre',
+                image: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=1200&h=600&fit=crop',
+                duration: '1 hr masterclass',
+                views: '4.2K',
+                date: 'Dec 18, 2025',
+                author: 'Director James Chen',
+                authorBio: 'Broadway director with 20+ years in theatre.',
+                tags: ['Acting', 'Method', 'Technique', 'Performance'],
+                hasVideo: true,
+                body: `
+                    <p>Dive deep into the world of method acting, the revolutionary technique that transformed modern performance. This masterclass covers the fundamentals every aspiring actor should know.</p>
+
+                    <h2>What is Method Acting?</h2>
+                    <p>Method acting is a range of training and rehearsal techniques that seek to encourage sincere and emotionally expressive performances. Developed from Stanislavski's system, it was refined by teachers like Lee Strasberg, Stella Adler, and Sanford Meisner.</p>
+
+                    <h2>The Core Principles</h2>
+
+                    <h3>1. Emotional Memory</h3>
+                    <p>Drawing on personal experiences to create authentic emotional responses in performance. This technique requires careful psychological preparation and should be approached with guidance.</p>
+
+                    <h3>2. Sense Memory</h3>
+                    <p>Recalling physical sensations to make imaginary circumstances feel real. Practice exercises include:</p>
+                    <ul>
+                        <li>Recalling the taste of a specific food</li>
+                        <li>Feeling the texture of a remembered object</li>
+                        <li>Experiencing temperature changes</li>
+                        <li>Recreating physical sensations of movement</li>
+                    </ul>
+
+                    <blockquote>
+                        "Acting is not about being someone different. It's finding the similarity in what is apparently different, then finding myself in there." - Meryl Streep
+                    </blockquote>
+
+                    <h3>3. Given Circumstances</h3>
+                    <p>Understanding everything about your character's world: time, place, social status, relationships, and history. Create a detailed backstory that informs every choice.</p>
+
+                    <h3>4. Objective and Super-Objective</h3>
+                    <p>What does your character want in each scene? What is their overarching goal throughout the entire play?</p>
+
+                    <h2>Practical Exercises</h2>
+
+                    <h3>Exercise 1: The Private Moment</h3>
+                    <p>Recreate a private behavior you do when alone. The goal is to achieve the same level of relaxation and authenticity on stage as you have in private.</p>
+
+                    <h3>Exercise 2: The Animal Study</h3>
+                    <p>Observe and embody an animal's movement patterns. Then gradually transform these movements into human behavior while retaining the animal's essence.</p>
+
+                    <h2>Famous Method Actors</h2>
+                    <p>Daniel Day-Lewis, Marlon Brando, Robert De Niro, and many other legendary performers have used method techniques to create unforgettable characters.</p>
+                `,
+                related: ['theatre-02', 'theatre-03']
+            },
+            'theatre-02': {
+                title: 'Stage Movement & Blocking',
+                category: 'Theatre',
+                image: 'https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=1200&h=600&fit=crop',
+                duration: '45 min workshop',
+                views: '3.8K',
+                date: 'Dec 14, 2025',
+                author: 'Choreographer Lisa Park',
+                authorBio: 'Movement director for major theatre productions.',
+                tags: ['Movement', 'Blocking', 'Stage', 'Choreography'],
+                hasVideo: true,
+                body: `
+                    <p>Master the art of stage movement and blocking to create dynamic, visually compelling performances. This workshop covers essential techniques for both actors and directors.</p>
+
+                    <h2>Understanding Stage Geography</h2>
+                    <p>Before we move, we need to speak the same language. The stage is divided into specific areas:</p>
+                    <ul>
+                        <li><strong>Downstage</strong> - closest to the audience</li>
+                        <li><strong>Upstage</strong> - farthest from the audience</li>
+                        <li><strong>Stage Right/Left</strong> - from the performer's perspective</li>
+                        <li><strong>Center Stage</strong> - the focal point</li>
+                    </ul>
+
+                    <h2>Principles of Effective Blocking</h2>
+
+                    <h3>1. Motivation</h3>
+                    <p>Every movement must have a reason. Ask yourself: Why is my character moving? What drives this cross?</p>
+
+                    <h3>2. Focus</h3>
+                    <p>Direct the audience's attention. Use body position, levels, and sightlines to guide their eyes.</p>
+
+                    <blockquote>
+                        "Movement is the most important aspect of the theatre. It's a silent language that speaks louder than words."
+                    </blockquote>
+
+                    <h3>3. Balance and Composition</h3>
+                    <p>Create visual interest through asymmetry. Strong compositions often use triangles and varied levels.</p>
+
+                    <h3>4. Traffic Patterns</h3>
+                    <p>Plan entrances, exits, and crosses so they don't interfere with each other or block sightlines.</p>
+
+                    <h2>Movement Exercises</h2>
+
+                    <h3>Exercise: The Viewpoints</h3>
+                    <p>Explore spatial relationships, tempo, duration, and kinesthetic response through improvised movement.</p>
+
+                    <h3>Exercise: Status Crosses</h3>
+                    <p>Practice how different status levels affect movement. High-status characters move differently than low-status characters.</p>
+
+                    <h2>Common Blocking Mistakes</h2>
+                    <ul>
+                        <li>Upstaging yourself or others</li>
+                        <li>Moving on your own lines (usually)</li>
+                        <li>Unmotivated crosses</li>
+                        <li>Blocking sightlines</li>
+                        <li>Too much or too little movement</li>
+                    </ul>
+                `,
+                related: ['theatre-01', 'theatre-03']
+            },
+            'theatre-03': {
+                title: 'Voice & Diction for Stage',
+                category: 'Theatre',
+                image: 'https://images.unsplash.com/photo-1547153760-18fc86324498?w=1200&h=600&fit=crop',
+                duration: '50 min lesson',
+                views: '5.6K',
+                date: 'Dec 8, 2025',
+                author: 'Voice Coach Emma Brooks',
+                authorBio: 'Vocal coach for West End and Broadway performers.',
+                tags: ['Voice', 'Diction', 'Projection', 'Speech'],
+                hasVideo: true,
+                body: `
+                    <p>Your voice is your instrument. Learn to project, articulate, and captivate audiences with proper vocal technique for the stage.</p>
+
+                    <h2>The Actor's Voice</h2>
+                    <p>Stage acting demands vocal power that film and television do not. Without amplification, your voice must reach the back row while maintaining emotional truth.</p>
+
+                    <h2>Breath Support</h2>
+                    <p>All good vocal production starts with proper breathing. We'll practice diaphragmatic breathing to support sustained projection.</p>
+
+                    <h3>Breathing Exercise</h3>
+                    <ol>
+                        <li>Lie on your back with a book on your stomach</li>
+                        <li>Breathe in - the book should rise</li>
+                        <li>Breathe out slowly - the book lowers</li>
+                        <li>Practice for 5 minutes daily</li>
+                    </ol>
+
+                    <h2>Resonance</h2>
+                    <p>Develop a rich, full sound by engaging all your resonating chambers: chest, throat, mouth, and head.</p>
+
+                    <blockquote>
+                        "The human voice is the most perfect instrument of all." - Arvo Pärt
+                    </blockquote>
+
+                    <h2>Articulation Exercises</h2>
+
+                    <h3>Tongue Twisters</h3>
+                    <p>Practice these daily, starting slowly and gradually increasing speed:</p>
+                    <ul>
+                        <li>"The lips, the teeth, the tip of the tongue"</li>
+                        <li>"Red leather, yellow leather"</li>
+                        <li>"Unique New York, you know you need unique New York"</li>
+                        <li>"Peter Piper picked a peck of pickled peppers"</li>
+                    </ul>
+
+                    <h3>Consonant Drills</h3>
+                    <p>Focus on crisp plosives (P, B, T, D, K, G) and clear sibilants (S, Z, SH).</p>
+
+                    <h2>Projection Without Strain</h2>
+                    <p>Projection is not about volume - it's about placement and direction. Think of throwing your voice to a specific point in the auditorium.</p>
+
+                    <h2>Preserving Your Voice</h2>
+                    <ul>
+                        <li>Stay hydrated (room temperature water is best)</li>
+                        <li>Warm up before performances</li>
+                        <li>Cool down after intense vocal work</li>
+                        <li>Avoid shouting and whispering</li>
+                        <li>Rest your voice when possible</li>
+                    </ul>
+                `,
+                related: ['theatre-01', 'theatre-02']
+            },
+            'education-01': {
+                title: 'Learning to Learn: Study Strategies',
+                category: 'Education',
+                image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=600&fit=crop',
+                duration: '40 min course',
+                views: '9.7K',
+                date: 'Dec 16, 2025',
+                author: 'Dr. Rachel Kim',
+                authorBio: 'Educational psychologist and learning specialist.',
+                tags: ['Study Skills', 'Learning', 'Memory', 'Productivity'],
+                hasVideo: true,
+                body: `
+                    <p>Unlock your learning potential with science-backed study strategies. Whether you're a student or lifelong learner, these techniques will transform how you absorb and retain information.</p>
+
+                    <h2>The Science of Learning</h2>
+                    <p>Understanding how your brain learns is the first step to learning more effectively. Memory formation involves encoding, storage, and retrieval - and we can optimize each stage.</p>
+
+                    <h2>Active Recall</h2>
+                    <p>The most powerful learning technique is testing yourself. Don't just re-read - actively retrieve information from memory.</p>
+
+                    <h3>How to Practice Active Recall</h3>
+                    <ul>
+                        <li>Close your notes and write what you remember</li>
+                        <li>Use flashcards (digital or physical)</li>
+                        <li>Teach the material to someone else</li>
+                        <li>Practice past exam questions</li>
+                    </ul>
+
+                    <h2>Spaced Repetition</h2>
+                    <p>Instead of cramming, space out your study sessions. Review material at increasing intervals: 1 day, 3 days, 1 week, 2 weeks, 1 month.</p>
+
+                    <blockquote>
+                        "The secret of getting ahead is getting started. The secret of getting started is breaking your complex overwhelming tasks into small manageable tasks." - Mark Twain
+                    </blockquote>
+
+                    <h2>The Pomodoro Technique</h2>
+                    <ol>
+                        <li>Choose a task</li>
+                        <li>Set a timer for 25 minutes</li>
+                        <li>Work until the timer rings</li>
+                        <li>Take a 5-minute break</li>
+                        <li>After 4 pomodoros, take a longer break (15-30 min)</li>
+                    </ol>
+
+                    <h2>Note-Taking Methods</h2>
+
+                    <h3>Cornell Method</h3>
+                    <p>Divide your page into three sections: main notes, cues/questions, and summary. Review by covering main notes and using cues to recall.</p>
+
+                    <h3>Mind Mapping</h3>
+                    <p>For visual learners, create branching diagrams that connect related concepts. Start with the main idea in the center and branch outward.</p>
+
+                    <h2>Optimize Your Environment</h2>
+                    <ul>
+                        <li>Minimize distractions (phone away, notifications off)</li>
+                        <li>Good lighting and comfortable temperature</li>
+                        <li>Dedicated study space</li>
+                        <li>Regular breaks and movement</li>
+                    </ul>
+                `,
+                related: ['education-02']
+            },
+            'education-02': {
+                title: 'Public Speaking Mastery',
+                category: 'Education',
+                image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1200&h=600&fit=crop',
+                duration: '55 min masterclass',
+                views: '7.4K',
+                date: 'Dec 11, 2025',
+                author: 'Prof. Michael Torres',
+                authorBio: 'Communications professor and keynote speaker.',
+                tags: ['Public Speaking', 'Presentation', 'Communication', 'Confidence'],
+                hasVideo: true,
+                body: `
+                    <p>Conquer your fear of public speaking and become a confident, compelling presenter. This masterclass covers everything from preparation to delivery.</p>
+
+                    <h2>Why Public Speaking Matters</h2>
+                    <p>In every career, the ability to communicate effectively is essential. Whether you're presenting to 5 people or 500, these skills will serve you well.</p>
+
+                    <h2>Overcoming Stage Fright</h2>
+                    <p>Nervousness is normal - even experienced speakers feel it. The goal is to manage anxiety, not eliminate it.</p>
+
+                    <h3>Quick Techniques</h3>
+                    <ul>
+                        <li><strong>Power Pose</strong> - Stand tall for 2 minutes before speaking</li>
+                        <li><strong>Box Breathing</strong> - Inhale 4 seconds, hold 4, exhale 4, hold 4</li>
+                        <li><strong>Reframe</strong> - Call it excitement, not anxiety</li>
+                        <li><strong>Prepare</strong> - Know your material cold</li>
+                    </ul>
+
+                    <h2>Structuring Your Talk</h2>
+
+                    <h3>The Classic Framework</h3>
+                    <ol>
+                        <li><strong>Hook</strong> - Grab attention immediately</li>
+                        <li><strong>Problem</strong> - What challenge are you addressing?</li>
+                        <li><strong>Solution</strong> - Your main message</li>
+                        <li><strong>Call to Action</strong> - What should the audience do?</li>
+                    </ol>
+
+                    <blockquote>
+                        "There are three things to aim at in public speaking: first, to get into your subject, then to get your subject into yourself, and lastly, to get your subject into the heart of your audience." - Alexander Gregg
+                    </blockquote>
+
+                    <h2>Delivery Techniques</h2>
+
+                    <h3>Voice</h3>
+                    <ul>
+                        <li>Vary your pace - slow down for emphasis</li>
+                        <li>Use pauses strategically</li>
+                        <li>Project without shouting</li>
+                        <li>Avoid filler words (um, uh, like)</li>
+                    </ul>
+
+                    <h3>Body Language</h3>
+                    <ul>
+                        <li>Maintain eye contact (3-5 seconds per person)</li>
+                        <li>Use purposeful gestures</li>
+                        <li>Move with intention</li>
+                        <li>Stand tall, feet shoulder-width apart</li>
+                    </ul>
+
+                    <h2>Practice Methods</h2>
+                    <p>Record yourself, practice in front of a mirror, rehearse with friends, or join a speaking group like Toastmasters. The more you practice, the more confident you'll become.</p>
+                `,
+                related: ['education-01']
+            }
+        };
+
+        // Get article slug from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('slug') || 'fitness-01';
+
+        // Load article content
+        function loadArticle(articleSlug) {
+            const article = articles[articleSlug];
+
+            if (!article) {
+                document.getElementById('articleTitle').textContent = 'Article Not Found';
+                document.getElementById('articleBody').innerHTML = '<p>Sorry, this article could not be found. <a href="index.html#content">Browse all content</a></p>';
+                return;
+            }
+
+            // Update page
+            document.getElementById('pageTitle').textContent = `${article.title} - Purple Squirrel Media`;
+            document.getElementById('heroBg').style.backgroundImage = `url(${article.image})`;
+            document.getElementById('articleCategory').textContent = article.category;
+            document.getElementById('articleTitle').textContent = article.title;
+            document.getElementById('articleDate').textContent = article.date;
+            document.getElementById('articleDuration').textContent = article.duration;
+            document.getElementById('articleViews').textContent = article.views + ' views';
+            document.getElementById('authorName').textContent = article.author;
+            document.getElementById('authorBio').textContent = article.authorBio;
+            document.getElementById('articleBody').innerHTML = article.body;
+
+            // Tags
+            const tagsHtml = article.tags.map(tag => `<a href="#">#${tag}</a>`).join('');
+            document.getElementById('articleTags').innerHTML = tagsHtml;
+
+            // Video player
+            if (article.hasVideo) {
+                document.getElementById('videoPlayer').style.display = 'block';
+                document.getElementById('articleVideo').poster = article.image;
+            }
+
+            // Related content
+            const relatedHtml = article.related.map(relSlug => {
+                const rel = articles[relSlug];
+                if (!rel) return '';
+                return `
+                    <a href="article.html?slug=${relSlug}" class="related-card">
+                        <img src="${rel.image}" alt="${rel.title}">
+                        <div class="related-card-content">
+                            <h3>${rel.title}</h3>
+                            <p>${rel.category} - ${rel.duration}</p>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+            document.getElementById('relatedGrid').innerHTML = relatedHtml;
+        }
+
+        // Video player functionality
+        document.getElementById('playOverlay')?.addEventListener('click', () => {
+            const video = document.getElementById('articleVideo');
+            const overlay = document.getElementById('playOverlay');
+            video.play();
+            overlay.classList.add('hidden');
+        });
+
+        document.getElementById('articleVideo')?.addEventListener('pause', () => {
+            document.getElementById('playOverlay').classList.remove('hidden');
+        });
+
+        // Load the article
+        loadArticle(slug);
+
+        // Mobile menu
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', () => {
+            document.querySelector('.nav-links')?.classList.toggle('active');
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar?.classList.add('scrolled');
+            } else {
+                navbar?.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
