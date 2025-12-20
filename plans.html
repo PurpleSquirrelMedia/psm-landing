@@ -4,22 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plans & Pricing - Purple Squirrel Media</title>
-    <meta name="description" content="Choose your Purple Squirrel Media subscription. Pay with Solana - zero fees.">
+    <meta name="description" content="Choose your Purple Squirrel Media membership. Free TV pass or premium subscriptions. Pay with Solana.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <style>
         :root {
             --primary: #7c3aed;
             --primary-dark: #1a0a2e;
-            --accent-pink: #e91e63;
             --bg-dark: #0f0518;
             --bg-card: #1e1028;
             --text-primary: #ffffff;
             --text-muted: #a1a1aa;
             --success: #22c55e;
             --solana: #9945ff;
+            --free-green: #22c55e;
+            --entertainment-purple: #8b5cf6;
+            --creator-gold: #f59e0b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -33,7 +36,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 40px;
-            background: rgba(26, 10, 46, 0.8);
+            background: rgba(26, 10, 46, 0.9);
             backdrop-filter: blur(10px);
             position: sticky;
             top: 0;
@@ -45,9 +48,9 @@
             gap: 10px;
             text-decoration: none;
             color: white;
+            font-weight: 600;
         }
-        .logo img { width: 40px; height: 40px; }
-        .logo-text { font-weight: 600; font-size: 14px; }
+        .logo-icon { font-size: 24px; }
         .nav-links { display: flex; gap: 30px; }
         .nav-links a {
             color: var(--text-muted);
@@ -56,6 +59,8 @@
             transition: color 0.3s;
         }
         .nav-links a:hover { color: white; }
+
+        /* Hero */
         .hero {
             text-align: center;
             padding: 80px 20px 40px;
@@ -71,7 +76,7 @@
         .hero p {
             color: var(--text-muted);
             font-size: 18px;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto 30px;
         }
         .solana-badge {
@@ -85,167 +90,245 @@
             color: white;
             font-size: 14px;
         }
-        .solana-badge img { width: 24px; height: 24px; }
-        .currency-toggle {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 40px 0;
-        }
-        .currency-btn {
-            padding: 10px 24px;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-        .currency-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
+
+        /* Pricing Grid */
+        .pricing-section {
+            padding: 60px 20px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px 80px;
         }
+
+        /* Plan Cards */
         .plan-card {
             background: var(--bg-card);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 40px 30px;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: transform 0.3s, border-color 0.3s;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
             position: relative;
+            overflow: hidden;
         }
         .plan-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
+            transform: translateY(-8px);
         }
-        .plan-card.featured {
-            border-color: var(--solana);
-            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(153, 69, 255, 0.1) 100%);
+
+        /* Free TV Pass - Green Theme */
+        .plan-card.free {
+            border-color: rgba(34, 197, 94, 0.3);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(34, 197, 94, 0.1) 100%);
         }
-        .plan-card.featured::before {
-            content: 'Most Popular';
+        .plan-card.free:hover { border-color: var(--free-green); }
+        .plan-card.free .plan-badge {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+        .plan-card.free .plan-icon { color: var(--free-green); }
+        .plan-card.free .plan-btn { background: linear-gradient(135deg, #22c55e, #16a34a); }
+
+        /* Entertainment - Purple Theme (Featured) */
+        .plan-card.entertainment {
+            border-color: var(--entertainment-purple);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(139, 92, 246, 0.15) 100%);
+            transform: scale(1.02);
+        }
+        .plan-card.entertainment:hover { transform: scale(1.04) translateY(-8px); }
+        .plan-card.entertainment .plan-badge {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+        .plan-card.entertainment .plan-icon { color: var(--entertainment-purple); }
+        .plan-card.entertainment .plan-btn { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+        /* Creator - Gold Theme */
+        .plan-card.creator {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(245, 158, 11, 0.1) 100%);
+        }
+        .plan-card.creator:hover { border-color: var(--creator-gold); }
+        .plan-card.creator .plan-badge {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        .plan-card.creator .plan-icon { color: var(--creator-gold); }
+        .plan-card.creator .plan-btn { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+        .plan-badge {
             position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--solana);
-            color: white;
-            padding: 6px 20px;
-            border-radius: 20px;
+            top: 0;
+            right: 0;
+            padding: 8px 20px;
+            border-radius: 0 22px 0 16px;
             font-size: 12px;
             font-weight: 600;
+            color: white;
         }
-        .plan-name {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .plan-price {
+
+        .plan-icon {
             font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 20px;
         }
-        .plan-price .currency { font-size: 20px; opacity: 0.7; }
-        .plan-price .period { font-size: 16px; color: var(--text-muted); }
-        .plan-usd {
+
+        .plan-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .plan-tagline {
             color: var(--text-muted);
             font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .plan-price {
             margin-bottom: 30px;
         }
+        .plan-price .amount {
+            font-size: 48px;
+            font-weight: 700;
+        }
+        .plan-price .currency {
+            font-size: 20px;
+            opacity: 0.8;
+        }
+        .plan-price .period {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+        .plan-price .type {
+            display: block;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
         .plan-features {
             list-style: none;
             margin-bottom: 30px;
         }
         .plan-features li {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
             margin-bottom: 15px;
             font-size: 14px;
-            color: var(--text-muted);
+            color: rgba(255,255,255,0.9);
         }
         .plan-features li i {
             color: var(--success);
             width: 20px;
+            margin-top: 3px;
         }
+        .plan-features li.disabled {
+            color: var(--text-muted);
+        }
+        .plan-features li.disabled i {
+            color: var(--text-muted);
+        }
+
         .plan-btn {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            color: white;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
-        .plan-btn.primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--solana) 100%);
-            color: white;
-        }
-        .plan-btn.primary:hover {
+        .plan-btn:hover {
             transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .plan-btn.secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .plan-btn.secondary:hover {
-            background: rgba(255,255,255,0.15);
-        }
+
+        /* NFT Explanation */
         .nft-section {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--bg-dark) 100%);
             padding: 80px 20px;
+        }
+        .nft-container {
+            max-width: 1000px;
+            margin: 0 auto;
             text-align: center;
         }
         .nft-section h2 {
             font-size: 36px;
             margin-bottom: 20px;
         }
-        .nft-section p {
+        .nft-section > p {
             color: var(--text-muted);
             max-width: 600px;
-            margin: 0 auto 40px;
+            margin: 0 auto 50px;
         }
-        .nft-benefits {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            max-width: 900px;
-            margin: 0 auto;
+        .nft-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
         }
-        .nft-benefit {
+        .nft-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 30px 20px;
             text-align: center;
-            max-width: 200px;
         }
-        .nft-benefit i {
+        .nft-card i {
             font-size: 40px;
             color: var(--solana);
             margin-bottom: 15px;
         }
-        .nft-benefit h4 {
-            font-size: 16px;
-            margin-bottom: 8px;
+        .nft-card h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
         }
-        .nft-benefit p {
+        .nft-card p {
             font-size: 13px;
             color: var(--text-muted);
         }
+
+        /* Comparison Table */
+        .comparison-section {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .comparison-section h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 40px;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .comparison-table th {
+            background: rgba(139, 92, 246, 0.2);
+            font-weight: 600;
+        }
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            text-align: left;
+            padding-left: 25px;
+        }
+        .comparison-table .check { color: var(--success); }
+        .comparison-table .x { color: var(--text-muted); }
+
+        /* FAQ */
         .faq-section {
             padding: 80px 20px;
             max-width: 800px;
@@ -279,30 +362,39 @@
             transition: all 0.3s;
             color: var(--text-muted);
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.8;
         }
         .faq-item.open .faq-answer {
             padding: 0 20px 20px;
-            max-height: 200px;
+            max-height: 300px;
         }
+
+        /* Footer */
         .footer {
             background: var(--primary-dark);
             padding: 40px 20px;
             text-align: center;
         }
-        .footer p {
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        .footer-links a {
             color: var(--text-muted);
+            text-decoration: none;
             font-size: 14px;
         }
-        /* Payment Modal */
+        .footer-links a:hover { color: white; }
+        .footer p { color: var(--text-muted); font-size: 14px; }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
+            inset: 0;
+            background: rgba(0,0,0,0.85);
             align-items: center;
             justify-content: center;
             z-index: 1000;
@@ -311,295 +403,425 @@
         .modal-content {
             background: var(--bg-card);
             padding: 40px;
-            border-radius: 20px;
-            max-width: 400px;
+            border-radius: 24px;
+            max-width: 450px;
             width: 90%;
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .modal-content h3 { margin-bottom: 20px; }
-        .wallet-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(153, 69, 255, 0.2);
+        .modal-content h3 { font-size: 24px; margin-bottom: 10px; }
+        .modal-content .subtitle { color: var(--text-muted); margin-bottom: 30px; }
+        .modal-icon {
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            margin: 0 auto 25px;
+            font-size: 48px;
         }
-        .wallet-icon i { font-size: 32px; color: var(--solana); }
+        .modal-icon.free { background: rgba(34, 197, 94, 0.2); color: var(--free-green); }
+        .modal-icon.entertainment { background: rgba(139, 92, 246, 0.2); color: var(--entertainment-purple); }
+        .modal-icon.creator { background: rgba(245, 158, 11, 0.2); color: var(--creator-gold); }
         .payment-amount {
-            font-size: 36px;
+            font-size: 42px;
             font-weight: 700;
-            margin: 20px 0;
+            margin: 20px 0 5px;
+        }
+        .payment-usd {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 25px;
         }
         .modal-btn {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         .modal-btn.phantom {
-            background: linear-gradient(135deg, #9945ff 0%, #14f195 100%);
+            background: linear-gradient(135deg, #ab9ff2, #512da8);
             color: white;
         }
-        .modal-close {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: var(--text-muted);
+        .modal-btn.cancel {
+            background: rgba(255,255,255,0.1);
+            color: white;
         }
+        .modal-note {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 20px;
+        }
+
         @media (max-width: 768px) {
             .hero h1 { font-size: 32px; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .plan-card.entertainment { transform: none; }
+            .plan-card.entertainment:hover { transform: translateY(-8px); }
+            .header { padding: 15px 20px; }
             .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header class="header">
         <a href="index.html" class="logo">
-            <img src="images/logo.png" alt="Purple Squirrel Media">
-            <span class="logo-text">Purple Squirrel Media</span>
+            <span class="logo-icon">🐿️</span>
+            <span>Purple Squirrel Media</span>
         </a>
         <nav class="nav-links">
             <a href="index.html">Home</a>
+            <a href="free-tv.html">Free TV</a>
+            <a href="watch.html">Premium</a>
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
-            <a href="login.html">Sign In</a>
         </nav>
     </header>
 
+    <!-- Hero -->
     <section class="hero">
-        <h1>Choose Your Plan</h1>
-        <p>Stream unlimited content, upload your creations, and join a thriving creator community.</p>
+        <h1>Choose Your Access Pass</h1>
+        <p>Get a lifetime Free TV pass or subscribe for full access to movies, shows, and creator tools. All powered by Solana NFTs.</p>
         <div class="solana-badge">
-            <img src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png" alt="Solana">
-            <span>Pay with Solana - Zero Transaction Fees</span>
+            <i class="fab fa-ethereum"></i>
+            Pay with SOL or USDC • Zero Platform Fees
         </div>
     </section>
 
-    <div class="currency-toggle">
-        <button class="currency-btn active" data-currency="sol">Pay in SOL</button>
-        <button class="currency-btn" data-currency="usdc">Pay in USDC</button>
-    </div>
-
-    <section class="pricing-grid">
-        <div class="plan-card" data-tier="basic">
-            <h3 class="plan-name">Basic</h3>
-            <div class="plan-price">
-                <span class="amount" data-sol="0.05" data-usdc="9.99">0.05</span>
-                <span class="currency">SOL</span>
-                <span class="period">/month</span>
+    <!-- Pricing Grid -->
+    <section class="pricing-section">
+        <div class="pricing-grid">
+            <!-- Free TV Pass -->
+            <div class="plan-card free">
+                <div class="plan-badge">Lifetime</div>
+                <div class="plan-icon">📺</div>
+                <h3 class="plan-name">Free TV Pass</h3>
+                <p class="plan-tagline">Access 50+ live channels forever</p>
+                <div class="plan-price">
+                    <span class="amount">FREE</span>
+                    <span class="type">One-time NFT mint (just pay gas ~0.001 SOL)</span>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 50+ live TV channels</li>
+                    <li><i class="fas fa-check"></i> News, sports, entertainment</li>
+                    <li><i class="fas fa-check"></i> Music & kids channels</li>
+                    <li><i class="fas fa-check"></i> Lifetime access - never expires</li>
+                    <li><i class="fas fa-check"></i> Transferable NFT</li>
+                    <li class="disabled"><i class="fas fa-times"></i> Movies & premium shows</li>
+                    <li class="disabled"><i class="fas fa-times"></i> 4K streaming</li>
+                    <li class="disabled"><i class="fas fa-times"></i> Creator tools</li>
+                </ul>
+                <button class="plan-btn" onclick="selectPlan('free')">
+                    <i class="fas fa-wallet"></i> Mint Free Pass
+                </button>
             </div>
-            <p class="plan-usd">~$10/month</p>
-            <ul class="plan-features">
-                <li><i class="fas fa-check"></i> HD Streaming (1080p)</li>
-                <li><i class="fas fa-check"></i> Basic Video Library</li>
-                <li><i class="fas fa-check"></i> Mobile & Desktop Access</li>
-                <li><i class="fas fa-check"></i> AI Captions</li>
-                <li><i class="fas fa-check"></i> Community Access</li>
-            </ul>
-            <button class="plan-btn secondary" onclick="selectPlan('basic')">
-                <i class="fas fa-wallet"></i> Subscribe with Wallet
-            </button>
-        </div>
 
-        <div class="plan-card featured" data-tier="pro">
-            <h3 class="plan-name">Pro</h3>
-            <div class="plan-price">
-                <span class="amount" data-sol="0.1" data-usdc="19.99">0.1</span>
-                <span class="currency">SOL</span>
-                <span class="period">/month</span>
+            <!-- Entertainment -->
+            <div class="plan-card entertainment">
+                <div class="plan-badge">Most Popular</div>
+                <div class="plan-icon">🎬</div>
+                <h3 class="plan-name">Entertainment</h3>
+                <p class="plan-tagline">Full library of TV shows & movies</p>
+                <div class="plan-price">
+                    <span class="currency">$</span><span class="amount">9.99</span><span class="period">/month</span>
+                    <span class="type">~0.05 SOL • Subscription NFT</span>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Everything in Free TV Pass</li>
+                    <li><i class="fas fa-check"></i> Unlimited movies & TV shows</li>
+                    <li><i class="fas fa-check"></i> 4K HDR streaming</li>
+                    <li><i class="fas fa-check"></i> Download for offline</li>
+                    <li><i class="fas fa-check"></i> Ad-free experience</li>
+                    <li><i class="fas fa-check"></i> Watch on 4 devices</li>
+                    <li><i class="fas fa-check"></i> New releases weekly</li>
+                    <li class="disabled"><i class="fas fa-times"></i> Creator Studio access</li>
+                </ul>
+                <button class="plan-btn" onclick="selectPlan('entertainment')">
+                    <i class="fas fa-play"></i> Subscribe Now
+                </button>
             </div>
-            <p class="plan-usd">~$20/month</p>
-            <ul class="plan-features">
-                <li><i class="fas fa-check"></i> 4K Ultra HD Streaming</li>
-                <li><i class="fas fa-check"></i> Full Video Library</li>
-                <li><i class="fas fa-check"></i> Offline Downloads</li>
-                <li><i class="fas fa-check"></i> No Advertisements</li>
-                <li><i class="fas fa-check"></i> Early Access Content</li>
-                <li><i class="fas fa-check"></i> Exclusive Discord</li>
-            </ul>
-            <button class="plan-btn primary" onclick="selectPlan('pro')">
-                <i class="fas fa-wallet"></i> Subscribe with Wallet
-            </button>
-        </div>
 
-        <div class="plan-card" data-tier="creator">
-            <h3 class="plan-name">Creator</h3>
-            <div class="plan-price">
-                <span class="amount" data-sol="0.25" data-usdc="49.99">0.25</span>
-                <span class="currency">SOL</span>
-                <span class="period">/month</span>
+            <!-- Creator -->
+            <div class="plan-card creator">
+                <div class="plan-badge">For Creators</div>
+                <div class="plan-icon">👑</div>
+                <h3 class="plan-name">Creator</h3>
+                <p class="plan-tagline">Everything + upload & monetize</p>
+                <div class="plan-price">
+                    <span class="currency">$</span><span class="amount">29.99</span><span class="period">/month</span>
+                    <span class="type">~0.15 SOL • Creator NFT</span>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Everything in Entertainment</li>
+                    <li><i class="fas fa-check"></i> Creator Studio access</li>
+                    <li><i class="fas fa-check"></i> Unlimited video uploads</li>
+                    <li><i class="fas fa-check"></i> Monetization tools</li>
+                    <li><i class="fas fa-check"></i> Analytics dashboard</li>
+                    <li><i class="fas fa-check"></i> Priority transcoding</li>
+                    <li><i class="fas fa-check"></i> Custom channel page</li>
+                    <li><i class="fas fa-check"></i> Revenue share (80% to you)</li>
+                </ul>
+                <button class="plan-btn" onclick="selectPlan('creator')">
+                    <i class="fas fa-crown"></i> Become a Creator
+                </button>
             </div>
-            <p class="plan-usd">~$50/month</p>
-            <ul class="plan-features">
-                <li><i class="fas fa-check"></i> Everything in Pro</li>
-                <li><i class="fas fa-check"></i> Unlimited Video Upload</li>
-                <li><i class="fas fa-check"></i> Monetization Tools</li>
-                <li><i class="fas fa-check"></i> Advanced Analytics</li>
-                <li><i class="fas fa-check"></i> Priority Transcoding</li>
-                <li><i class="fas fa-check"></i> Priority Support</li>
-                <li><i class="fas fa-check"></i> Creator Badge NFT</li>
-            </ul>
-            <button class="plan-btn secondary" onclick="selectPlan('creator')">
-                <i class="fas fa-wallet"></i> Subscribe with Wallet
-            </button>
         </div>
     </section>
 
+    <!-- NFT Benefits -->
     <section class="nft-section">
-        <h2>NFT Membership Tokens</h2>
-        <p>Your subscription includes an exclusive NFT that proves your membership on-chain. Trade, collect, or hold for benefits.</p>
-        <div class="nft-benefits">
-            <div class="nft-benefit">
-                <i class="fas fa-infinity"></i>
-                <h4>Lifetime Perks</h4>
-                <p>Original holders get bonus features forever</p>
-            </div>
-            <div class="nft-benefit">
-                <i class="fas fa-exchange-alt"></i>
-                <h4>Transferable</h4>
-                <p>Sell or gift your membership on any marketplace</p>
-            </div>
-            <div class="nft-benefit">
-                <i class="fas fa-ticket-alt"></i>
-                <h4>Exclusive Access</h4>
-                <p>Token-gated events and content drops</p>
-            </div>
-            <div class="nft-benefit">
-                <i class="fas fa-coins"></i>
-                <h4>Earn Rewards</h4>
-                <p>Stake for platform tokens and governance</p>
+        <div class="nft-container">
+            <h2>Why NFT Memberships?</h2>
+            <p>Your membership is a real digital asset you own, not just a subscription.</p>
+            <div class="nft-grid">
+                <div class="nft-card">
+                    <i class="fas fa-wallet"></i>
+                    <h4>True Ownership</h4>
+                    <p>Your NFT lives in your wallet. You control it, not us.</p>
+                </div>
+                <div class="nft-card">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h4>Transferable</h4>
+                    <p>Sell or gift your membership on secondary markets.</p>
+                </div>
+                <div class="nft-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>No Cancel Hassle</h4>
+                    <p>Just don't renew. Your NFT expires but you keep it.</p>
+                </div>
+                <div class="nft-card">
+                    <i class="fas fa-percentage"></i>
+                    <h4>Zero Fees</h4>
+                    <p>Solana payments mean no credit card fees passed to you.</p>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Comparison Table -->
+    <section class="comparison-section">
+        <h2>Compare Plans</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Free TV</th>
+                    <th>Entertainment</th>
+                    <th>Creator</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Live TV Channels (50+)</td>
+                    <td><i class="fas fa-check check"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                </tr>
+                <tr>
+                    <td>Movies & TV Shows</td>
+                    <td><i class="fas fa-times x"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                </tr>
+                <tr>
+                    <td>4K HDR Quality</td>
+                    <td><i class="fas fa-times x"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                </tr>
+                <tr>
+                    <td>Offline Downloads</td>
+                    <td><i class="fas fa-times x"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                </tr>
+                <tr>
+                    <td>Ad-Free</td>
+                    <td><i class="fas fa-times x"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                </tr>
+                <tr>
+                    <td>Simultaneous Streams</td>
+                    <td>1</td>
+                    <td>4</td>
+                    <td>Unlimited</td>
+                </tr>
+                <tr>
+                    <td>Upload Content</td>
+                    <td><i class="fas fa-times x"></i></td>
+                    <td><i class="fas fa-times x"></i></td>
+                    <td><i class="fas fa-check check"></i></td>
+                </tr>
+                <tr>
+                    <td>Monetization</td>
+                    <td><i class="fas fa-times x"></i></td>
+                    <td><i class="fas fa-times x"></i></td>
+                    <td>80% revenue</td>
+                </tr>
+                <tr>
+                    <td>Price</td>
+                    <td><strong>Free</strong></td>
+                    <td><strong>$9.99/mo</strong></td>
+                    <td><strong>$29.99/mo</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- FAQ -->
     <section class="faq-section">
         <h2>Frequently Asked Questions</h2>
 
         <div class="faq-item">
             <div class="faq-question">
-                Why pay with Solana?
+                <span>What wallet do I need?</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                Solana payments are instant, secure, and cost almost nothing (~$0.00025 per transaction). Unlike credit cards that charge 2-3% fees, we pass the savings to you. Plus, you get an NFT membership token.
+                We recommend Phantom wallet for the best experience. It's free, secure, and works on desktop and mobile. Download at phantom.app. Other Solana wallets like Solflare also work.
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">
-                What wallet do I need?
+                <span>How does the Free TV Pass work?</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                We recommend Phantom wallet - it's free, secure, and works in your browser. Download it from phantom.app and fund it with SOL from any exchange.
+                The Free TV Pass is a one-time NFT mint. You only pay the Solana network gas fee (~0.001 SOL, about $0.20). Once minted, you have lifetime access to all 50+ live channels. The NFT never expires and can be transferred or sold.
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">
-                Can I pay with USDC instead?
+                <span>How do subscriptions work with NFTs?</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                Yes! Toggle to USDC above for stable pricing. USDC is a stablecoin pegged to USD, so you'll always pay the exact dollar amount shown.
+                When you subscribe to Entertainment or Creator, you receive an NFT with an expiration date. As long as the NFT is valid, you have access. To renew, simply pay again to extend your NFT. If you don't renew, the NFT remains in your wallet but no longer grants access.
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">
-                How do I cancel my subscription?
+                <span>Can I cancel my subscription?</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                Subscriptions are month-to-month with no commitment. Simply don't renew next month. Your NFT membership token remains yours to keep or trade.
+                There's no "cancel" button needed! Simply don't renew when your current period ends. You keep full access until your NFT expires. No hidden fees, no hassle.
             </div>
         </div>
 
         <div class="faq-item">
             <div class="faq-question">
-                What happens to my NFT if I cancel?
+                <span>Can I sell my membership NFT?</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="faq-answer">
-                You keep your NFT forever! It just won't provide active subscription benefits until renewed. Original holder perks remain active.
+                Yes! Your NFT is a real digital asset. You can list it on NFT marketplaces like Magic Eden or Tensor. The new owner will receive all membership benefits. This is especially valuable for the Free TV Pass which never expires.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What payment methods do you accept?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                We accept SOL (Solana's native token) and USDC (a stablecoin pegged to USD). Paying with USDC means you always pay the exact dollar amount shown. SOL prices may vary with market conditions.
             </div>
         </div>
     </section>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="terms.html">Terms of Service</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="dmca.html">DMCA</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
+    </footer>
+
     <!-- Payment Modal -->
     <div class="modal" id="paymentModal">
         <div class="modal-content">
-            <div class="wallet-icon">
-                <i class="fas fa-wallet"></i>
-            </div>
-            <h3 id="modalTitle">Subscribe to Pro</h3>
-            <div class="payment-amount" id="modalAmount">0.1 SOL</div>
-            <p style="color: var(--text-muted); font-size: 14px;">Connect your wallet to complete payment</p>
-            <button class="modal-btn phantom" id="payBtn">
-                <i class="fab fa-ethereum"></i> Pay with Phantom
+            <div class="modal-icon" id="modalIcon">📺</div>
+            <h3 id="modalTitle">Free TV Pass</h3>
+            <p class="subtitle" id="modalSubtitle">Lifetime access to 50+ channels</p>
+            <div class="payment-amount" id="modalAmount">FREE</div>
+            <div class="payment-usd" id="modalUsd">Gas only: ~0.001 SOL</div>
+            <button class="modal-btn phantom" onclick="connectAndPay()">
+                <i class="fab fa-ethereum"></i> Connect Phantom & Mint
             </button>
-            <button class="modal-btn modal-close" onclick="closeModal()">Cancel</button>
+            <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+            <p class="modal-note">You'll be prompted to approve the transaction in your wallet.</p>
         </div>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2024 Purple Squirrel Media. Powered by Solana.</p>
-    </footer>
-
-    <!-- Solana Web3 -->
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/solana-pay.js"></script>
     <script>
-        let selectedTier = 'pro';
-        let payInUSDC = false;
+        // Plan data
+        const PLANS = {
+            free: {
+                name: 'Free TV Pass',
+                subtitle: 'Lifetime access to 50+ channels',
+                icon: '📺',
+                iconClass: 'free',
+                amount: 'FREE',
+                usd: 'Gas only: ~0.001 SOL (~$0.20)',
+                sol: 0, // Just gas
+                tier: 'free'
+            },
+            entertainment: {
+                name: 'Entertainment',
+                subtitle: 'Full TV & Movies access - 1 month',
+                icon: '🎬',
+                iconClass: 'entertainment',
+                amount: '0.05 SOL',
+                usd: '~$9.99 USD',
+                sol: 0.05,
+                tier: 'entertainment'
+            },
+            creator: {
+                name: 'Creator',
+                subtitle: 'Full access + Creator Studio - 1 month',
+                icon: '👑',
+                iconClass: 'creator',
+                amount: '0.15 SOL',
+                usd: '~$29.99 USD',
+                sol: 0.15,
+                tier: 'creator'
+            }
+        };
 
-        // Currency toggle
-        document.querySelectorAll('.currency-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                payInUSDC = btn.dataset.currency === 'usdc';
-                updatePrices();
-            });
-        });
+        let selectedPlan = null;
 
-        function updatePrices() {
-            document.querySelectorAll('.plan-card').forEach(card => {
-                const amount = card.querySelector('.amount');
-                const currency = card.querySelector('.currency');
-                if (payInUSDC) {
-                    amount.textContent = amount.dataset.usdc;
-                    currency.textContent = 'USDC';
-                } else {
-                    amount.textContent = amount.dataset.sol;
-                    currency.textContent = 'SOL';
-                }
-            });
-        }
+        function selectPlan(planKey) {
+            selectedPlan = PLANS[planKey];
 
-        // FAQ toggle
-        document.querySelectorAll('.faq-question').forEach(q => {
-            q.addEventListener('click', () => {
-                q.parentElement.classList.toggle('open');
-            });
-        });
+            // Update modal
+            document.getElementById('modalIcon').textContent = selectedPlan.icon;
+            document.getElementById('modalIcon').className = 'modal-icon ' + selectedPlan.iconClass;
+            document.getElementById('modalTitle').textContent = selectedPlan.name;
+            document.getElementById('modalSubtitle').textContent = selectedPlan.subtitle;
+            document.getElementById('modalAmount').textContent = selectedPlan.amount;
+            document.getElementById('modalUsd').textContent = selectedPlan.usd;
 
-        // Plan selection
-        function selectPlan(tier) {
-            selectedTier = tier;
-            const tierData = PSM_PAY.TIERS[tier];
-            const amount = payInUSDC ? tierData.priceUSDC : tierData.priceSOL;
-            const currency = payInUSDC ? 'USDC' : 'SOL';
-
-            document.getElementById('modalTitle').textContent = `Subscribe to ${tierData.name}`;
-            document.getElementById('modalAmount').textContent = `${amount} ${currency}`;
+            // Show modal
             document.getElementById('paymentModal').classList.add('show');
         }
 
@@ -607,32 +829,53 @@
             document.getElementById('paymentModal').classList.remove('show');
         }
 
-        // Payment button
-        document.getElementById('payBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('payBtn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            btn.disabled = true;
-
-            const result = await PSM_PAY.payWithWallet(selectedTier, payInUSDC);
-
-            if (result.success) {
-                btn.innerHTML = '<i class="fas fa-check"></i> Success!';
-                setTimeout(() => {
-                    closeModal();
-                    window.location.href = 'app.html';
-                }, 1500);
-            } else {
-                btn.innerHTML = `<i class="fas fa-times"></i> ${result.error}`;
-                setTimeout(() => {
-                    btn.innerHTML = '<i class="fab fa-ethereum"></i> Pay with Phantom';
-                    btn.disabled = false;
-                }, 2000);
+        async function connectAndPay() {
+            if (!window.solana?.isPhantom) {
+                window.open('https://phantom.app/', '_blank');
+                return;
             }
+
+            try {
+                // Connect wallet
+                await window.solana.connect();
+
+                if (selectedPlan.sol === 0) {
+                    // Free mint - just gas
+                    const result = await PSM_NFT.mintMembershipNFT(selectedPlan.tier, 'free-mint');
+                    if (result.success) {
+                        alert('Free TV Pass minted! Check your wallet.');
+                        closeModal();
+                        window.location.href = 'free-tv.html';
+                    } else {
+                        alert('Minting failed: ' + result.error);
+                    }
+                } else {
+                    // Paid subscription
+                    const result = await PSM_PAY.payWithWallet(selectedPlan.tier, false);
+                    if (result.success) {
+                        alert(`${selectedPlan.name} subscription activated!`);
+                        closeModal();
+                        window.location.href = 'watch.html';
+                    } else {
+                        alert('Payment failed: ' + result.error);
+                    }
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // FAQ toggles
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
         });
 
-        // Close modal on outside click
-        document.getElementById('paymentModal').addEventListener('click', (e) => {
-            if (e.target.id === 'paymentModal') closeModal();
+        // Close modal on escape
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
         });
     </script>
 </body>

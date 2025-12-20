@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free TV - Purple Squirrel Media</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Free TV Styles */
+        .freetv-hero {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 16, 32, 0.95)),
+                        url('https://images.unsplash.com/photo-1593784991095-a205069470b6?w=1920') center/cover;
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 2rem 3rem;
+        }
+
+        .freetv-hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .freetv-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .free-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        /* Channel Guide */
+        .channel-guide {
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .guide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .category-pills {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .category-pill {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #a78bfa;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .category-pill:hover, .category-pill.active {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Live Now Indicator */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Channel Grid */
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .channel-card {
+            background: rgba(30, 30, 50, 0.8);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .channel-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(34, 197, 94, 0.5);
+            box-shadow: 0 15px 40px rgba(34, 197, 94, 0.2);
+        }
+
+        .channel-preview {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .channel-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .channel-logo {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .channel-logo img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .now-playing {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .now-playing .title {
+            color: white;
+            font-weight: 500;
+        }
+
+        .now-playing .time {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+        }
+
+        .channel-info {
+            padding: 1rem;
+        }
+
+        .channel-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .channel-info .genre {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        /* Player Section */
+        .player-section {
+            background: #000;
+            padding: 2rem;
+            display: none;
+        }
+
+        .player-section.active {
+            display: block;
+        }
+
+        .main-player {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .player-wrapper {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: #111;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .player-wrapper video,
+        .player-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .current-channel {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .current-channel h2 {
+            font-size: 1.5rem;
+        }
+
+        .channel-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .channel-nav button {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .channel-nav button:hover {
+            background: rgba(139, 92, 246, 0.4);
+        }
+
+        /* Upgrade Banner */
+        .upgrade-banner {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(30, 30, 50, 0.9));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 3rem auto;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .upgrade-banner h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upgrade-banner p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+
+        .upgrade-banner .btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .upgrade-banner .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .freetv-hero h1 {
+                font-size: 2rem;
+            }
+            .channel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🐿️</span>
+                Purple Squirrel Media
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="free-tv.html" class="active">Free TV</a>
+                <a href="watch.html">Watch</a>
+                <a href="plans.html">Plans</a>
+                <a href="about.html">About</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-secondary">Sign In</a>
+                <a href="plans.html" class="btn btn-primary">Get NFT Pass</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="freetv-hero">
+        <div class="freetv-hero-content">
+            <h1>📺 Free Live TV</h1>
+            <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem;">
+                Watch 50+ channels free - no sign up required. News, sports, movies, and more.
+            </p>
+            <div class="free-badge">
+                <span>✓</span> Always Free • No Credit Card • No Account Needed
+            </div>
+        </div>
+    </section>
+
+    <!-- Player Section (appears when channel selected) -->
+    <section class="player-section" id="playerSection">
+        <div class="main-player">
+            <div class="player-wrapper">
+                <iframe id="channelPlayer" allowfullscreen></iframe>
+            </div>
+            <div class="player-controls">
+                <div class="current-channel">
+                    <span class="live-indicator"><span class="live-dot"></span> LIVE</span>
+                    <h2 id="currentChannelName">Channel Name</h2>
+                </div>
+                <div class="channel-nav">
+                    <button onclick="prevChannel()">← Previous</button>
+                    <button onclick="nextChannel()">Next →</button>
+                    <button onclick="closePlayer()">✕ Close</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Channel Guide -->
+    <section class="channel-guide">
+        <div class="guide-header">
+            <div>
+                <h2>Live Channels</h2>
+                <p style="color: rgba(255,255,255,0.6);">50+ channels streaming 24/7</p>
+            </div>
+            <div class="category-pills">
+                <button class="category-pill active" data-category="all">All</button>
+                <button class="category-pill" data-category="news">News</button>
+                <button class="category-pill" data-category="entertainment">Entertainment</button>
+                <button class="category-pill" data-category="sports">Sports</button>
+                <button class="category-pill" data-category="movies">Movies</button>
+                <button class="category-pill" data-category="music">Music</button>
+                <button class="category-pill" data-category="kids">Kids</button>
+            </div>
+        </div>
+
+        <div class="channel-grid" id="channelGrid">
+            <!-- Channels loaded dynamically -->
+        </div>
+    </section>
+
+    <!-- Upgrade Banner -->
+    <section class="channel-guide">
+        <div class="upgrade-banner">
+            <h3>🚀 Want Premium Content?</h3>
+            <p>Get an NFT pass for 4K streaming, exclusive content, downloads, and ad-free viewing.</p>
+            <a href="plans.html" class="btn">View NFT Plans</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Purple Squirrel Media</h3>
+                <p>Free TV for everyone, premium content for NFT holders</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="free-tv.html">Free TV</a>
+                <a href="watch.html">Premium</a>
+                <a href="plans.html">Plans</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="contact.html">Contact Us</a>
+                <a href="about.html">About</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Free TV Channel Data
+        const FREE_CHANNELS = [
+            // News
+            { id: 1, name: 'ABC News Live', category: 'news', genre: 'News', logo: '📰', stream: 'https://www.youtube.com/embed/w_Ma8oQLmSM?autoplay=1', preview: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=400' },
+            { id: 2, name: 'CBS News', category: 'news', genre: '24/7 News', logo: '📺', stream: 'https://www.youtube.com/embed/nCAH2Sgj5V0?autoplay=1', preview: 'https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=400' },
+            { id: 3, name: 'NBC News NOW', category: 'news', genre: 'Breaking News', logo: '🗞️', stream: 'https://www.youtube.com/embed/IW41ej5EZfY?autoplay=1', preview: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400' },
+            { id: 4, name: 'Al Jazeera', category: 'news', genre: 'World News', logo: '🌍', stream: 'https://www.youtube.com/embed/gCNeDWCI0vo?autoplay=1', preview: 'https://images.unsplash.com/photo-1557992260-ec58e38d363c?w=400' },
+            { id: 5, name: 'DW News', category: 'news', genre: 'International', logo: '🇩🇪', stream: 'https://www.youtube.com/embed/-Q76H7SKPzQ?autoplay=1', preview: 'https://images.unsplash.com/photo-1478147427282-58a87a120781?w=400' },
+            { id: 6, name: 'France 24', category: 'news', genre: 'Global News', logo: '🇫🇷', stream: 'https://www.youtube.com/embed/h3MuIUNCCzI?autoplay=1', preview: 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=400' },
+
+            // Entertainment
+            { id: 10, name: 'Pluto TV Comedy', category: 'entertainment', genre: 'Comedy', logo: '😂', stream: 'https://www.youtube.com/embed/live_stream?channel=UCvjgEDvShRsAazREmoLnYaA&autoplay=1', preview: 'https://images.unsplash.com/photo-1586899028174-e7098604235b?w=400' },
+            { id: 11, name: 'Reality TV', category: 'entertainment', genre: 'Reality Shows', logo: '🎭', stream: 'https://www.youtube.com/embed/live_stream?channel=UCxP7B1E3cg0H6q1qANaU6HA&autoplay=1', preview: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400' },
+            { id: 12, name: 'Classic TV', category: 'entertainment', genre: 'Retro Shows', logo: '📺', stream: 'https://www.youtube.com/embed/live_stream?channel=UC8-Th83bH_thdKZDJCrn88g&autoplay=1', preview: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400' },
+
+            // Sports
+            { id: 20, name: 'ESPN News', category: 'sports', genre: 'Sports News', logo: '⚽', stream: 'https://www.youtube.com/embed/live_stream?channel=UCiWLfSweyRNmLpgEHekhoAg&autoplay=1', preview: 'https://images.unsplash.com/photo-1461896836934- voices?w=400' },
+            { id: 21, name: 'Stadium', category: 'sports', genre: 'Live Sports', logo: '🏟️', stream: 'https://www.youtube.com/embed/live_stream?channel=UCLyL0J6vpHxE-G2iA7KxXww&autoplay=1', preview: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=400' },
+            { id: 22, name: 'beIN Sports', category: 'sports', genre: 'Football', logo: '⚽', stream: 'https://www.youtube.com/embed/live_stream?channel=UCl4HVaFu9X3-ACvvY-lUF2Q&autoplay=1', preview: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=400' },
+
+            // Movies
+            { id: 30, name: 'Free Movies', category: 'movies', genre: 'Feature Films', logo: '🎬', stream: 'https://www.youtube.com/embed/live_stream?channel=UCwILLMsFwAOsuJCCShZ0xQQ&autoplay=1', preview: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400' },
+            { id: 31, name: 'Action Movies', category: 'movies', genre: 'Action', logo: '💥', stream: 'https://www.youtube.com/embed/live_stream?channel=UCmWoNs5zxiLQnfKZKGp8OVQ&autoplay=1', preview: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400' },
+            { id: 32, name: 'Horror Channel', category: 'movies', genre: 'Horror', logo: '👻', stream: 'https://www.youtube.com/embed/live_stream?channel=UCKO-cHAA7bMoNQOQnxk0L8A&autoplay=1', preview: 'https://images.unsplash.com/photo-1509248961895-b886fea86ac5?w=400' },
+            { id: 33, name: 'Sci-Fi Channel', category: 'movies', genre: 'Science Fiction', logo: '🚀', stream: 'https://www.youtube.com/embed/live_stream?channel=UCQof25ozAHfLY-b4Vz-ASTA&autoplay=1', preview: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400' },
+
+            // Music
+            { id: 40, name: 'MTV Classic', category: 'music', genre: 'Music Videos', logo: '🎵', stream: 'https://www.youtube.com/embed/live_stream?channel=UC-9-kyTW8ZkZNDHQJ6FgpwQ&autoplay=1', preview: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400' },
+            { id: 41, name: 'Lo-Fi Radio', category: 'music', genre: 'Chill Beats', logo: '🎧', stream: 'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1', preview: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400' },
+            { id: 42, name: 'Jazz FM', category: 'music', genre: 'Jazz', logo: '🎷', stream: 'https://www.youtube.com/embed/live_stream?channel=UCJIOFQLGwB3GH9K9waxwynQ&autoplay=1', preview: 'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=400' },
+            { id: 43, name: 'Electronic', category: 'music', genre: 'EDM', logo: '🎹', stream: 'https://www.youtube.com/embed/live_stream?channel=UCp6vaU3P0XHfbcEVOXb8YlA&autoplay=1', preview: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400' },
+
+            // Kids
+            { id: 50, name: 'Cartoon Network', category: 'kids', genre: 'Cartoons', logo: '🎪', stream: 'https://www.youtube.com/embed/live_stream?channel=UCDv5brsgfcIBl1CAiXSwHHQ&autoplay=1', preview: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400' },
+            { id: 51, name: 'Kids Movies', category: 'kids', genre: 'Family Films', logo: '👶', stream: 'https://www.youtube.com/embed/live_stream?channel=UCJ2JCb3j48rlqiCl5zYm2lg&autoplay=1', preview: 'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?w=400' },
+            { id: 52, name: 'Educational', category: 'kids', genre: 'Learning', logo: '📚', stream: 'https://www.youtube.com/embed/live_stream?channel=UC_x5XG1OV2P6uZZ5FSM9Ttw&autoplay=1', preview: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400' },
+        ];
+
+        let currentChannelIndex = 0;
+
+        // Initialize
+        function init() {
+            renderChannels('all');
+            setupCategoryFilters();
+        }
+
+        // Render channel cards
+        function renderChannels(category) {
+            const grid = document.getElementById('channelGrid');
+            const filtered = category === 'all'
+                ? FREE_CHANNELS
+                : FREE_CHANNELS.filter(ch => ch.category === category);
+
+            grid.innerHTML = filtered.map((channel, index) => `
+                <div class="channel-card" onclick="playChannel(${channel.id})" data-category="${channel.category}">
+                    <div class="channel-preview">
+                        <img src="${channel.preview}" alt="${channel.name}" onerror="this.src='https://images.unsplash.com/photo-1593784991095-a205069470b6?w=400'">
+                        <div class="now-playing">
+                            <span class="live-indicator"><span class="live-dot"></span> LIVE</span>
+                            <div class="title">${channel.name}</div>
+                        </div>
+                        <div class="channel-logo">${channel.logo}</div>
+                    </div>
+                    <div class="channel-info">
+                        <h3>
+                            ${channel.name}
+                            <span class="live-indicator" style="font-size: 0.7rem;"><span class="live-dot"></span> LIVE</span>
+                        </h3>
+                        <p class="genre">${channel.genre}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Setup category filters
+        function setupCategoryFilters() {
+            document.querySelectorAll('.category-pill').forEach(pill => {
+                pill.addEventListener('click', (e) => {
+                    document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderChannels(e.target.dataset.category);
+                });
+            });
+        }
+
+        // Play channel
+        function playChannel(channelId) {
+            const channel = FREE_CHANNELS.find(ch => ch.id === channelId);
+            if (!channel) return;
+
+            currentChannelIndex = FREE_CHANNELS.findIndex(ch => ch.id === channelId);
+
+            const player = document.getElementById('channelPlayer');
+            const section = document.getElementById('playerSection');
+            const nameEl = document.getElementById('currentChannelName');
+
+            player.src = channel.stream;
+            nameEl.textContent = channel.name;
+            section.classList.add('active');
+
+            // Scroll to player
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Navigation
+        function prevChannel() {
+            currentChannelIndex = (currentChannelIndex - 1 + FREE_CHANNELS.length) % FREE_CHANNELS.length;
+            playChannel(FREE_CHANNELS[currentChannelIndex].id);
+        }
+
+        function nextChannel() {
+            currentChannelIndex = (currentChannelIndex + 1) % FREE_CHANNELS.length;
+            playChannel(FREE_CHANNELS[currentChannelIndex].id);
+        }
+
+        function closePlayer() {
+            const player = document.getElementById('channelPlayer');
+            const section = document.getElementById('playerSection');
+            player.src = '';
+            section.classList.remove('active');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePlayer();
+            if (e.key === 'ArrowLeft') prevChannel();
+            if (e.key === 'ArrowRight') nextChannel();
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
