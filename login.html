@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Purple Squirrel Media</title>
+    <meta name="description" content="Sign in to your Purple Squirrel Media account">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #1a0a2e;
+            --accent-pink: #e91e63;
+            --bg-dark: #0f0518;
+            --bg-card: #1e1028;
+            --text-primary: #ffffff;
+            --text-muted: #a1a1aa;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(26, 10, 46, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+        .logo img { width: 40px; height: 40px; }
+        .logo-text { font-weight: 600; font-size: 14px; }
+        .header-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .header-links a:hover { color: white; }
+        /* Main */
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary-dark) 100%);
+        }
+        .auth-container {
+            display: flex;
+            max-width: 900px;
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .auth-sidebar {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-pink) 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .auth-sidebar h2 { font-size: 28px; margin-bottom: 15px; }
+        .auth-sidebar p { opacity: 0.9; line-height: 1.6; margin-bottom: 30px; }
+        .feature-list { list-style: none; }
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .feature-list i { color: white; }
+        .auth-form-container {
+            flex: 1;
+            padding: 60px 50px;
+        }
+        .tabs {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+        .tab {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            padding-bottom: 15px;
+            margin-bottom: -16px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab.active, .tab:hover {
+            color: white;
+            border-bottom-color: var(--primary);
+        }
+        .form { display: none; }
+        .form.active { display: block; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .input-wrapper {
+            position: relative;
+        }
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 13px;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+        .remember-me input { accent-color: var(--primary); }
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .forgot-link:hover { text-decoration: underline; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background: #6d28d9; }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+        .divider span { padding: 0 15px; }
+        .social-login {
+            display: flex;
+            gap: 12px;
+        }
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            background: transparent;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        .social-btn:hover { background: rgba(255,255,255,0.05); }
+        .social-btn.google i { color: #ea4335; }
+        .social-btn.apple i { color: white; }
+        .social-btn.solana i { color: #9945ff; }
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .auth-sidebar { display: none; }
+            .auth-form-container { padding: 40px 30px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Purple Squirrel Media">
+            <span class="logo-text">Purple Squirrel Media</span>
+        </a>
+        <nav class="header-links">
+            <a href="plans.html">Pricing</a>
+            <a href="blog.html">Blog</a>
+            <a href="about.html">About</a>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="auth-container">
+            <div class="auth-sidebar">
+                <h2>Welcome to Purple Squirrel Media</h2>
+                <p>Stream unlimited content, upload your own videos, and connect with creators worldwide.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Unlimited HD streaming</li>
+                    <li><i class="fas fa-check-circle"></i> AI-powered captions (Watson STT)</li>
+                    <li><i class="fas fa-check-circle"></i> Multi-cloud infrastructure</li>
+                    <li><i class="fas fa-check-circle"></i> NFT membership tokens</li>
+                    <li><i class="fas fa-check-circle"></i> Creator monetization</li>
+                </ul>
+            </div>
+
+            <div class="auth-form-container">
+                <div class="tabs">
+                    <button class="tab active" data-tab="login">Sign In</button>
+                    <button class="tab" data-tab="signup">Create Account</button>
+                </div>
+
+                <div class="error-message" id="errorMsg"></div>
+                <div class="success-message" id="successMsg"></div>
+
+                <!-- Login Form -->
+                <form class="form active" id="loginForm">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" placeholder="you@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Enter your password" required>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox"> Remember me
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </form>
+
+                <!-- Signup Form -->
+                <form class="form" id="signupForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" placeholder="John Doe" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" placeholder="you@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Create a password" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="Confirm password" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+
+                <div class="divider"><span>or continue with</span></div>
+
+                <div class="social-login">
+                    <button class="social-btn google"><i class="fab fa-google"></i> Google</button>
+                    <button class="social-btn apple"><i class="fab fa-apple"></i> Apple</button>
+                    <button class="social-btn solana"><i class="fas fa-wallet"></i> Solana</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + 'Form').classList.add('active');
+            });
+        });
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            const password = e.target.querySelector('input[type="password"]').value;
+
+            // Demo: store in localStorage and redirect
+            localStorage.setItem('psmUser', JSON.stringify({ email, loggedIn: true }));
+            showSuccess('Login successful! Redirecting...');
+            setTimeout(() => window.location.href = 'app.html', 1500);
+        });
+
+        // Signup form
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const inputs = e.target.querySelectorAll('input');
+            const name = inputs[0].value;
+            const email = inputs[1].value;
+            const password = inputs[2].value;
+            const confirm = inputs[3].value;
+
+            if (password !== confirm) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            localStorage.setItem('psmUser', JSON.stringify({ name, email, loggedIn: true }));
+            showSuccess('Account created! Redirecting...');
+            setTimeout(() => window.location.href = 'app.html', 1500);
+        });
+
+        // Solana wallet login
+        document.querySelector('.social-btn.solana').addEventListener('click', async () => {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    const resp = await window.solana.connect();
+                    localStorage.setItem('psmUser', JSON.stringify({
+                        wallet: resp.publicKey.toString(),
+                        loggedIn: true
+                    }));
+                    showSuccess('Wallet connected! Redirecting...');
+                    setTimeout(() => window.location.href = 'app.html', 1500);
+                } catch (err) {
+                    showError('Wallet connection failed');
+                }
+            } else {
+                showError('Please install Phantom wallet');
+            }
+        });
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            document.getElementById('successMsg').style.display = 'none';
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('successMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

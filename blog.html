@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Purple Squirrel Media</title>
+    <meta name="description" content="Latest news, tutorials, and updates from Purple Squirrel Media">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #1a0a2e;
+            --accent-pink: #e91e63;
+            --bg-dark: #0f0518;
+            --bg-card: #1e1028;
+            --text-primary: #ffffff;
+            --text-muted: #a1a1aa;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(26, 10, 46, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+        .logo img { width: 40px; height: 40px; }
+        .logo-text { font-weight: 600; font-size: 14px; }
+        .nav { display: flex; gap: 30px; }
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .nav a:hover, .nav a.active { color: white; }
+        .header-actions { display: flex; gap: 15px; }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-outline {
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            background: transparent;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        /* Hero */
+        .blog-hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--bg-dark) 100%);
+        }
+        .blog-hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .blog-hero p {
+            color: var(--text-muted);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        /* Categories */
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 30px 20px;
+            flex-wrap: wrap;
+        }
+        .category-tag {
+            padding: 8px 20px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .category-tag:hover, .category-tag.active {
+            background: var(--primary);
+            color: white;
+        }
+        /* Blog Grid */
+        .blog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .featured-post {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .featured-image {
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-pink) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .featured-image i { font-size: 80px; opacity: 0.5; }
+        .featured-content {
+            padding: 40px 40px 40px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .post-badge {
+            display: inline-block;
+            background: var(--accent-pink);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+        .featured-content h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        .featured-content p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .post-meta img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .blog-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(124, 58, 237, 0.2);
+        }
+        .card-image {
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-image i { font-size: 48px; opacity: 0.5; }
+        .card-content { padding: 25px; }
+        .card-category {
+            font-size: 11px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .card-excerpt {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+        /* Newsletter */
+        .newsletter {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-pink) 100%);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            margin: 60px 0;
+        }
+        .newsletter h3 { font-size: 28px; margin-bottom: 15px; }
+        .newsletter p { opacity: 0.9; margin-bottom: 30px; }
+        .newsletter-form {
+            display: flex;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .newsletter-form input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .newsletter-form button {
+            padding: 14px 30px;
+            background: var(--bg-dark);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .newsletter-form button:hover { opacity: 0.9; }
+        /* Footer */
+        .footer {
+            background: var(--primary-dark);
+            padding: 60px 40px 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+        .footer-col h4 {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .footer-col a {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: white; }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        @media (max-width: 768px) {
+            .featured-post { grid-template-columns: 1fr; }
+            .featured-content { padding: 30px; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .newsletter { padding: 40px 20px; }
+            .newsletter-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Purple Squirrel Media">
+            <span class="logo-text">Purple Squirrel Media</span>
+        </a>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="app.html">Watch</a>
+            <a href="plans.html">Pricing</a>
+            <a href="blog.html" class="active">Blog</a>
+            <a href="about.html">About</a>
+        </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-outline">Sign In</a>
+            <a href="login.html" class="btn btn-primary">Get Started</a>
+        </div>
+    </header>
+
+    <section class="blog-hero">
+        <h1>Blog & News</h1>
+        <p>Insights on streaming technology, creator tools, and the future of decentralized media.</p>
+    </section>
+
+    <div class="categories">
+        <a href="#" class="category-tag active">All Posts</a>
+        <a href="#" class="category-tag">Technology</a>
+        <a href="#" class="category-tag">Tutorials</a>
+        <a href="#" class="category-tag">Creator Tips</a>
+        <a href="#" class="category-tag">Company News</a>
+        <a href="#" class="category-tag">Web3</a>
+    </div>
+
+    <main class="blog-container">
+        <!-- Featured Post -->
+        <article class="featured-post">
+            <div class="featured-image">
+                <i class="fas fa-cloud"></i>
+            </div>
+            <div class="featured-content">
+                <span class="post-badge">FEATURED</span>
+                <h2>Building a Multi-Cloud OTT Platform: Oracle + Azure + IBM</h2>
+                <p>Learn how we built Purple Squirrel Media using Oracle Cloud for compute, Azure Static Web Apps for hosting, and IBM Watson for AI-powered captions. A deep dive into modern cloud architecture.</p>
+                <div class="post-meta">
+                    <img src="images/avatar.png" alt="Author">
+                    <div>
+                        <strong>Purple Squirrel Team</strong>
+                        <span> • December 20, 2024 • 8 min read</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Blog Grid -->
+        <div class="blog-grid">
+            <article class="blog-card">
+                <div class="card-image"><i class="fas fa-closed-captioning"></i></div>
+                <div class="card-content">
+                    <div class="card-category">Tutorial</div>
+                    <h3 class="card-title">Auto-Generate Captions with IBM Watson Speech-to-Text</h3>
+                    <p class="card-excerpt">Step-by-step guide to implementing AI-powered captions for your video content using Watson STT API.</p>
+                    <div class="card-footer">
+                        <span>Dec 19, 2024</span>
+                        <span>5 min read</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="card-image"><i class="fas fa-video"></i></div>
+                <div class="card-content">
+                    <div class="card-category">Technology</div>
+                    <h3 class="card-title">HLS Streaming Explained: Adaptive Bitrate for Everyone</h3>
+                    <p class="card-excerpt">Understanding HTTP Live Streaming and why it's the gold standard for video delivery.</p>
+                    <div class="card-footer">
+                        <span>Dec 18, 2024</span>
+                        <span>6 min read</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="card-image"><i class="fab fa-solana"></i></div>
+                <div class="card-content">
+                    <div class="card-category">Web3</div>
+                    <h3 class="card-title">NFT Memberships: The Future of Creator Monetization</h3>
+                    <p class="card-excerpt">How Solana-based NFT tokens are revolutionizing subscription models for content creators.</p>
+                    <div class="card-footer">
+                        <span>Dec 15, 2024</span>
+                        <span>7 min read</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="card-image"><i class="fas fa-server"></i></div>
+                <div class="card-content">
+                    <div class="card-category">Technology</div>
+                    <h3 class="card-title">Oracle ARM VMs: 4 OCPU Free Tier for Streaming</h3>
+                    <p class="card-excerpt">Maximize Oracle Cloud's always-free tier for video transcoding and API hosting.</p>
+                    <div class="card-footer">
+                        <span>Dec 12, 2024</span>
+                        <span>4 min read</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="card-image"><i class="fas fa-palette"></i></div>
+                <div class="card-content">
+                    <div class="card-category">Creator Tips</div>
+                    <h3 class="card-title">Building Your Brand as a Video Creator</h3>
+                    <p class="card-excerpt">Essential strategies for standing out in the crowded streaming landscape.</p>
+                    <div class="card-footer">
+                        <span>Dec 10, 2024</span>
+                        <span>5 min read</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="blog-card">
+                <div class="card-image"><i class="fas fa-rocket"></i></div>
+                <div class="card-content">
+                    <div class="card-category">Company News</div>
+                    <h3 class="card-title">Introducing Purple Squirrel Media: dOTT Platform</h3>
+                    <p class="card-excerpt">Our vision for decentralized over-the-top streaming and community-owned media.</p>
+                    <div class="card-footer">
+                        <span>Dec 1, 2024</span>
+                        <span>3 min read</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Newsletter -->
+        <section class="newsletter">
+            <h3>Stay Updated</h3>
+            <p>Get the latest articles, tutorials, and platform updates delivered to your inbox.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email">
+                <button type="submit">Subscribe</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="app.html">Watch</a>
+                <a href="plans.html">Pricing</a>
+                <a href="#">Creators</a>
+                <a href="#">API</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="about.html">About Us</a>
+                <a href="blog.html">Blog</a>
+                <a href="#">Careers</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#">Documentation</a>
+                <a href="#">Help Center</a>
+                <a href="#">Community</a>
+                <a href="#">Status</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Purple Squirrel Media. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>

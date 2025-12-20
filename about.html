@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Purple Squirrel Media</title>
+    <meta name="description" content="Learn about Purple Squirrel Media's mission to democratize streaming">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #1a0a2e;
+            --accent-pink: #e91e63;
+            --bg-dark: #0f0518;
+            --bg-card: #1e1028;
+            --text-primary: #ffffff;
+            --text-muted: #a1a1aa;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(26, 10, 46, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+        .logo img { width: 40px; height: 40px; }
+        .logo-text { font-weight: 600; font-size: 14px; }
+        .nav { display: flex; gap: 30px; }
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .nav a:hover, .nav a.active { color: white; }
+        .header-actions { display: flex; gap: 15px; }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-outline {
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            background: transparent;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 80px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--bg-dark) 100%);
+        }
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            color: var(--text-muted);
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        /* Mission */
+        .section {
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        /* Values */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .value-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .value-card:hover { transform: translateY(-5px); }
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-pink));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+        }
+        .value-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .value-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        /* Stats */
+        .stats {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-pink) 100%);
+            padding: 60px 40px;
+            margin: 60px 0;
+            border-radius: 20px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        /* Tech Stack */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .tech-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .tech-card:hover { transform: translateY(-5px); }
+        .tech-card i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        .tech-card h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .tech-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        /* Team */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        .team-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+        }
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-pink));
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        .team-card h4 { margin-bottom: 5px; }
+        .team-card .role {
+            color: var(--primary);
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        .team-social a {
+            color: var(--text-muted);
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        .team-social a:hover { color: white; }
+        /* CTA */
+        .cta {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            margin: 60px 0;
+        }
+        .cta h3 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .cta p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .btn-lg {
+            padding: 16px 40px;
+            font-size: 16px;
+        }
+        /* Footer */
+        .footer {
+            background: var(--primary-dark);
+            padding: 60px 40px 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+        .footer-col h4 {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .footer-col a {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: white; }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        @media (max-width: 768px) {
+            .values-grid, .tech-grid, .team-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Purple Squirrel Media">
+            <span class="logo-text">Purple Squirrel Media</span>
+        </a>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="app.html">Watch</a>
+            <a href="plans.html">Pricing</a>
+            <a href="blog.html">Blog</a>
+            <a href="about.html" class="active">About</a>
+        </nav>
+        <div class="header-actions">
+            <a href="login.html" class="btn btn-outline">Sign In</a>
+            <a href="login.html" class="btn btn-primary">Get Started</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Democratizing Media</h1>
+        <p>We're building the future of decentralized streaming, empowering creators and communities to own their content.</p>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2>Our Values</h2>
+            <p>The principles that guide everything we build</p>
+        </div>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-users"></i></div>
+                <h3>Community First</h3>
+                <p>Built by creators, for creators. Every decision starts with our community's needs.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-lock-open"></i></div>
+                <h3>Open & Transparent</h3>
+                <p>Open-source tools, transparent pricing, and honest communication always.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-rocket"></i></div>
+                <h3>Innovation Driven</h3>
+                <p>Leveraging Web3, AI, and multi-cloud to push streaming forward.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="stats">
+            <div class="stats-grid">
+                <div>
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Active Creators</div>
+                </div>
+                <div>
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Videos Streamed</div>
+                </div>
+                <div>
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime SLA</div>
+                </div>
+                <div>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Cloud Providers</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2>Our Tech Stack</h2>
+            <p>Enterprise-grade infrastructure powering your content</p>
+        </div>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <i class="fas fa-database"></i>
+                <h4>Oracle Cloud</h4>
+                <p>ARM VMs, Object Storage, PostgreSQL</p>
+            </div>
+            <div class="tech-card">
+                <i class="fab fa-microsoft"></i>
+                <h4>Azure</h4>
+                <p>Static Web Apps, CDN, Functions</p>
+            </div>
+            <div class="tech-card">
+                <i class="fas fa-brain"></i>
+                <h4>IBM Watson</h4>
+                <p>Speech-to-Text, AI Captions</p>
+            </div>
+            <div class="tech-card">
+                <i class="fab fa-google"></i>
+                <h4>Google Cloud</h4>
+                <p>Cloud Run, Firebase, Analytics</p>
+            </div>
+            <div class="tech-card">
+                <i class="fab fa-golang"></i>
+                <h4>Go/Fiber</h4>
+                <p>High-performance API</p>
+            </div>
+            <div class="tech-card">
+                <i class="fas fa-film"></i>
+                <h4>FFmpeg</h4>
+                <p>HLS Transcoding</p>
+            </div>
+            <div class="tech-card">
+                <i class="fab fa-solana"></i>
+                <h4>Solana</h4>
+                <p>NFT Memberships</p>
+            </div>
+            <div class="tech-card">
+                <i class="fab fa-docker"></i>
+                <h4>Docker</h4>
+                <p>Container Orchestration</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h2>Meet the Team</h2>
+            <p>The humans behind Purple Squirrel Media</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-avatar"><i class="fas fa-user"></i></div>
+                <h4>Alex Chen</h4>
+                <p class="role">CEO & Founder</p>
+                <div class="team-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar"><i class="fas fa-user"></i></div>
+                <h4>Sarah Kim</h4>
+                <p class="role">CTO</p>
+                <div class="team-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar"><i class="fas fa-user"></i></div>
+                <h4>Marcus Johnson</h4>
+                <p class="role">Head of Product</p>
+                <div class="team-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar"><i class="fas fa-user"></i></div>
+                <h4>Emily Rodriguez</h4>
+                <p class="role">Lead Designer</p>
+                <div class="team-social">
+                    <a href="#"><i class="fab fa-dribbble"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="cta">
+            <h3>Ready to Join Us?</h3>
+            <p>Start streaming, creating, and earning today.</p>
+            <div class="cta-buttons">
+                <a href="login.html" class="btn btn-primary btn-lg">Get Started Free</a>
+                <a href="contact.html" class="btn btn-outline btn-lg">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="app.html">Watch</a>
+                <a href="plans.html">Pricing</a>
+                <a href="#">Creators</a>
+                <a href="#">API</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="about.html">About Us</a>
+                <a href="blog.html">Blog</a>
+                <a href="#">Careers</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="#">Documentation</a>
+                <a href="#">Help Center</a>
+                <a href="#">Community</a>
+                <a href="#">Status</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Purple Squirrel Media. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>
