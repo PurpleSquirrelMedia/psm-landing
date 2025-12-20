@@ -307,6 +307,136 @@
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
         }
 
+        /* Ad Overlay */
+        .ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-container {
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+        }
+
+        .ad-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .ad-label {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .ad-countdown {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .ad-player {
+            aspect-ratio: 16/9;
+            background: #111;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-player iframe, .ad-player video {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .ad-skip-btn {
+            margin-top: 15px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            float: right;
+            transition: all 0.3s ease;
+        }
+
+        .ad-skip-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        /* Stream Error */
+        .stream-error {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .stream-error i {
+            font-size: 3rem;
+            color: #ffc107;
+        }
+
+        .stream-error p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .stream-error button {
+            background: rgba(139, 92, 246, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+
+        .stream-error button:hover {
+            background: rgba(139, 92, 246, 0.5);
+        }
+
+        /* Viewer count badge */
+        .viewer-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
         @media (max-width: 768px) {
             .freetv-hero h1 {
                 font-size: 2rem;
@@ -352,11 +482,29 @@
         </div>
     </section>
 
+    <!-- Pre-roll Ad Container -->
+    <div class="ad-overlay" id="adOverlay" style="display: none;">
+        <div class="ad-container">
+            <div class="ad-header">
+                <span class="ad-label">Advertisement</span>
+                <span class="ad-countdown" id="adCountdown">Skip in 5s</span>
+            </div>
+            <div class="ad-player" id="adPlayer"></div>
+            <button class="ad-skip-btn" id="adSkipBtn" style="display: none;" onclick="skipAd()">Skip Ad →</button>
+        </div>
+    </div>
+
     <!-- Player Section (appears when channel selected) -->
     <section class="player-section" id="playerSection">
         <div class="main-player">
             <div class="player-wrapper">
                 <iframe id="channelPlayer" allowfullscreen></iframe>
+                <div class="stream-error" id="streamError" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Stream temporarily unavailable</p>
+                    <button onclick="retryStream()">Retry</button>
+                    <button onclick="nextChannel()">Try Next Channel</button>
+                </div>
             </div>
             <div class="player-controls">
                 <div class="current-channel">
@@ -439,6 +587,27 @@
     </footer>
 
     <script>
+        // API Configuration
+        const API_BASE = 'http://163.192.105.31:8080/api/v1';
+
+        // Ad Configuration
+        const AD_CONFIG = {
+            enabled: true,
+            skipAfter: 5, // seconds
+            showEveryNChannels: 3, // Show ad every N channel changes
+            vastTag: null, // VAST tag URL (null = use demo ads)
+            demoAds: [
+                { type: 'image', src: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800', duration: 5, link: 'plans.html', text: 'Upgrade to Premium - No Ads!' },
+                { type: 'image', src: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800', duration: 5, link: 'advertise.html', text: 'Advertise on PSM - Reach Millions!' }
+            ]
+        };
+
+        // Analytics & State
+        let channelChangeCount = 0;
+        let watchStartTime = null;
+        let currentAdTimer = null;
+        let adSkipCountdown = AD_CONFIG.skipAfter;
+
         // Free TV Channel Data
         const FREE_CHANNELS = [
             // News
@@ -485,6 +654,22 @@
             setupCategoryFilters();
         }
 
+        // Generate random viewer count (simulated)
+        function getViewerCount(channelId) {
+            // Seed random with channel ID for consistency
+            const base = (channelId * 7919) % 10000;
+            const variance = Math.floor(Math.random() * 500);
+            return base + variance;
+        }
+
+        // Format viewer count
+        function formatViewers(count) {
+            if (count >= 1000) {
+                return (count / 1000).toFixed(1) + 'K';
+            }
+            return count.toString();
+        }
+
         // Render channel cards
         function renderChannels(category) {
             const grid = document.getElementById('channelGrid');
@@ -508,6 +693,7 @@
                             <span class="live-indicator" style="font-size: 0.7rem;"><span class="live-dot"></span> LIVE</span>
                         </h3>
                         <p class="genre">${channel.genre}</p>
+                        <span class="viewer-count"><i class="fas fa-eye"></i> ${formatViewers(getViewerCount(channel.id))} watching</span>
                     </div>
                 </div>
             `).join('');
@@ -524,23 +710,157 @@
             });
         }
 
-        // Play channel
+        // Play channel with ad integration
         function playChannel(channelId) {
             const channel = FREE_CHANNELS.find(ch => ch.id === channelId);
             if (!channel) return;
 
-            currentChannelIndex = FREE_CHANNELS.findIndex(ch => ch.id === channelId);
+            // Track previous watch time
+            if (watchStartTime) {
+                const watchDuration = Math.floor((Date.now() - watchStartTime) / 1000);
+                trackAnalytics('channel_watch', {
+                    channel_id: FREE_CHANNELS[currentChannelIndex]?.id,
+                    duration: watchDuration
+                });
+            }
 
+            currentChannelIndex = FREE_CHANNELS.findIndex(ch => ch.id === channelId);
+            channelChangeCount++;
+
+            // Show pre-roll ad every N channel changes
+            if (AD_CONFIG.enabled && channelChangeCount % AD_CONFIG.showEveryNChannels === 0) {
+                showPrerollAd(() => {
+                    startChannel(channel);
+                });
+            } else {
+                startChannel(channel);
+            }
+        }
+
+        // Start playing a channel (after ad or directly)
+        function startChannel(channel) {
             const player = document.getElementById('channelPlayer');
             const section = document.getElementById('playerSection');
             const nameEl = document.getElementById('currentChannelName');
+            const errorEl = document.getElementById('streamError');
+
+            // Hide error state
+            errorEl.style.display = 'none';
 
             player.src = channel.stream;
             nameEl.textContent = channel.name;
             section.classList.add('active');
 
+            // Track watch start
+            watchStartTime = Date.now();
+            trackAnalytics('channel_play', {
+                channel_id: channel.id,
+                channel_name: channel.name,
+                category: channel.category
+            });
+
             // Scroll to player
             section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Pre-roll Ad System
+        function showPrerollAd(onComplete) {
+            const overlay = document.getElementById('adOverlay');
+            const adPlayer = document.getElementById('adPlayer');
+            const countdown = document.getElementById('adCountdown');
+            const skipBtn = document.getElementById('adSkipBtn');
+
+            // Get random demo ad
+            const ad = AD_CONFIG.demoAds[Math.floor(Math.random() * AD_CONFIG.demoAds.length)];
+
+            // Show ad overlay
+            overlay.style.display = 'flex';
+            skipBtn.style.display = 'none';
+            adSkipCountdown = AD_CONFIG.skipAfter;
+
+            // Render ad content
+            adPlayer.innerHTML = `
+                <a href="${ad.link}" style="display: block; width: 100%; height: 100%; position: relative;">
+                    <img src="${ad.src}" style="width: 100%; height: 100%; object-fit: cover;" alt="Advertisement">
+                    <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px;">
+                        <p style="margin: 0; font-size: 1.2rem; font-weight: 600;">${ad.text}</p>
+                    </div>
+                </a>
+            `;
+
+            // Track ad impression
+            trackAnalytics('ad_impression', { ad_type: 'preroll', ad_link: ad.link });
+
+            // Countdown timer
+            currentAdTimer = setInterval(() => {
+                adSkipCountdown--;
+                if (adSkipCountdown > 0) {
+                    countdown.textContent = `Skip in ${adSkipCountdown}s`;
+                } else {
+                    countdown.textContent = 'You can skip now';
+                    skipBtn.style.display = 'block';
+                    clearInterval(currentAdTimer);
+                }
+            }, 1000);
+
+            // Store callback
+            window.adCompleteCallback = onComplete;
+        }
+
+        // Skip ad
+        function skipAd() {
+            const overlay = document.getElementById('adOverlay');
+            const adPlayer = document.getElementById('adPlayer');
+
+            clearInterval(currentAdTimer);
+            overlay.style.display = 'none';
+            adPlayer.innerHTML = '';
+
+            trackAnalytics('ad_skip', { skip_time: AD_CONFIG.skipAfter - adSkipCountdown });
+
+            if (window.adCompleteCallback) {
+                window.adCompleteCallback();
+                window.adCompleteCallback = null;
+            }
+        }
+
+        // Retry stream
+        function retryStream() {
+            const channel = FREE_CHANNELS[currentChannelIndex];
+            if (channel) {
+                document.getElementById('streamError').style.display = 'none';
+                document.getElementById('channelPlayer').src = channel.stream;
+            }
+        }
+
+        // Analytics tracking
+        function trackAnalytics(event, data = {}) {
+            const payload = {
+                event,
+                timestamp: new Date().toISOString(),
+                session_id: getSessionId(),
+                ...data
+            };
+
+            // Log to console for debugging
+            console.log('📊 Analytics:', event, data);
+
+            // Send to backend (fire and forget)
+            fetch(`${API_BASE}/analytics/freetv`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(() => { /* Silently fail - analytics shouldn't break UX */ });
+        }
+
+        // Get or create session ID
+        function getSessionId() {
+            let sid = sessionStorage.getItem('psm_session_id');
+            if (!sid) {
+                sid = 'ftv_' + Math.random().toString(36).substring(2, 15);
+                sessionStorage.setItem('psm_session_id', sid);
+            }
+            return sid;
         }
 
         // Navigation
@@ -568,8 +888,22 @@
             if (e.key === 'ArrowRight') nextChannel();
         });
 
+        // Track page unload
+        window.addEventListener('beforeunload', () => {
+            if (watchStartTime) {
+                const watchDuration = Math.floor((Date.now() - watchStartTime) / 1000);
+                trackAnalytics('session_end', {
+                    total_channels_watched: channelChangeCount,
+                    last_watch_duration: watchDuration
+                });
+            }
+        });
+
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            trackAnalytics('page_view', { page: 'free-tv' });
+        });
     </script>
 </body>
 </html>
