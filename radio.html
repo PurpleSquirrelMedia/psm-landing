@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purple Squirrel Radio - Live Streaming</title>
+    <meta name="description" content="Listen to Purple Squirrel Radio - 24/7 indie music, curated playlists, and emerging artists.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #1a0a2e;
+            --bg-dark: #0f0518;
+            --bg-card: #1e1028;
+            --text-primary: #ffffff;
+            --text-muted: #a1a1aa;
+            --accent-pink: #ec4899;
+            --accent-blue: #3b82f6;
+            --success: #22c55e;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(26, 10, 46, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+        .logo-icon-svg {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top center;
+        }
+        .logo-text { font-weight: 600; font-size: 16px; line-height: 1.2; }
+        .logo-text small { font-weight: 400; opacity: 0.8; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: white; }
+
+        /* Main Player Section */
+        .player-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--bg-dark) 50%, rgba(236, 72, 153, 0.1) 100%);
+            padding: 60px 20px;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .player-container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Now Playing Card */
+        .now-playing-card {
+            background: rgba(30, 16, 40, 0.9);
+            border-radius: 30px;
+            padding: 50px 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 80px rgba(124, 58, 237, 0.3);
+        }
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ef4444;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .live-badge .pulse {
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .album-art {
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            box-shadow: 0 20px 60px rgba(124, 58, 237, 0.4);
+            animation: albumSpin 20s linear infinite;
+            animation-play-state: paused;
+        }
+        .album-art.playing { animation-play-state: running; }
+        @keyframes albumSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .track-info h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .track-info .artist {
+            color: var(--accent-pink);
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .track-info .rotation {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* Audio Visualizer */
+        .visualizer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 4px;
+            height: 40px;
+            margin: 30px 0;
+        }
+        .visualizer .bar {
+            width: 4px;
+            background: linear-gradient(to top, var(--primary), var(--accent-pink));
+            border-radius: 2px;
+            animation: visualize 0.5s ease-in-out infinite alternate;
+            animation-play-state: paused;
+        }
+        .visualizer.playing .bar { animation-play-state: running; }
+        .visualizer .bar:nth-child(1) { height: 15px; animation-delay: 0s; }
+        .visualizer .bar:nth-child(2) { height: 25px; animation-delay: 0.1s; }
+        .visualizer .bar:nth-child(3) { height: 35px; animation-delay: 0.15s; }
+        .visualizer .bar:nth-child(4) { height: 20px; animation-delay: 0.2s; }
+        .visualizer .bar:nth-child(5) { height: 40px; animation-delay: 0.25s; }
+        .visualizer .bar:nth-child(6) { height: 30px; animation-delay: 0.3s; }
+        .visualizer .bar:nth-child(7) { height: 25px; animation-delay: 0.35s; }
+        .visualizer .bar:nth-child(8) { height: 35px; animation-delay: 0.4s; }
+        .visualizer .bar:nth-child(9) { height: 20px; animation-delay: 0.45s; }
+        .visualizer .bar:nth-child(10) { height: 30px; animation-delay: 0.5s; }
+        @keyframes visualize {
+            to { height: 40px; }
+        }
+
+        /* Player Controls */
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-pink));
+            box-shadow: 0 10px 40px rgba(124, 58, 237, 0.5);
+        }
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 50px rgba(124, 58, 237, 0.6);
+        }
+
+        /* Volume Control */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .volume-control i { color: var(--text-muted); }
+        .volume-slider {
+            width: 150px;
+            height: 6px;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            outline: none;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Playlist Section */
+        .playlist-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .section-header h2 {
+            font-size: 28px;
+        }
+        .rotation-tabs {
+            display: flex;
+            gap: 10px;
+        }
+        .rotation-tab {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .rotation-tab:hover, .rotation-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Playlist Grid */
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .track-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .track-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+        .track-card.playing {
+            border-color: var(--accent-pink);
+            background: linear-gradient(135deg, var(--bg-card), rgba(236, 72, 153, 0.1));
+        }
+        .track-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .track-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .track-details h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .track-details .artist {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .track-meta {
+            text-align: right;
+        }
+        .track-meta .duration {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .track-meta .rotation-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .rotation-badge.a-list { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
+        .rotation-badge.b-list { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .rotation-badge.c-list { background: rgba(20, 184, 166, 0.2); color: #14b8a6; }
+        .rotation-badge.top-40 { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+
+        /* Submit CTA */
+        .submit-cta {
+            background: linear-gradient(135deg, var(--primary-dark), var(--bg-dark));
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .submit-cta h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .submit-cta p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--primary));
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-dark);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .footer-links a:hover { color: white; }
+        .footer p { color: var(--text-muted); font-size: 14px; }
+
+        /* Hidden audio element */
+        audio { display: none; }
+
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .now-playing-card { padding: 30px 20px; }
+            .album-art { width: 150px; height: 150px; font-size: 60px; }
+            .track-info h2 { font-size: 22px; }
+            .section-header { flex-direction: column; gap: 20px; }
+            .rotation-tabs { flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+            <span class="logo-text">Purple Squirrel<br><small>Radio</small></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="radio.html" class="active">Radio</a>
+            <a href="free-tv.html">Free TV</a>
+            <a href="watch.html">Premium</a>
+            <a href="radio-submit.html">Submit Music</a>
+        </nav>
+    </header>
+
+    <!-- Main Player -->
+    <section class="player-section">
+        <div class="player-container">
+            <div class="now-playing-card">
+                <div class="live-badge">
+                    <span class="pulse"></span>
+                    Live Radio
+                </div>
+
+                <div class="album-art" id="albumArt">
+                    <i class="fas fa-music"></i>
+                </div>
+
+                <div class="track-info">
+                    <h2 id="trackTitle">Purple Squirrel Radio</h2>
+                    <p class="artist" id="trackArtist">24/7 Indie & Emerging Artists</p>
+                    <p class="rotation" id="trackRotation">A-List Rotation</p>
+                </div>
+
+                <div class="visualizer" id="visualizer">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+
+                <div class="player-controls">
+                    <button class="control-btn" onclick="previousTrack()">
+                        <i class="fas fa-backward"></i>
+                    </button>
+                    <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()">
+                        <i class="fas fa-play" id="playIcon"></i>
+                    </button>
+                    <button class="control-btn" onclick="nextTrack()">
+                        <i class="fas fa-forward"></i>
+                    </button>
+                </div>
+
+                <div class="volume-control">
+                    <i class="fas fa-volume-down"></i>
+                    <input type="range" class="volume-slider" min="0" max="100" value="75" onchange="setVolume(this.value)">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Playlist Section -->
+    <section class="playlist-section">
+        <div class="section-header">
+            <h2>Current Playlist</h2>
+            <div class="rotation-tabs">
+                <button class="rotation-tab active" onclick="filterRotation('all')">All</button>
+                <button class="rotation-tab" onclick="filterRotation('a-list')">A-List</button>
+                <button class="rotation-tab" onclick="filterRotation('b-list')">B-List</button>
+                <button class="rotation-tab" onclick="filterRotation('c-list')">C-List</button>
+                <button class="rotation-tab" onclick="filterRotation('top-40')">Top 40</button>
+            </div>
+        </div>
+
+        <div class="playlist-grid" id="playlistGrid">
+            <!-- Tracks will be populated by JS -->
+        </div>
+    </section>
+
+    <!-- Submit CTA -->
+    <section class="submit-cta">
+        <h2>Want Your Music On Air?</h2>
+        <p>Submit your track for review. New submissions start in C-List rotation and can climb to A-List based on listener engagement.</p>
+        <a href="radio-submit.html" class="submit-btn">
+            <i class="fas fa-upload"></i> Submit Your Track
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="advertise.html">Advertise</a>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
+    </footer>
+
+    <!-- Audio Element -->
+    <audio id="audioPlayer" preload="auto"></audio>
+
+    <script>
+        // Sample playlist data (would come from API)
+        const playlist = [
+            { id: 1, title: "Neon Dreams", artist: "Luna Wave", duration: "3:42", rotation: "a-list", src: "" },
+            { id: 2, title: "Midnight City Lights", artist: "The Velvet Echo", duration: "4:15", rotation: "a-list", src: "" },
+            { id: 3, title: "Electric Summer", artist: "Solar Flare", duration: "3:28", rotation: "a-list", src: "" },
+            { id: 4, title: "Wanderlust", artist: "Nomad Soul", duration: "4:02", rotation: "b-list", src: "" },
+            { id: 5, title: "Heartbeat Avenue", artist: "Pulse Theory", duration: "3:55", rotation: "b-list", src: "" },
+            { id: 6, title: "Ocean Drive", artist: "Coastal Dreams", duration: "3:38", rotation: "b-list", src: "" },
+            { id: 7, title: "Starlight Serenade", artist: "Nova Collective", duration: "4:20", rotation: "c-list", src: "" },
+            { id: 8, title: "Urban Jungle", artist: "City Beats", duration: "3:15", rotation: "c-list", src: "" },
+            { id: 9, title: "Golden Hour", artist: "Sunset Syndicate", duration: "3:50", rotation: "top-40", src: "" },
+            { id: 10, title: "Rise Up", artist: "Elevation", duration: "4:08", rotation: "top-40", src: "" },
+            { id: 11, title: "Crystal Clear", artist: "Diamond Eyes", duration: "3:33", rotation: "top-40", src: "" },
+            { id: 12, title: "Forever Young", artist: "Youth Revival", duration: "3:45", rotation: "a-list", src: "" },
+        ];
+
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        // Render playlist
+        function renderPlaylist(filter = 'all') {
+            const grid = document.getElementById('playlistGrid');
+            const filtered = filter === 'all' ? playlist : playlist.filter(t => t.rotation === filter);
+
+            grid.innerHTML = filtered.map((track, index) => `
+                <div class="track-card ${currentTrackIndex === playlist.indexOf(track) && isPlaying ? 'playing' : ''}"
+                     onclick="playTrack(${playlist.indexOf(track)})">
+                    <div class="track-thumb">
+                        ${currentTrackIndex === playlist.indexOf(track) && isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}
+                    </div>
+                    <div class="track-details">
+                        <h4>${track.title}</h4>
+                        <p class="artist">${track.artist}</p>
+                    </div>
+                    <div class="track-meta">
+                        <p class="duration">${track.duration}</p>
+                        <span class="rotation-badge ${track.rotation}">${track.rotation.replace('-', ' ').toUpperCase()}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update tab active state
+            document.querySelectorAll('.rotation-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.textContent.toLowerCase().replace(' ', '-') === filter ||
+                    (filter === 'all' && tab.textContent === 'All')) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+
+        function filterRotation(rotation) {
+            renderPlaylist(rotation);
+        }
+
+        function playTrack(index) {
+            currentTrackIndex = index;
+            const track = playlist[index];
+
+            document.getElementById('trackTitle').textContent = track.title;
+            document.getElementById('trackArtist').textContent = track.artist;
+            document.getElementById('trackRotation').textContent = track.rotation.replace('-', ' ').toUpperCase() + ' Rotation';
+
+            // In production, set actual audio source
+            // audioPlayer.src = track.src;
+
+            isPlaying = true;
+            updatePlayState();
+            renderPlaylist(document.querySelector('.rotation-tab.active')?.textContent.toLowerCase().replace(' ', '-') || 'all');
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            updatePlayState();
+
+            if (isPlaying) {
+                // audioPlayer.play();
+            } else {
+                // audioPlayer.pause();
+            }
+        }
+
+        function updatePlayState() {
+            const playIcon = document.getElementById('playIcon');
+            const albumArt = document.getElementById('albumArt');
+            const visualizer = document.getElementById('visualizer');
+
+            playIcon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+
+            if (isPlaying) {
+                albumArt.classList.add('playing');
+                visualizer.classList.add('playing');
+            } else {
+                albumArt.classList.remove('playing');
+                visualizer.classList.remove('playing');
+            }
+        }
+
+        function previousTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+            playTrack(currentTrackIndex);
+        }
+
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+            playTrack(currentTrackIndex);
+        }
+
+        function setVolume(value) {
+            audioPlayer.volume = value / 100;
+        }
+
+        // Auto-advance to next track
+        audioPlayer.addEventListener('ended', nextTrack);
+
+        // Initialize
+        renderPlaylist();
+        setVolume(75);
+    </script>
+</body>
+</html>
