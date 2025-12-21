@@ -186,7 +186,7 @@ const PSM_PAY = {
             const wallet = this.provider.publicKey.toString();
 
             // 1. Record payment in backend
-            const response = await fetch('https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/payments/record', {
+            const response = await fetch('https://evolution-reporting-wiki-maximum.trycloudflare.com/api/v1/payments/record', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -280,7 +280,7 @@ const PSM_PAY = {
 const PSM_NFT = {
     // NFT Minter service URL (runs alongside main API)
     MINTER_URL: 'http://163.192.105.31:3001',
-    API_URL: 'https://iowa-schema-cruise-tmp.trycloudflare.com',
+    API_URL: 'https://evolution-reporting-wiki-maximum.trycloudflare.com',
 
     // Check if wallet holds membership NFT
     async checkMembership(walletAddress) {
