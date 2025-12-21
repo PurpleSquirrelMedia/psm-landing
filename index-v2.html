@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purple Squirrel - Stream. Create. Earn.</title>
+    <meta name="description" content="The next-generation streaming platform where creators own their content and fans support directly with zero fees. Powered by Solana.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Design System -->
+    <link rel="stylesheet" href="design-system/tokens.css">
+    <link rel="stylesheet" href="design-system/components.css">
+
+    <style>
+        /* Page-specific styles */
+        .hero {
+            min-height: 100vh;
+            padding-top: 80px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--ps-space-16);
+            align-items: center;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--ps-text-muted);
+            max-width: 500px;
+            margin-bottom: var(--ps-space-8);
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--ps-space-4);
+            margin-bottom: var(--ps-space-12);
+        }
+
+        .stats-row {
+            display: flex;
+            gap: var(--ps-space-10);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--ps-gradient-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--ps-text-subtle);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Phone mockup */
+        .phone-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone {
+            width: 280px;
+            height: 560px;
+            background: var(--ps-gray-900);
+            border-radius: 40px;
+            padding: 10px;
+            border: 1px solid var(--ps-glass-border);
+            box-shadow: var(--ps-shadow-glow), 0 25px 50px rgba(0,0,0,0.5);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--ps-gradient-brand);
+            border-radius: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phone-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .phone-screen i {
+            font-size: 64px;
+            margin-bottom: var(--ps-space-4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .phone-screen strong {
+            font-size: 1.25rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .phone-screen span {
+            opacity: 0.8;
+            font-size: 0.875rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features section */
+        .features-section {
+            padding: var(--ps-space-24) 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--ps-space-16);
+        }
+
+        .section-header p {
+            color: var(--ps-text-muted);
+            font-size: 1.125rem;
+            margin-top: var(--ps-space-4);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--ps-gradient-brand);
+            border-radius: var(--ps-radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: var(--ps-space-4);
+            box-shadow: var(--ps-shadow-glow);
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--ps-space-2);
+        }
+
+        .feature-desc {
+            color: var(--ps-text-muted);
+            line-height: 1.6;
+        }
+
+        /* CTA section */
+        .cta-section {
+            padding: var(--ps-space-24) 0;
+            background: var(--ps-gradient-brand);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.1) 0%, transparent 60%);
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--ps-space-4);
+        }
+
+        .cta-section p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-bottom: var(--ps-space-8);
+        }
+
+        .cta-form {
+            display: flex;
+            gap: var(--ps-space-3);
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .cta-form input {
+            flex: 1;
+            padding: var(--ps-space-4) var(--ps-space-6);
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: var(--ps-radius-xl);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .cta-form input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .cta-form input:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .cta-form button {
+            padding: var(--ps-space-4) var(--ps-space-8);
+            background: white;
+            color: var(--ps-purple);
+            border: none;
+            border-radius: var(--ps-radius-xl);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform var(--ps-transition-fast);
+        }
+
+        .cta-form button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Channels preview */
+        .channels-section {
+            padding: var(--ps-space-24) 0;
+        }
+
+        .channel-card {
+            position: relative;
+            aspect-ratio: 16/9;
+            border-radius: var(--ps-radius-xl);
+            overflow: hidden;
+            background: var(--ps-gray-800);
+        }
+
+        .channel-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .channel-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 50%);
+            padding: var(--ps-space-4);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .channel-title {
+            font-weight: 600;
+            margin-bottom: var(--ps-space-1);
+        }
+
+        .channel-viewers {
+            font-size: 0.875rem;
+            color: var(--ps-text-muted);
+        }
+
+        /* Footer */
+        footer {
+            padding: var(--ps-space-8) 0;
+            border-top: 1px solid var(--ps-glass-border);
+            text-align: center;
+            color: var(--ps-text-muted);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--ps-purple);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-description {
+                margin: 0 auto var(--ps-space-8);
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .stats-row {
+                justify-content: center;
+            }
+
+            .phone-wrapper {
+                margin-top: var(--ps-space-12);
+            }
+
+            .ps-grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="ps-bg-animated">
+    <!-- Navigation -->
+    <nav class="ps-nav">
+        <div class="ps-nav-content">
+            <a href="#" class="ps-logo">
+                <div class="ps-logo-icon">
+                    <i class="fas fa-play" style="color: white; font-size: 14px;"></i>
+                </div>
+                Purple Squirrel
+            </a>
+            <div style="display: flex; gap: var(--ps-space-6);" class="nav-links">
+                <a href="#features" class="ps-nav-link">Features</a>
+                <a href="#channels" class="ps-nav-link">Channels</a>
+                <a href="#" class="ps-nav-link">Creators</a>
+                <a href="#" class="ps-nav-link">Pricing</a>
+            </div>
+            <div style="display: flex; gap: var(--ps-space-3);">
+                <a href="login-v2.html" class="ps-btn ps-btn-ghost">Sign In</a>
+                <a href="login-v2.html#signup" class="ps-btn ps-btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="ps-container">
+            <div class="hero-grid">
+                <div>
+                    <span class="ps-badge ps-badge-live">Live on Solana</span>
+                    <h1 class="ps-heading-xl" style="margin: var(--ps-space-6) 0;">
+                        Stream. Create.<br>
+                        <span class="ps-text-gradient">Earn.</span>
+                    </h1>
+                    <p class="hero-description">
+                        The next-generation streaming platform where creators own their content and fans support directly with zero fees. Powered by Solana.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#" class="ps-btn ps-btn-primary ps-btn-lg">
+                            <i class="fab fa-apple"></i> Download App
+                        </a>
+                        <a href="#" class="ps-btn ps-btn-secondary ps-btn-lg">
+                            <i class="fas fa-play"></i> Watch Demo
+                        </a>
+                    </div>
+                    <div class="stats-row">
+                        <div>
+                            <div class="stat-value">2,500+</div>
+                            <div class="stat-label">Creators</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">50+</div>
+                            <div class="stat-label">Channels</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">0%</div>
+                            <div class="stat-label">Fees</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-wrapper">
+                    <div class="phone">
+                        <div class="phone-screen">
+                            <i class="fas fa-play-circle"></i>
+                            <strong>Purple Squirrel</strong>
+                            <span>Media</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section" id="features">
+        <div class="ps-container">
+            <div class="section-header">
+                <h2 class="ps-heading-lg">Why Purple Squirrel?</h2>
+                <p>Built for creators, powered by blockchain, loved by millions.</p>
+            </div>
+            <div class="ps-grid ps-grid-3">
+                <div class="ps-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Zero Fees</h3>
+                    <p class="feature-desc">Pay with Solana and keep 100% of your earnings. No middlemen, no hidden charges, no platform cuts.</p>
+                </div>
+                <div class="ps-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">AI Captions</h3>
+                    <p class="feature-desc">Automatic transcription in 50+ languages powered by IBM Watson. Accessibility built in from day one.</p>
+                </div>
+                <div class="ps-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3 class="feature-title">Live Channels</h3>
+                    <p class="feature-desc">24/7 live streams across fitness, education, theatre, music and more. Always something playing.</p>
+                </div>
+                <div class="ps-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3 class="feature-title">Instant Payments</h3>
+                    <p class="feature-desc">Get paid instantly in SOL or USDC. No waiting 30 days for your money to clear.</p>
+                </div>
+                <div class="ps-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Own Your Content</h3>
+                    <p class="feature-desc">Your videos live on decentralized storage. No deplatforming, no arbitrary takedowns.</p>
+                </div>
+                <div class="ps-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Community First</h3>
+                    <p class="feature-desc">Built by creators, for creators. Join our Discord and help shape the platform.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Channels Preview -->
+    <section class="channels-section" id="channels">
+        <div class="ps-container">
+            <div class="section-header">
+                <h2 class="ps-heading-lg">Live Now</h2>
+                <p>See what's streaming right now on Purple Squirrel.</p>
+            </div>
+            <div class="ps-grid ps-grid-3">
+                <div class="ps-card channel-card" style="padding: 0;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%;"></div>
+                    <div class="channel-overlay">
+                        <span class="ps-badge ps-badge-live" style="width: fit-content; margin-bottom: var(--ps-space-2);">Live</span>
+                        <div class="channel-title">Morning Yoga Flow</div>
+                        <div class="channel-viewers"><i class="fas fa-eye"></i> 1,234 watching</div>
+                    </div>
+                </div>
+                <div class="ps-card channel-card" style="padding: 0;">
+                    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); height: 100%;"></div>
+                    <div class="channel-overlay">
+                        <span class="ps-badge ps-badge-live" style="width: fit-content; margin-bottom: var(--ps-space-2);">Live</span>
+                        <div class="channel-title">Lo-Fi Beats Radio</div>
+                        <div class="channel-viewers"><i class="fas fa-eye"></i> 3,891 watching</div>
+                    </div>
+                </div>
+                <div class="ps-card channel-card" style="padding: 0;">
+                    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); height: 100%;"></div>
+                    <div class="channel-overlay">
+                        <span class="ps-badge ps-badge-live" style="width: fit-content; margin-bottom: var(--ps-space-2);">Live</span>
+                        <div class="channel-title">Crypto Market Watch</div>
+                        <div class="channel-viewers"><i class="fas fa-eye"></i> 892 watching</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="ps-container cta-content">
+            <h2>Ready to Start Streaming?</h2>
+            <p>Join thousands of creators earning on their own terms.</p>
+            <form class="cta-form">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Join Waitlist</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="ps-container">
+            <p>&copy; 2025 Purple Squirrel Media. Powered by <a href="https://solana.com" target="_blank">Solana</a>.</p>
+        </div>
+    </footer>
+</body>
+</html>

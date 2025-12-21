@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Purple Squirrel</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Design System -->
+    <link rel="stylesheet" href="design-system/tokens.css">
+    <link rel="stylesheet" href="design-system/components.css">
+
+    <style>
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: var(--ps-gray-900);
+            border-right: 1px solid var(--ps-glass-border);
+            padding: var(--ps-space-6);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-3);
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--ps-space-8);
+        }
+
+        .sidebar-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--ps-gradient-brand);
+            border-radius: var(--ps-radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+        }
+
+        .sidebar-section {
+            margin-bottom: var(--ps-space-6);
+        }
+
+        .sidebar-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ps-text-subtle);
+            margin-bottom: var(--ps-space-3);
+            padding: 0 var(--ps-space-3);
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-3);
+            padding: var(--ps-space-3);
+            color: var(--ps-text-muted);
+            text-decoration: none;
+            border-radius: var(--ps-radius-lg);
+            transition: all var(--ps-transition-fast);
+            margin-bottom: var(--ps-space-1);
+        }
+
+        .sidebar-link:hover {
+            background: var(--ps-gray-800);
+            color: var(--ps-text);
+        }
+
+        .sidebar-link.active {
+            background: rgba(153, 69, 255, 0.15);
+            color: var(--ps-purple);
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding-top: var(--ps-space-4);
+            border-top: 1px solid var(--ps-glass-border);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-3);
+            padding: var(--ps-space-3);
+            background: var(--ps-gray-800);
+            border-radius: var(--ps-radius-lg);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--ps-gradient-brand);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--ps-text-muted);
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+            padding: var(--ps-space-8);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--ps-space-8);
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: var(--ps-space-3);
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--ps-space-6);
+            margin-bottom: var(--ps-space-8);
+        }
+
+        .stat-card {
+            background: var(--ps-glass-bg);
+            border: 1px solid var(--ps-glass-border);
+            border-radius: var(--ps-radius-xl);
+            padding: var(--ps-space-6);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--ps-space-4);
+        }
+
+        .stat-card-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(153, 69, 255, 0.15);
+            border-radius: var(--ps-radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ps-purple);
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-1);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .stat-trend.up {
+            color: var(--ps-green);
+        }
+
+        .stat-trend.down {
+            color: #ef4444;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--ps-space-1);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--ps-text-muted);
+        }
+
+        /* Content sections */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--ps-space-6);
+        }
+
+        .content-section {
+            background: var(--ps-glass-bg);
+            border: 1px solid var(--ps-glass-border);
+            border-radius: var(--ps-radius-xl);
+            padding: var(--ps-space-6);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--ps-space-6);
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        /* Video list */
+        .video-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ps-space-4);
+        }
+
+        .video-item {
+            display: flex;
+            gap: var(--ps-space-4);
+            padding: var(--ps-space-4);
+            background: var(--ps-gray-800);
+            border-radius: var(--ps-radius-lg);
+            transition: all var(--ps-transition-fast);
+        }
+
+        .video-item:hover {
+            background: var(--ps-gray-700);
+        }
+
+        .video-thumb {
+            width: 120px;
+            height: 68px;
+            background: var(--ps-gray-700);
+            border-radius: var(--ps-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--ps-gradient-brand);
+            opacity: 0.3;
+        }
+
+        .video-thumb i {
+            position: relative;
+            z-index: 1;
+            font-size: 1.5rem;
+        }
+
+        .video-info {
+            flex: 1;
+        }
+
+        .video-title {
+            font-weight: 600;
+            margin-bottom: var(--ps-space-1);
+        }
+
+        .video-meta {
+            font-size: 0.875rem;
+            color: var(--ps-text-muted);
+        }
+
+        .video-stats {
+            display: flex;
+            gap: var(--ps-space-4);
+            margin-top: var(--ps-space-2);
+            font-size: 0.75rem;
+            color: var(--ps-text-subtle);
+        }
+
+        .video-stats span {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-1);
+        }
+
+        /* Activity feed */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ps-space-4);
+        }
+
+        .activity-item {
+            display: flex;
+            gap: var(--ps-space-3);
+            padding-bottom: var(--ps-space-4);
+            border-bottom: 1px solid var(--ps-gray-800);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--ps-gray-800);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.earn {
+            background: rgba(20, 241, 149, 0.15);
+            color: var(--ps-green);
+        }
+
+        .activity-icon.view {
+            background: rgba(153, 69, 255, 0.15);
+            color: var(--ps-purple);
+        }
+
+        .activity-icon.sub {
+            background: rgba(255, 107, 157, 0.15);
+            color: var(--ps-pink);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 0.875rem;
+            margin-bottom: var(--ps-space-1);
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--ps-text-subtle);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">
+                    <i class="fas fa-play" style="color: white; font-size: 12px;"></i>
+                </div>
+                Purple Squirrel
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Main</div>
+                    <a href="#" class="sidebar-link active">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-compass"></i> Browse
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-heart"></i> Following
+                    </a>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Creator</div>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-video"></i> My Videos
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-broadcast-tower"></i> Go Live
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-chart-line"></i> Analytics
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-wallet"></i> Earnings
+                    </a>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Settings</div>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a href="#" class="sidebar-link">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="user-avatar">M</div>
+                    <div class="user-info">
+                        <div class="user-name">Matt K</div>
+                        <div class="user-role">Creator</div>
+                    </div>
+                    <i class="fas fa-ellipsis-v" style="color: var(--ps-text-muted);"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <div class="page-actions">
+                    <button class="ps-btn ps-btn-secondary">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                    <button class="ps-btn ps-btn-primary">
+                        <i class="fas fa-broadcast-tower"></i> Go Live
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 12%
+                        </div>
+                    </div>
+                    <div class="stat-value">24.5K</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 8%
+                        </div>
+                    </div>
+                    <div class="stat-value">1,234</div>
+                    <div class="stat-label">Subscribers</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 23%
+                        </div>
+                    </div>
+                    <div class="stat-value">847h</div>
+                    <div class="stat-label">Watch Time</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon" style="background: rgba(20, 241, 149, 0.15); color: var(--ps-green);">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i> 45%
+                        </div>
+                    </div>
+                    <div class="stat-value" style="background: var(--ps-gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">12.4 SOL</div>
+                    <div class="stat-label">This Month</div>
+                </div>
+            </div>
+
+            <!-- Content sections -->
+            <div class="content-grid">
+                <!-- Recent Videos -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Videos</h2>
+                        <a href="#" class="ps-btn ps-btn-ghost ps-btn-sm">View All</a>
+                    </div>
+                    <div class="video-list">
+                        <div class="video-item">
+                            <div class="video-thumb">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-info">
+                                <div class="video-title">Building a Web3 App from Scratch</div>
+                                <div class="video-meta">Published 2 days ago</div>
+                                <div class="video-stats">
+                                    <span><i class="fas fa-eye"></i> 3,421</span>
+                                    <span><i class="fas fa-heart"></i> 234</span>
+                                    <span><i class="fas fa-comment"></i> 45</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-thumb">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-info">
+                                <div class="video-title">Solana Smart Contract Tutorial</div>
+                                <div class="video-meta">Published 5 days ago</div>
+                                <div class="video-stats">
+                                    <span><i class="fas fa-eye"></i> 5,892</span>
+                                    <span><i class="fas fa-heart"></i> 412</span>
+                                    <span><i class="fas fa-comment"></i> 87</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-thumb">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-info">
+                                <div class="video-title">DeFi Explained for Beginners</div>
+                                <div class="video-meta">Published 1 week ago</div>
+                                <div class="video-stats">
+                                    <span><i class="fas fa-eye"></i> 8,234</span>
+                                    <span><i class="fas fa-heart"></i> 623</span>
+                                    <span><i class="fas fa-comment"></i> 156</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Feed -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Activity</h2>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon earn">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>0.5 SOL</strong> earned from tips</div>
+                                <div class="activity-time">2 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon sub">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>CryptoKing</strong> subscribed</div>
+                                <div class="activity-time">15 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon view">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>1,000 views</strong> milestone!</div>
+                                <div class="activity-time">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon earn">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>2.1 SOL</strong> from subscription</div>
+                                <div class="activity-time">3 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon sub">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text"><strong>5 new</strong> subscribers</div>
+                                <div class="activity-time">Today</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

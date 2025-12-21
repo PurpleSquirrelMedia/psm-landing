@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch - Purple Squirrel</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Design System -->
+    <link rel="stylesheet" href="design-system/tokens.css">
+    <link rel="stylesheet" href="design-system/components.css">
+
+    <style>
+        body {
+            background: var(--ps-black);
+        }
+
+        /* Top nav bar */
+        .player-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--ps-glass-border);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--ps-space-6);
+            z-index: 100;
+        }
+
+        .player-nav-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-2);
+            color: var(--ps-text);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .player-nav-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--ps-gradient-brand);
+            border-radius: var(--ps-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-nav-search {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 var(--ps-space-8);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--ps-space-2) var(--ps-space-4);
+            background: var(--ps-gray-900);
+            border: 1px solid var(--ps-gray-700);
+            border-radius: var(--ps-radius-full);
+            color: var(--ps-text);
+            font-size: 0.875rem;
+        }
+
+        .search-input::placeholder {
+            color: var(--ps-text-subtle);
+        }
+
+        .player-nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-4);
+        }
+
+        .nav-icon-btn {
+            width: 36px;
+            height: 36px;
+            background: transparent;
+            border: none;
+            color: var(--ps-text-muted);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--ps-transition-fast);
+        }
+
+        .nav-icon-btn:hover {
+            background: var(--ps-gray-800);
+            color: var(--ps-text);
+        }
+
+        .nav-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--ps-gradient-brand);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        /* Main layout */
+        .player-layout {
+            display: flex;
+            padding-top: 56px;
+            min-height: 100vh;
+        }
+
+        .player-main {
+            flex: 1;
+            max-width: 1200px;
+            padding: var(--ps-space-6);
+        }
+
+        /* Video player */
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: var(--ps-gray-900);
+            border-radius: var(--ps-radius-xl);
+            overflow: hidden;
+            margin-bottom: var(--ps-space-6);
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--ps-gradient-brand);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--ps-transition-fast);
+            box-shadow: var(--ps-shadow-glow);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+
+        .play-button i {
+            font-size: 2rem;
+            color: white;
+            margin-left: 4px;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--ps-space-4);
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            margin-bottom: var(--ps-space-3);
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            width: 35%;
+            height: 100%;
+            background: var(--ps-gradient-brand);
+            border-radius: 2px;
+        }
+
+        .controls-row {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-4);
+        }
+
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity var(--ps-transition-fast);
+        }
+
+        .control-btn:hover {
+            opacity: 1;
+        }
+
+        .time-display {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.8);
+            font-family: var(--ps-font-mono);
+        }
+
+        .controls-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-4);
+        }
+
+        /* Video info */
+        .video-info {
+            margin-bottom: var(--ps-space-6);
+        }
+
+        .video-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--ps-space-3);
+        }
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-6);
+            color: var(--ps-text-muted);
+            font-size: 0.875rem;
+            margin-bottom: var(--ps-space-4);
+        }
+
+        .video-meta span {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-2);
+        }
+
+        .video-actions {
+            display: flex;
+            gap: var(--ps-space-3);
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-2);
+            padding: var(--ps-space-2) var(--ps-space-4);
+            background: var(--ps-gray-800);
+            border: none;
+            border-radius: var(--ps-radius-full);
+            color: var(--ps-text);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all var(--ps-transition-fast);
+        }
+
+        .action-btn:hover {
+            background: var(--ps-gray-700);
+        }
+
+        .action-btn.active {
+            background: rgba(153, 69, 255, 0.2);
+            color: var(--ps-purple);
+        }
+
+        /* Creator card */
+        .creator-card {
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-4);
+            padding: var(--ps-space-4);
+            background: var(--ps-gray-900);
+            border-radius: var(--ps-radius-xl);
+            margin-bottom: var(--ps-space-6);
+        }
+
+        .creator-avatar {
+            width: 56px;
+            height: 56px;
+            background: var(--ps-gradient-brand);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .creator-info {
+            flex: 1;
+        }
+
+        .creator-name {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: var(--ps-space-1);
+        }
+
+        .creator-subs {
+            font-size: 0.875rem;
+            color: var(--ps-text-muted);
+        }
+
+        .tip-btn {
+            background: var(--ps-gradient-brand);
+            border: none;
+            padding: var(--ps-space-3) var(--ps-space-6);
+            border-radius: var(--ps-radius-lg);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--ps-space-2);
+            box-shadow: var(--ps-shadow-glow);
+            transition: all var(--ps-transition-fast);
+        }
+
+        .tip-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Description */
+        .video-description {
+            background: var(--ps-gray-900);
+            border-radius: var(--ps-radius-xl);
+            padding: var(--ps-space-4);
+            margin-bottom: var(--ps-space-6);
+        }
+
+        .description-text {
+            color: var(--ps-text-muted);
+            line-height: 1.7;
+        }
+
+        .description-tags {
+            display: flex;
+            gap: var(--ps-space-2);
+            margin-top: var(--ps-space-4);
+        }
+
+        .tag {
+            padding: var(--ps-space-1) var(--ps-space-3);
+            background: var(--ps-gray-800);
+            border-radius: var(--ps-radius-full);
+            font-size: 0.75rem;
+            color: var(--ps-text-muted);
+        }
+
+        /* Sidebar */
+        .player-sidebar {
+            width: 360px;
+            padding: var(--ps-space-6);
+            padding-left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--ps-space-4);
+        }
+
+        .sidebar-title {
+            font-weight: 600;
+        }
+
+        .recommended-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ps-space-3);
+        }
+
+        .rec-video {
+            display: flex;
+            gap: var(--ps-space-3);
+            padding: var(--ps-space-2);
+            border-radius: var(--ps-radius-lg);
+            cursor: pointer;
+            transition: all var(--ps-transition-fast);
+        }
+
+        .rec-video:hover {
+            background: var(--ps-gray-900);
+        }
+
+        .rec-thumb {
+            width: 160px;
+            height: 90px;
+            background: var(--ps-gray-800);
+            border-radius: var(--ps-radius-md);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rec-thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--ps-gradient-purple);
+            opacity: 0.3;
+        }
+
+        .rec-duration {
+            position: absolute;
+            bottom: var(--ps-space-1);
+            right: var(--ps-space-1);
+            background: rgba(0,0,0,0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: var(--ps-font-mono);
+            z-index: 1;
+        }
+
+        .rec-info {
+            flex: 1;
+        }
+
+        .rec-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: var(--ps-space-1);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .rec-creator {
+            font-size: 0.75rem;
+            color: var(--ps-text-muted);
+            margin-bottom: var(--ps-space-1);
+        }
+
+        .rec-meta {
+            font-size: 0.75rem;
+            color: var(--ps-text-subtle);
+        }
+
+        /* Live badge */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--ps-space-1);
+            padding: 2px 8px;
+            background: #ef4444;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .live-indicator::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .player-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .player-nav-search {
+                display: none;
+            }
+
+            .player-main {
+                padding: var(--ps-space-3);
+            }
+
+            .video-title {
+                font-size: 1.25rem;
+            }
+
+            .video-meta {
+                flex-wrap: wrap;
+                gap: var(--ps-space-3);
+            }
+
+            .video-actions {
+                flex-wrap: wrap;
+            }
+
+            .creator-card {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="player-nav">
+        <a href="index-v2.html" class="player-nav-logo">
+            <div class="player-nav-logo-icon">
+                <i class="fas fa-play" style="color: white; font-size: 10px;"></i>
+            </div>
+            Purple Squirrel
+        </a>
+
+        <div class="player-nav-search">
+            <input type="text" class="search-input" placeholder="Search videos, creators, channels...">
+        </div>
+
+        <div class="player-nav-right">
+            <button class="nav-icon-btn"><i class="fas fa-video"></i></button>
+            <button class="nav-icon-btn"><i class="fas fa-bell"></i></button>
+            <div class="nav-avatar">M</div>
+        </div>
+    </nav>
+
+    <!-- Main layout -->
+    <div class="player-layout">
+        <!-- Main content -->
+        <main class="player-main">
+            <!-- Video player -->
+            <div class="video-container">
+                <div class="video-player">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-controls">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="controls-row">
+                        <button class="control-btn"><i class="fas fa-play"></i></button>
+                        <button class="control-btn"><i class="fas fa-forward"></i></button>
+                        <button class="control-btn"><i class="fas fa-volume-up"></i></button>
+                        <span class="time-display">12:34 / 45:21</span>
+                        <div class="controls-right">
+                            <button class="control-btn"><i class="fas fa-closed-captioning"></i></button>
+                            <button class="control-btn"><i class="fas fa-cog"></i></button>
+                            <button class="control-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video info -->
+            <div class="video-info">
+                <h1 class="video-title">Building a Decentralized Streaming Platform with Solana</h1>
+                <div class="video-meta">
+                    <span><i class="fas fa-eye"></i> 12,456 views</span>
+                    <span><i class="fas fa-calendar"></i> Dec 18, 2025</span>
+                    <span class="ps-badge ps-badge-live" style="padding: 2px 8px; font-size: 0.7rem;">HD</span>
+                </div>
+                <div class="video-actions">
+                    <button class="action-btn active"><i class="fas fa-heart"></i> 1.2K</button>
+                    <button class="action-btn"><i class="fas fa-share"></i> Share</button>
+                    <button class="action-btn"><i class="fas fa-bookmark"></i> Save</button>
+                    <button class="action-btn"><i class="fas fa-download"></i> Download</button>
+                    <button class="action-btn"><i class="fas fa-flag"></i> Report</button>
+                </div>
+            </div>
+
+            <!-- Creator -->
+            <div class="creator-card">
+                <div class="creator-avatar">C</div>
+                <div class="creator-info">
+                    <div class="creator-name">CryptoBuilder</div>
+                    <div class="creator-subs">45.2K subscribers</div>
+                </div>
+                <button class="ps-btn ps-btn-secondary">Subscribe</button>
+                <button class="tip-btn">
+                    <i class="fas fa-coins"></i> Tip SOL
+                </button>
+            </div>
+
+            <!-- Description -->
+            <div class="video-description">
+                <p class="description-text">
+                    In this comprehensive tutorial, we'll build a fully decentralized streaming platform using Solana blockchain technology. Learn how to integrate wallet authentication, handle payments in SOL, and store video metadata on-chain.
+                    <br><br>
+                    Topics covered:
+                    • Setting up a Solana development environment
+                    • Connecting Phantom wallet
+                    • Creating streaming payment programs
+                    • IPFS video storage integration
+                    • Building the React frontend
+                </p>
+                <div class="description-tags">
+                    <span class="tag">#solana</span>
+                    <span class="tag">#web3</span>
+                    <span class="tag">#streaming</span>
+                    <span class="tag">#tutorial</span>
+                    <span class="tag">#blockchain</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="player-sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Up Next</span>
+                <button class="ps-btn ps-btn-ghost ps-btn-sm">Autoplay</button>
+            </div>
+
+            <div class="recommended-list">
+                <div class="rec-video">
+                    <div class="rec-thumb">
+                        <span class="rec-duration">23:45</span>
+                    </div>
+                    <div class="rec-info">
+                        <div class="rec-title">NFT Marketplace Tutorial</div>
+                        <div class="rec-creator">Web3Dev</div>
+                        <div class="rec-meta">8.2K views • 2 days ago</div>
+                    </div>
+                </div>
+
+                <div class="rec-video">
+                    <div class="rec-thumb">
+                        <span class="live-indicator">LIVE</span>
+                    </div>
+                    <div class="rec-info">
+                        <div class="rec-title">Coding Session: Rust Smart Contracts</div>
+                        <div class="rec-creator">RustMaster</div>
+                        <div class="rec-meta">342 watching now</div>
+                    </div>
+                </div>
+
+                <div class="rec-video">
+                    <div class="rec-thumb">
+                        <span class="rec-duration">18:32</span>
+                    </div>
+                    <div class="rec-info">
+                        <div class="rec-title">DeFi Explained Simply</div>
+                        <div class="rec-creator">CryptoSimple</div>
+                        <div class="rec-meta">24K views • 1 week ago</div>
+                    </div>
+                </div>
+
+                <div class="rec-video">
+                    <div class="rec-thumb">
+                        <span class="rec-duration">45:00</span>
+                    </div>
+                    <div class="rec-info">
+                        <div class="rec-title">Complete Anchor Framework Guide</div>
+                        <div class="rec-creator">SolanaU</div>
+                        <div class="rec-meta">15K views • 3 days ago</div>
+                    </div>
+                </div>
+
+                <div class="rec-video">
+                    <div class="rec-thumb">
+                        <span class="rec-duration">12:18</span>
+                    </div>
+                    <div class="rec-info">
+                        <div class="rec-title">Token Economics 101</div>
+                        <div class="rec-creator">TokenGuru</div>
+                        <div class="rec-meta">6.8K views • 5 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>
