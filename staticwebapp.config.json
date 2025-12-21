@@ -1,8 +1,8 @@
 {
   "routes": [
     {
-      "route": "/app*",
-      "allowedRoles": ["authenticated"]
+      "route": "/app/*",
+      "allowedRoles": ["anonymous", "authenticated"]
     },
     {
       "route": "/upload*",
