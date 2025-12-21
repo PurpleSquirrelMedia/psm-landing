@@ -47,6 +47,14 @@
     {
       "route": "/plans",
       "rewrite": "/plans.html"
+    },
+    {
+      "route": "/signup",
+      "rewrite": "/signup.html"
+    },
+    {
+      "route": "/get-started",
+      "rewrite": "/signup.html"
     }
   ],
   "navigationFallback": {
