@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Squirrel Mascot - Purple Squirrel Media</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            pointer-events: none;
+        }
+        .badge {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: #a78bfa;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        h1 span {
+            background: linear-gradient(135deg, #8b5cf6, #d946ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2rem;
+        }
+        .hint {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.875rem;
+            text-align: right;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div class="content">
+        <div class="badge">Meet Our Mascot</div>
+        <h1>Say Hello to <span>Nutkin</span></h1>
+        <p>Drag to rotate • Scroll to zoom</p>
+    </div>
+
+    <div class="hint">Move mouse to interact</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 6);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+        scene.add(ambientLight);
+
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        mainLight.position.set(5, 10, 7);
+        mainLight.castShadow = true;
+        scene.add(mainLight);
+
+        const purpleLight = new THREE.PointLight(0x8b5cf6, 2, 15);
+        purpleLight.position.set(-4, 3, 4);
+        scene.add(purpleLight);
+
+        const pinkLight = new THREE.PointLight(0xd946ef, 1.5, 15);
+        pinkLight.position.set(4, -2, 3);
+        scene.add(pinkLight);
+
+        const backLight = new THREE.PointLight(0x06b6d4, 1, 10);
+        backLight.position.set(0, 0, -5);
+        scene.add(backLight);
+
+        // Create stylized squirrel
+        const squirrelGroup = new THREE.Group();
+
+        // Materials
+        const purpleMat = new THREE.MeshStandardMaterial({
+            color: 0x8b5cf6,
+            roughness: 0.4,
+            metalness: 0.1
+        });
+        const darkPurpleMat = new THREE.MeshStandardMaterial({
+            color: 0x7c3aed,
+            roughness: 0.5,
+            metalness: 0.1
+        });
+        const lightPurpleMat = new THREE.MeshStandardMaterial({
+            color: 0xddd6fe,
+            roughness: 0.5
+        });
+        const pinkMat = new THREE.MeshStandardMaterial({
+            color: 0xd946ef,
+            roughness: 0.4
+        });
+        const blackMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2e });
+        const whiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const shineMat = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            emissive: 0xffffff,
+            emissiveIntensity: 0.5
+        });
+
+        // Body - main torso (oval shape)
+        const bodyGeom = new THREE.SphereGeometry(1, 32, 32);
+        bodyGeom.scale(0.9, 1.1, 0.8);
+        const body = new THREE.Mesh(bodyGeom, purpleMat);
+        body.position.set(0, -0.3, 0);
+        body.castShadow = true;
+        squirrelGroup.add(body);
+
+        // Belly (lighter color)
+        const bellyGeom = new THREE.SphereGeometry(0.6, 32, 32);
+        bellyGeom.scale(0.7, 0.9, 0.5);
+        const belly = new THREE.Mesh(bellyGeom, lightPurpleMat);
+        belly.position.set(0, -0.4, 0.45);
+        squirrelGroup.add(belly);
+
+        // Head
+        const headGeom = new THREE.SphereGeometry(0.7, 32, 32);
+        headGeom.scale(1, 0.95, 0.9);
+        const head = new THREE.Mesh(headGeom, purpleMat);
+        head.position.set(0, 1, 0.1);
+        head.castShadow = true;
+        squirrelGroup.add(head);
+
+        // Cheeks (puffy)
+        [-0.35, 0.35].forEach(x => {
+            const cheekGeom = new THREE.SphereGeometry(0.25, 16, 16);
+            const cheek = new THREE.Mesh(cheekGeom, lightPurpleMat);
+            cheek.position.set(x, 0.85, 0.5);
+            squirrelGroup.add(cheek);
+        });
+
+        // Snout
+        const snoutGeom = new THREE.SphereGeometry(0.22, 32, 32);
+        snoutGeom.scale(1, 0.8, 1.1);
+        const snout = new THREE.Mesh(snoutGeom, lightPurpleMat);
+        snout.position.set(0, 0.85, 0.7);
+        squirrelGroup.add(snout);
+
+        // Nose
+        const noseGeom = new THREE.SphereGeometry(0.1, 16, 16);
+        noseGeom.scale(1.2, 1, 1);
+        const nose = new THREE.Mesh(noseGeom, blackMat);
+        nose.position.set(0, 0.88, 0.9);
+        squirrelGroup.add(nose);
+
+        // Eyes
+        [-0.22, 0.22].forEach(x => {
+            // Eye white
+            const eyeWhiteGeom = new THREE.SphereGeometry(0.18, 16, 16);
+            const eyeWhite = new THREE.Mesh(eyeWhiteGeom, whiteMat);
+            eyeWhite.position.set(x, 1.15, 0.5);
+            squirrelGroup.add(eyeWhite);
+
+            // Pupil
+            const pupilGeom = new THREE.SphereGeometry(0.12, 16, 16);
+            const pupil = new THREE.Mesh(pupilGeom, blackMat);
+            pupil.position.set(x, 1.15, 0.65);
+            squirrelGroup.add(pupil);
+
+            // Eye shine
+            const shineGeom = new THREE.SphereGeometry(0.05, 8, 8);
+            const shine = new THREE.Mesh(shineGeom, shineMat);
+            shine.position.set(x + 0.04, 1.2, 0.75);
+            squirrelGroup.add(shine);
+        });
+
+        // Ears
+        [-0.4, 0.4].forEach(x => {
+            // Main ear
+            const earGeom = new THREE.ConeGeometry(0.2, 0.5, 32);
+            const ear = new THREE.Mesh(earGeom, purpleMat);
+            ear.position.set(x, 1.65, -0.1);
+            ear.rotation.z = x > 0 ? -0.4 : 0.4;
+            ear.rotation.x = -0.2;
+            squirrelGroup.add(ear);
+
+            // Ear tuft (pink tip)
+            const tuftGeom = new THREE.ConeGeometry(0.1, 0.3, 16);
+            const tuft = new THREE.Mesh(tuftGeom, pinkMat);
+            tuft.position.set(x * 1.1, 1.9, -0.15);
+            tuft.rotation.z = x > 0 ? -0.4 : 0.4;
+            tuft.rotation.x = -0.2;
+            squirrelGroup.add(tuft);
+
+            // Inner ear
+            const innerEarGeom = new THREE.ConeGeometry(0.1, 0.25, 16);
+            const innerEar = new THREE.Mesh(innerEarGeom, pinkMat);
+            innerEar.position.set(x * 0.9, 1.6, 0);
+            innerEar.rotation.z = x > 0 ? -0.4 : 0.4;
+            squirrelGroup.add(innerEar);
+        });
+
+        // Tail - big fluffy spiral
+        const tailGroup = new THREE.Group();
+        const tailSegments = 12;
+        for (let i = 0; i < tailSegments; i++) {
+            const t = i / tailSegments;
+            const size = 0.4 * (1 - t * 0.5);
+            const tailSeg = new THREE.Mesh(
+                new THREE.SphereGeometry(size, 16, 16),
+                i % 2 === 0 ? darkPurpleMat : purpleMat
+            );
+            const angle = t * Math.PI * 1.5;
+            tailSeg.position.set(
+                0,
+                t * 2.5,
+                -0.8 - Math.sin(angle) * 0.8
+            );
+            tailSeg.scale.set(1, 1.2, 1);
+            tailGroup.add(tailSeg);
+        }
+        tailGroup.position.set(0, -1.2, -0.2);
+        squirrelGroup.add(tailGroup);
+
+        // Arms
+        [-0.7, 0.7].forEach(x => {
+            // Upper arm
+            const armGeom = new THREE.SphereGeometry(0.2, 16, 16);
+            armGeom.scale(0.8, 1.5, 0.8);
+            const arm = new THREE.Mesh(armGeom, purpleMat);
+            arm.position.set(x, -0.2, 0.4);
+            arm.rotation.z = x > 0 ? -0.6 : 0.6;
+            arm.rotation.x = 0.4;
+            squirrelGroup.add(arm);
+
+            // Paw
+            const pawGeom = new THREE.SphereGeometry(0.15, 16, 16);
+            const paw = new THREE.Mesh(pawGeom, lightPurpleMat);
+            paw.position.set(x * 1.1, -0.5, 0.6);
+            squirrelGroup.add(paw);
+        });
+
+        // Legs
+        [-0.4, 0.4].forEach(x => {
+            // Thigh
+            const thighGeom = new THREE.SphereGeometry(0.3, 16, 16);
+            thighGeom.scale(0.9, 1.2, 0.9);
+            const thigh = new THREE.Mesh(thighGeom, purpleMat);
+            thigh.position.set(x, -1.1, 0.1);
+            squirrelGroup.add(thigh);
+
+            // Foot
+            const footGeom = new THREE.SphereGeometry(0.22, 16, 16);
+            footGeom.scale(1.3, 0.6, 1.6);
+            const foot = new THREE.Mesh(footGeom, lightPurpleMat);
+            foot.position.set(x, -1.45, 0.35);
+            squirrelGroup.add(foot);
+        });
+
+        // Add acorn (held in paws)
+        const acornGroup = new THREE.Group();
+        const acornBodyGeom = new THREE.SphereGeometry(0.18, 16, 16);
+        acornBodyGeom.scale(1, 1.3, 1);
+        const acornBody = new THREE.Mesh(acornBodyGeom, new THREE.MeshStandardMaterial({ color: 0x8B4513 }));
+        acornGroup.add(acornBody);
+
+        const acornCapGeom = new THREE.SphereGeometry(0.2, 16, 16);
+        acornCapGeom.scale(1, 0.5, 1);
+        const acornCap = new THREE.Mesh(acornCapGeom, new THREE.MeshStandardMaterial({ color: 0x654321 }));
+        acornCap.position.y = 0.15;
+        acornGroup.add(acornCap);
+
+        const stemGeom = new THREE.CylinderGeometry(0.03, 0.03, 0.1, 8);
+        const stem = new THREE.Mesh(stemGeom, new THREE.MeshStandardMaterial({ color: 0x4a3520 }));
+        stem.position.y = 0.35;
+        acornGroup.add(stem);
+
+        acornGroup.position.set(0, -0.5, 0.7);
+        acornGroup.scale.setScalar(0.8);
+        squirrelGroup.add(acornGroup);
+
+        scene.add(squirrelGroup);
+
+        // Floating particles
+        const particlesGeom = new THREE.BufferGeometry();
+        const particleCount = 200;
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+            const radius = 3 + Math.random() * 4;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            positions[i * 3 + 2] = radius * Math.cos(phi);
+
+            const color = Math.random() > 0.5 ? 0x8b5cf6 : 0xd946ef;
+            const c = new THREE.Color(color);
+            colors[i * 3] = c.r;
+            colors[i * 3 + 1] = c.g;
+            colors[i * 3 + 2] = c.b;
+        }
+
+        particlesGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particlesGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particlesMat = new THREE.PointsMaterial({
+            size: 0.08,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        const particles = new THREE.Points(particlesGeom, particlesMat);
+        scene.add(particles);
+
+        // Mouse interaction
+        let isDragging = false;
+        let previousMouse = { x: 0, y: 0 };
+        let targetRotation = { x: 0, y: 0 };
+        let currentRotation = { x: 0, y: 0 };
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMouse = { x: e.clientX, y: e.clientY };
+        });
+        canvas.addEventListener('mouseup', () => isDragging = false);
+        canvas.addEventListener('mouseleave', () => isDragging = false);
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const deltaX = e.clientX - previousMouse.x;
+                const deltaY = e.clientY - previousMouse.y;
+                targetRotation.y += deltaX * 0.01;
+                targetRotation.x += deltaY * 0.005;
+                targetRotation.x = Math.max(-0.5, Math.min(0.5, targetRotation.x));
+            }
+            previousMouse = { x: e.clientX, y: e.clientY };
+        });
+
+        // Zoom
+        canvas.addEventListener('wheel', (e) => {
+            camera.position.z += e.deltaY * 0.01;
+            camera.position.z = Math.max(3, Math.min(12, camera.position.z));
+        });
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            previousMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        });
+        canvas.addEventListener('touchend', () => isDragging = false);
+        canvas.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                const deltaX = e.touches[0].clientX - previousMouse.x;
+                const deltaY = e.touches[0].clientY - previousMouse.y;
+                targetRotation.y += deltaX * 0.01;
+                targetRotation.x += deltaY * 0.005;
+                targetRotation.x = Math.max(-0.5, Math.min(0.5, targetRotation.x));
+                previousMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+        });
+
+        // Animation
+        const clock = new THREE.Clock();
+        function animate() {
+            const t = clock.getElapsedTime();
+
+            // Smooth rotation interpolation
+            currentRotation.x += (targetRotation.x - currentRotation.x) * 0.05;
+            currentRotation.y += (targetRotation.y - currentRotation.y) * 0.05;
+
+            squirrelGroup.rotation.y = currentRotation.y;
+            squirrelGroup.rotation.x = currentRotation.x;
+
+            // Idle breathing animation
+            squirrelGroup.position.y = Math.sin(t * 2) * 0.08;
+
+            // Tail wag
+            tailGroup.rotation.x = Math.sin(t * 3) * 0.15;
+            tailGroup.rotation.z = Math.sin(t * 2.5) * 0.08;
+
+            // Ear twitch (random)
+            squirrelGroup.children.forEach((child, i) => {
+                if (child.geometry && child.geometry.type === 'ConeGeometry') {
+                    child.rotation.x += Math.sin(t * 5 + i) * 0.003;
+                }
+            });
+
+            // Eye blink (occasional)
+            const blinkPhase = Math.sin(t * 0.5);
+            if (blinkPhase > 0.98) {
+                squirrelGroup.children.forEach(child => {
+                    if (child.material === whiteMat) {
+                        child.scale.y = 0.1;
+                    }
+                });
+            } else {
+                squirrelGroup.children.forEach(child => {
+                    if (child.material === whiteMat) {
+                        child.scale.y = 1;
+                    }
+                });
+            }
+
+            // Particles orbit
+            particles.rotation.y = t * 0.1;
+            particles.rotation.x = Math.sin(t * 0.3) * 0.2;
+
+            // Lights pulse
+            purpleLight.intensity = 2 + Math.sin(t * 2) * 0.5;
+            pinkLight.intensity = 1.5 + Math.cos(t * 2) * 0.4;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

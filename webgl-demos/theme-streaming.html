@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming Theme - Purple Squirrel Media</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            overflow: hidden;
+            background: #000;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        .logo {
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: linear-gradient(180deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeUp 1.5s ease 0.5s forwards;
+        }
+        .tagline {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1.5s ease 1s forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .cta {
+            margin-top: 3rem;
+            display: flex;
+            gap: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1.5s ease 1.5s forwards;
+        }
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+        }
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .stats {
+            position: fixed;
+            bottom: 3rem;
+            display: flex;
+            gap: 4rem;
+            opacity: 0;
+            animation: fadeUp 1.5s ease 2s forwards;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div class="content">
+        <h1 class="logo">PURPLE SQUIRREL</h1>
+        <p class="tagline">Stream Anywhere, Anytime</p>
+        <div class="cta">
+            <a href="#" class="btn btn-primary">Start Free Trial</a>
+            <a href="#" class="btn btn-outline">View Plans</a>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value">4K</div>
+            <div class="stat-label">Ultra HD</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">∞</div>
+            <div class="stat-label">Content</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">0</div>
+            <div class="stat-label">Ads</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 10);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x111122, 0.5);
+        scene.add(ambientLight);
+
+        const purpleLight = new THREE.PointLight(0x8b5cf6, 2, 30);
+        purpleLight.position.set(-5, 5, 5);
+        scene.add(purpleLight);
+
+        const cyanLight = new THREE.PointLight(0x06b6d4, 2, 30);
+        cyanLight.position.set(5, -5, 5);
+        scene.add(cyanLight);
+
+        // Data stream particles (representing streaming data)
+        const streamGroup = new THREE.Group();
+        const streamCount = 50;
+        const streams = [];
+
+        for (let i = 0; i < streamCount; i++) {
+            const particleCount = 30;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const startX = (Math.random() - 0.5) * 30;
+            const startY = (Math.random() - 0.5) * 20;
+            const startZ = -20 - Math.random() * 20;
+
+            const color = Math.random() > 0.5 ?
+                new THREE.Color(0x8b5cf6) :
+                new THREE.Color(0x06b6d4);
+
+            for (let j = 0; j < particleCount; j++) {
+                positions[j * 3] = startX;
+                positions[j * 3 + 1] = startY;
+                positions[j * 3 + 2] = startZ + j * 0.5;
+
+                const fade = 1 - j / particleCount;
+                colors[j * 3] = color.r * fade;
+                colors[j * 3 + 1] = color.g * fade;
+                colors[j * 3 + 2] = color.b * fade;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.08,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+
+            const stream = new THREE.Points(geometry, material);
+            stream.userData = {
+                speed: 0.1 + Math.random() * 0.2,
+                startZ: startZ
+            };
+            streams.push(stream);
+            streamGroup.add(stream);
+        }
+        scene.add(streamGroup);
+
+        // Floating play buttons
+        const playButtonGroup = new THREE.Group();
+        const playMaterial = new THREE.MeshStandardMaterial({
+            color: 0x8b5cf6,
+            metalness: 0.8,
+            roughness: 0.2,
+            emissive: 0x8b5cf6,
+            emissiveIntensity: 0.3
+        });
+
+        function createPlayButton(size) {
+            const group = new THREE.Group();
+
+            // Circle
+            const ringGeom = new THREE.RingGeometry(size * 0.8, size, 32);
+            const ringMat = new THREE.MeshStandardMaterial({
+                color: 0x8b5cf6,
+                metalness: 0.5,
+                roughness: 0.3,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.8
+            });
+            const ring = new THREE.Mesh(ringGeom, ringMat);
+            group.add(ring);
+
+            // Triangle (play icon)
+            const triangleShape = new THREE.Shape();
+            const s = size * 0.4;
+            triangleShape.moveTo(-s * 0.3, -s * 0.5);
+            triangleShape.lineTo(-s * 0.3, s * 0.5);
+            triangleShape.lineTo(s * 0.5, 0);
+            triangleShape.closePath();
+
+            const triangleGeom = new THREE.ShapeGeometry(triangleShape);
+            const triangle = new THREE.Mesh(triangleGeom, playMaterial);
+            triangle.position.x = size * 0.05;
+            group.add(triangle);
+
+            return group;
+        }
+
+        for (let i = 0; i < 8; i++) {
+            const playBtn = createPlayButton(0.5 + Math.random() * 0.5);
+            playBtn.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 15,
+                -5 - Math.random() * 10
+            );
+            playBtn.userData = {
+                rotationSpeed: (Math.random() - 0.5) * 0.02,
+                floatOffset: Math.random() * Math.PI * 2,
+                floatSpeed: 0.5 + Math.random() * 0.5
+            };
+            playButtonGroup.add(playBtn);
+        }
+        scene.add(playButtonGroup);
+
+        // Progress bars (like loading/buffering)
+        const progressGroup = new THREE.Group();
+        const progressMaterial = new THREE.MeshBasicMaterial({
+            color: 0x06b6d4,
+            transparent: true,
+            opacity: 0.6
+        });
+
+        for (let i = 0; i < 10; i++) {
+            const width = 2 + Math.random() * 4;
+            const barGeom = new THREE.PlaneGeometry(width, 0.05);
+            const bar = new THREE.Mesh(barGeom, progressMaterial.clone());
+            bar.position.set(
+                (Math.random() - 0.5) * 25,
+                (Math.random() - 0.5) * 18,
+                -8 - Math.random() * 5
+            );
+            bar.userData = {
+                fullWidth: width,
+                progress: Math.random(),
+                speed: 0.005 + Math.random() * 0.01
+            };
+            progressGroup.add(bar);
+        }
+        scene.add(progressGroup);
+
+        // Waveform visualizer
+        const waveGroup = new THREE.Group();
+        const waveBarCount = 64;
+        const waveBars = [];
+
+        for (let i = 0; i < waveBarCount; i++) {
+            const barGeom = new THREE.BoxGeometry(0.1, 1, 0.1);
+            const barMat = new THREE.MeshBasicMaterial({
+                color: new THREE.Color().lerpColors(
+                    new THREE.Color(0x8b5cf6),
+                    new THREE.Color(0x06b6d4),
+                    i / waveBarCount
+                ),
+                transparent: true,
+                opacity: 0.7
+            });
+            const bar = new THREE.Mesh(barGeom, barMat);
+            bar.position.x = (i - waveBarCount / 2) * 0.15;
+            bar.position.y = -6;
+            bar.position.z = -3;
+            waveBars.push(bar);
+            waveGroup.add(bar);
+        }
+        scene.add(waveGroup);
+
+        // Network nodes (representing distributed streaming)
+        const nodeGroup = new THREE.Group();
+        const nodes = [];
+        const nodePositions = [];
+
+        for (let i = 0; i < 15; i++) {
+            const nodeGeom = new THREE.SphereGeometry(0.1, 16, 16);
+            const nodeMat = new THREE.MeshBasicMaterial({
+                color: 0x8b5cf6,
+                transparent: true,
+                opacity: 0.8
+            });
+            const node = new THREE.Mesh(nodeGeom, nodeMat);
+            const pos = new THREE.Vector3(
+                (Math.random() - 0.5) * 15,
+                (Math.random() - 0.5) * 10,
+                -5 - Math.random() * 5
+            );
+            node.position.copy(pos);
+            nodePositions.push(pos);
+            nodes.push(node);
+            nodeGroup.add(node);
+        }
+
+        // Connect nodes with lines
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x8b5cf6,
+            transparent: true,
+            opacity: 0.2
+        });
+
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                if (nodePositions[i].distanceTo(nodePositions[j]) < 6) {
+                    const lineGeom = new THREE.BufferGeometry().setFromPoints([
+                        nodePositions[i],
+                        nodePositions[j]
+                    ]);
+                    const line = new THREE.Line(lineGeom, lineMaterial);
+                    nodeGroup.add(line);
+                }
+            }
+        }
+        scene.add(nodeGroup);
+
+        // Mouse interaction
+        const mouse = { x: 0, y: 0 };
+        const targetMouse = { x: 0, y: 0 };
+
+        document.addEventListener('mousemove', (e) => {
+            targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            targetMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        // Animation
+        const clock = new THREE.Clock();
+
+        function animate() {
+            const t = clock.getElapsedTime();
+
+            // Smooth mouse follow
+            mouse.x += (targetMouse.x - mouse.x) * 0.05;
+            mouse.y += (targetMouse.y - mouse.y) * 0.05;
+
+            // Camera movement
+            camera.position.x = mouse.x * 1;
+            camera.position.y = mouse.y * 0.5;
+            camera.lookAt(0, 0, 0);
+
+            // Animate data streams (flying towards camera)
+            streams.forEach(stream => {
+                const positions = stream.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i + 2] += stream.userData.speed;
+                    if (positions[i + 2] > 10) {
+                        positions[i + 2] = stream.userData.startZ;
+                    }
+                }
+                stream.geometry.attributes.position.needsUpdate = true;
+            });
+
+            // Animate play buttons
+            playButtonGroup.children.forEach(btn => {
+                btn.rotation.z += btn.userData.rotationSpeed;
+                btn.position.y += Math.sin(t * btn.userData.floatSpeed + btn.userData.floatOffset) * 0.005;
+            });
+
+            // Animate progress bars
+            progressGroup.children.forEach(bar => {
+                bar.userData.progress += bar.userData.speed;
+                if (bar.userData.progress > 1) bar.userData.progress = 0;
+                bar.scale.x = bar.userData.progress;
+                bar.position.x += (bar.userData.progress - 0.5) * bar.userData.fullWidth * 0.5 * 0.01;
+            });
+
+            // Animate waveform
+            waveBars.forEach((bar, i) => {
+                const height = 0.3 + Math.abs(Math.sin(t * 3 + i * 0.3)) * 1.5;
+                bar.scale.y = height;
+                bar.position.y = -6 + height * 0.5;
+            });
+
+            // Animate nodes (pulse)
+            nodes.forEach((node, i) => {
+                const scale = 1 + Math.sin(t * 2 + i) * 0.3;
+                node.scale.setScalar(scale);
+            });
+
+            // Pulsing lights
+            purpleLight.intensity = 2 + Math.sin(t) * 0.5;
+            cyanLight.intensity = 2 + Math.cos(t) * 0.5;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
