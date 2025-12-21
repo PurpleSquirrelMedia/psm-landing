@@ -14,7 +14,91 @@
     <link rel="stylesheet" href="design-system/tokens.css">
     <link rel="stylesheet" href="design-system/components.css">
 
+    <!-- HLS.js for video streaming -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
     <style>
+        /* API Status indicator */
+        .api-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: var(--ps-glass-bg);
+            border: 1px solid var(--ps-glass-border);
+            border-radius: var(--ps-radius-lg);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+        .api-status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ps-green);
+        }
+        .api-status.offline .dot {
+            background: #ef4444;
+        }
+
+        /* Captions */
+        .captions-container {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 80%;
+            text-align: center;
+        }
+        .caption-text {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            font-size: 1.125rem;
+            line-height: 1.4;
+        }
+        .captions-container.hidden {
+            display: none;
+        }
+
+        /* Loading state */
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: var(--ps-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Video element */
+        #video-element {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+        #video-element.active {
+            display: block;
+        }
+        .loading-state {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--ps-gray-900);
+        }
+        .loading-state.hidden {
+            display: none;
+        }
         body {
             background: var(--ps-black);
         }
@@ -545,11 +629,27 @@
         <main class="player-main">
             <!-- Video player -->
             <div class="video-container">
-                <div class="video-player">
-                    <div class="play-button">
+                <div class="video-player" id="player-wrapper">
+                    <!-- Video element for HLS playback -->
+                    <video id="video-element" playsinline></video>
+
+                    <!-- Loading state -->
+                    <div id="loading-state" class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p style="margin-top: 16px; color: var(--ps-text-muted);">Loading video...</p>
+                    </div>
+
+                    <!-- Play button overlay -->
+                    <div class="play-button" id="play-overlay">
                         <i class="fas fa-play"></i>
                     </div>
                 </div>
+
+                <!-- Watson AI Captions -->
+                <div class="captions-container hidden" id="captions">
+                    <span class="caption-text" id="caption-text"></span>
+                </div>
+
                 <div class="video-controls">
                     <div class="progress-bar">
                         <div class="progress-fill"></div>
@@ -685,5 +785,321 @@
             </div>
         </aside>
     </div>
+
+    <!-- API Status Indicator -->
+    <div class="api-status" id="api-status">
+        <span class="dot"></span>
+        <span id="api-status-text">Connecting...</span>
+    </div>
+
+    <script>
+        // OCI Backend Configuration
+        const API_BASE = 'http://163.192.105.31:8080';
+        const API_ENDPOINTS = {
+            health: `${API_BASE}/health`,
+            videos: `${API_BASE}/api/v1/videos`,
+            transcode: `${API_BASE}/api/v1/transcode`
+        };
+
+        // DOM Elements
+        const video = document.getElementById('video-element');
+        const playOverlay = document.getElementById('play-overlay');
+        const loadingState = document.getElementById('loading-state');
+        const captionsContainer = document.getElementById('captions');
+        const captionText = document.getElementById('caption-text');
+        const apiStatus = document.getElementById('api-status');
+        const apiStatusText = document.getElementById('api-status-text');
+        const progressFill = document.querySelector('.progress-fill');
+        const progressBar = document.querySelector('.progress-bar');
+        const timeDisplay = document.querySelector('.time-display');
+        const playBtn = document.querySelector('.control-btn');
+        const ccBtn = document.querySelector('.control-btn .fa-closed-captioning')?.parentElement;
+
+        let hls = null;
+        let captionsEnabled = true;
+        let currentVideoData = null;
+
+        // Check API health
+        async function checkApiHealth() {
+            try {
+                const response = await fetch(API_ENDPOINTS.health);
+                const data = await response.json();
+
+                apiStatus.classList.remove('offline');
+                apiStatusText.textContent = `API: ${data.status || 'Online'}`;
+
+                if (data.watson_enabled) {
+                    apiStatusText.textContent += ' | Watson AI';
+                }
+
+                return true;
+            } catch (error) {
+                console.error('API health check failed:', error);
+                apiStatus.classList.add('offline');
+                apiStatusText.textContent = 'API Offline';
+                return false;
+            }
+        }
+
+        // Load videos from API
+        async function loadVideos() {
+            try {
+                const response = await fetch(API_ENDPOINTS.videos);
+                const videos = await response.json();
+
+                if (videos && videos.length > 0) {
+                    // Load the first video or one from URL params
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const videoId = urlParams.get('v');
+
+                    const videoToPlay = videoId
+                        ? videos.find(v => v.id === videoId) || videos[0]
+                        : videos[0];
+
+                    loadVideo(videoToPlay);
+                    populateRecommendations(videos.slice(0, 5));
+                } else {
+                    showDemoMode();
+                }
+            } catch (error) {
+                console.error('Failed to load videos:', error);
+                showDemoMode();
+            }
+        }
+
+        // Load a specific video
+        function loadVideo(videoData) {
+            currentVideoData = videoData;
+
+            // Update page info
+            document.querySelector('.video-title').textContent = videoData.title || 'Untitled Video';
+            document.querySelector('.video-meta').innerHTML = `
+                <span><i class="fas fa-eye"></i> ${formatViews(videoData.views || 0)} views</span>
+                <span><i class="fas fa-calendar"></i> ${formatDate(videoData.created_at)}</span>
+                ${videoData.hd ? '<span class="ps-badge ps-badge-live" style="padding: 2px 8px; font-size: 0.7rem;">HD</span>' : ''}
+            `;
+
+            // Load video stream
+            const streamUrl = videoData.stream_url || videoData.hls_url || videoData.url;
+
+            if (streamUrl) {
+                initializePlayer(streamUrl);
+            }
+
+            // Load captions if available
+            if (videoData.captions_url || videoData.transcript) {
+                loadCaptions(videoData);
+            }
+        }
+
+        // Initialize HLS player
+        function initializePlayer(streamUrl) {
+            loadingState.classList.remove('hidden');
+            playOverlay.style.display = 'none';
+
+            // Check if HLS is supported
+            if (Hls.isSupported() && streamUrl.includes('.m3u8')) {
+                if (hls) hls.destroy();
+
+                hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true
+                });
+
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    loadingState.classList.add('hidden');
+                    video.classList.add('active');
+                    playOverlay.style.display = 'flex';
+                });
+
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    console.error('HLS error:', data);
+                    if (data.fatal) {
+                        showDemoMode();
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari native HLS support
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    loadingState.classList.add('hidden');
+                    video.classList.add('active');
+                    playOverlay.style.display = 'flex';
+                });
+            } else {
+                // Direct video source (MP4, WebM)
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    loadingState.classList.add('hidden');
+                    video.classList.add('active');
+                    playOverlay.style.display = 'flex';
+                });
+            }
+        }
+
+        // Load and display captions
+        async function loadCaptions(videoData) {
+            try {
+                let captions = [];
+
+                if (videoData.captions_url) {
+                    const response = await fetch(videoData.captions_url);
+                    captions = await response.json();
+                } else if (videoData.transcript) {
+                    captions = videoData.transcript;
+                }
+
+                if (captions.length > 0) {
+                    displayCaptions(captions);
+                }
+            } catch (error) {
+                console.error('Failed to load captions:', error);
+            }
+        }
+
+        // Display captions synchronized with video
+        function displayCaptions(captions) {
+            video.addEventListener('timeupdate', () => {
+                if (!captionsEnabled) return;
+
+                const currentTime = video.currentTime;
+                const activeCaption = captions.find(c =>
+                    currentTime >= c.start && currentTime <= c.end
+                );
+
+                if (activeCaption) {
+                    captionText.textContent = activeCaption.text;
+                    captionsContainer.classList.remove('hidden');
+                } else {
+                    captionsContainer.classList.add('hidden');
+                }
+            });
+        }
+
+        // Show demo mode when API is unavailable
+        function showDemoMode() {
+            loadingState.classList.add('hidden');
+            playOverlay.style.display = 'flex';
+            apiStatusText.textContent = 'Demo Mode';
+        }
+
+        // Populate recommendations sidebar
+        function populateRecommendations(videos) {
+            const recList = document.querySelector('.recommended-list');
+            if (!recList || !videos.length) return;
+
+            recList.innerHTML = videos.map(v => `
+                <div class="rec-video" onclick="loadVideo(${JSON.stringify(v).replace(/"/g, '&quot;')})">
+                    <div class="rec-thumb">
+                        ${v.thumbnail ? `<img src="${v.thumbnail}" style="width:100%;height:100%;object-fit:cover;">` : ''}
+                        <span class="rec-duration">${formatDuration(v.duration)}</span>
+                    </div>
+                    <div class="rec-info">
+                        <div class="rec-title">${v.title || 'Untitled'}</div>
+                        <div class="rec-creator">${v.creator || 'Unknown'}</div>
+                        <div class="rec-meta">${formatViews(v.views)} views • ${formatDate(v.created_at)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Utility functions
+        function formatViews(views) {
+            if (views >= 1000000) return (views / 1000000).toFixed(1) + 'M';
+            if (views >= 1000) return (views / 1000).toFixed(1) + 'K';
+            return views.toString();
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return 'Recently';
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+            if (diff === 0) return 'Today';
+            if (diff === 1) return 'Yesterday';
+            if (diff < 7) return `${diff} days ago`;
+            if (diff < 30) return `${Math.floor(diff / 7)} weeks ago`;
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function formatDuration(seconds) {
+            if (!seconds) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Video controls
+        playOverlay.addEventListener('click', () => {
+            video.play();
+            playOverlay.style.display = 'none';
+        });
+
+        video.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        });
+
+        video.addEventListener('play', () => {
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            playOverlay.style.display = 'none';
+        });
+
+        video.addEventListener('pause', () => {
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playOverlay.style.display = 'flex';
+        });
+
+        video.addEventListener('timeupdate', () => {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressFill.style.width = `${progress}%`;
+            timeDisplay.textContent = `${formatDuration(video.currentTime)} / ${formatDuration(video.duration)}`;
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            video.currentTime = percent * video.duration;
+        });
+
+        // Captions toggle
+        if (ccBtn) {
+            ccBtn.addEventListener('click', () => {
+                captionsEnabled = !captionsEnabled;
+                ccBtn.classList.toggle('active', captionsEnabled);
+                if (!captionsEnabled) {
+                    captionsContainer.classList.add('hidden');
+                }
+            });
+        }
+
+        // Fullscreen toggle
+        document.querySelector('.fa-expand')?.parentElement.addEventListener('click', () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.querySelector('.video-container').requestFullscreen();
+            }
+        });
+
+        // Initialize
+        (async function init() {
+            const apiOnline = await checkApiHealth();
+            if (apiOnline) {
+                await loadVideos();
+            } else {
+                showDemoMode();
+            }
+
+            // Periodic health check
+            setInterval(checkApiHealth, 30000);
+        })();
+    </script>
 </body>
 </html>
