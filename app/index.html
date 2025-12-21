@@ -614,34 +614,114 @@
             }
         };
 
-        // Sample content (until API is populated)
-        const sampleContent = {
-            featured: {
-                title: "Purple Squirrel Originals",
-                description: "Exclusive content created by our community. Fresh perspectives, unique stories, and creative expression from independent creators worldwide.",
-                image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1920"
-            },
-            trending: [
-                { id: 1, title: "The Creator's Journey", year: "2025", image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400" },
-                { id: 2, title: "Digital Dreams", year: "2024", image: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400" },
-                { id: 3, title: "Beyond the Code", year: "2025", image: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
-                { id: 4, title: "Neon Nights", year: "2024", image: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400" },
-                { id: 5, title: "The Algorithm", year: "2025", image: "https://images.unsplash.com/photo-1535016120720-40c646be5580?w=400" },
-                { id: 6, title: "Cloud Atlas", year: "2024", image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400" }
-            ],
-            live: [
-                { id: 101, title: "PSM News 24/7", viewers: "2.4K", image: "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600" },
-                { id: 102, title: "Gaming Central", viewers: "5.1K", image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600" },
-                { id: 103, title: "Music Vibes", viewers: "1.8K", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600" },
-                { id: 104, title: "Tech Talk Live", viewers: "892", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600" }
-            ],
-            radio: [
-                { id: 201, title: "Chill Beats", genre: "Lo-Fi", image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400" },
-                { id: 202, title: "Rock Classics", genre: "Rock", image: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=400" },
-                { id: 203, title: "Jazz Corner", genre: "Jazz", image: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=400" },
-                { id: 204, title: "EDM Party", genre: "Electronic", image: "https://images.unsplash.com/photo-1571266028243-3716f02d2d2e?w=400" }
-            ]
+        // Content cache - will be populated from API
+        let contentCache = {
+            videos: null,
+            live: null,
+            radio: null,
+            lastFetch: null
         };
+
+        // Load content from API with fallback
+        async function loadContent() {
+            try {
+                const [videos, live, radio] = await Promise.all([
+                    api.get('/videos'),
+                    api.get('/live'),
+                    api.get('/radio')
+                ]);
+
+                if (videos?.length) contentCache.videos = videos;
+                if (live?.length) contentCache.live = live;
+                if (radio?.length) contentCache.radio = radio;
+                contentCache.lastFetch = Date.now();
+
+                console.log('Content loaded:', {
+                    videos: contentCache.videos?.length || 0,
+                    live: contentCache.live?.length || 0,
+                    radio: contentCache.radio?.length || 0
+                });
+            } catch (e) {
+                console.error('Failed to load content:', e);
+            }
+        }
+
+        // Get sample content (API format or fallback)
+        const sampleContent = {
+            get featured() {
+                const vid = contentCache.videos?.find(v => v.featured) || contentCache.videos?.[0];
+                if (vid) {
+                    return {
+                        id: vid.id,
+                        title: vid.title,
+                        description: vid.description,
+                        image: vid.thumbnail,
+                        hls_path: vid.hls_path
+                    };
+                }
+                return {
+                    title: "Purple Squirrel Originals",
+                    description: "Exclusive content created by our community. Fresh perspectives, unique stories, and creative expression from independent creators worldwide.",
+                    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1920"
+                };
+            },
+            get trending() {
+                if (contentCache.videos?.length) {
+                    return contentCache.videos.map(v => ({
+                        id: v.id,
+                        title: v.title,
+                        year: v.year?.toString() || '2024',
+                        image: v.thumbnail,
+                        hls_path: v.hls_path
+                    }));
+                }
+                return [
+                    { id: 1, title: "The Creator's Journey", year: "2025", image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400" },
+                    { id: 2, title: "Digital Dreams", year: "2024", image: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400" },
+                    { id: 3, title: "Beyond the Code", year: "2025", image: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
+                    { id: 4, title: "Neon Nights", year: "2024", image: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400" },
+                    { id: 5, title: "The Algorithm", year: "2025", image: "https://images.unsplash.com/photo-1535016120720-40c646be5580?w=400" },
+                    { id: 6, title: "Cloud Atlas", year: "2024", image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400" }
+                ];
+            },
+            get live() {
+                if (contentCache.live?.length) {
+                    return contentCache.live.map(ch => ({
+                        id: ch.id,
+                        title: ch.name,
+                        viewers: ch.viewers >= 1000 ? (ch.viewers/1000).toFixed(1) + 'K' : ch.viewers.toString(),
+                        image: ch.thumbnail,
+                        stream_url: ch.stream_url
+                    }));
+                }
+                return [
+                    { id: 101, title: "PSM News 24/7", viewers: "2.4K", image: "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600" },
+                    { id: 102, title: "Gaming Central", viewers: "5.1K", image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600" },
+                    { id: 103, title: "Music Vibes", viewers: "1.8K", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600" },
+                    { id: 104, title: "Tech Talk Live", viewers: "892", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600" }
+                ];
+            },
+            get radio() {
+                if (contentCache.radio?.length) {
+                    return contentCache.radio.map(s => ({
+                        id: s.id,
+                        title: s.name,
+                        genre: s.genre,
+                        image: s.thumbnail,
+                        stream_url: s.stream_url
+                    }));
+                }
+                return [
+                    { id: 201, title: "Chill Beats", genre: "Lo-Fi", image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400" },
+                    { id: 202, title: "Rock Classics", genre: "Rock", image: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=400" },
+                    { id: 203, title: "Jazz Corner", genre: "Jazz", image: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=400" },
+                    { id: 204, title: "EDM Party", genre: "Electronic", image: "https://images.unsplash.com/photo-1571266028243-3716f02d2d2e?w=400" }
+                ];
+            }
+        };
+
+        // Audio player for radio
+        let radioPlayer = null;
 
         // Router
         function router() {
@@ -819,29 +899,106 @@
         }
 
         // Player
-        function playVideo(id) {
+        let currentHls = null;
+
+        async function playVideo(id) {
             const playerView = document.getElementById('playerView');
             const video = document.getElementById('videoPlayer');
 
             playerView.classList.add('active');
-            document.getElementById('playerTitle').textContent = 'Now Playing';
 
-            // For demo, use a sample video
-            video.src = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+            // Find video URL from content
+            let videoUrl = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+            let title = 'Now Playing';
+
+            if (id === 'featured') {
+                const featured = sampleContent.featured;
+                if (featured.hls_path) videoUrl = featured.hls_path;
+                title = featured.title || 'Featured Content';
+            } else {
+                // Check trending/videos
+                const item = sampleContent.trending.find(v => v.id === id || v.id?.toString() === id);
+                if (item?.hls_path) {
+                    videoUrl = item.hls_path;
+                    title = item.title;
+                }
+                // Check live channels
+                const channel = sampleContent.live.find(c => c.id === id || c.id?.toString() === id);
+                if (channel?.stream_url) {
+                    videoUrl = channel.stream_url;
+                    title = channel.title;
+                }
+            }
+
+            document.getElementById('playerTitle').textContent = title;
+
+            // Cleanup previous HLS instance
+            if (currentHls) {
+                currentHls.destroy();
+                currentHls = null;
+            }
 
             if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(video.src);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+                currentHls = new Hls();
+                currentHls.loadSource(videoUrl);
+                currentHls.attachMedia(video);
+                currentHls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+                currentHls.on(Hls.Events.ERROR, (e, data) => {
+                    console.error('HLS Error:', data);
+                    if (data.fatal) {
+                        video.src = videoUrl;
+                        video.play();
+                    }
+                });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = video.src;
+                video.src = videoUrl;
                 video.play();
             }
         }
 
         function playRadio(id) {
-            alert('Radio player coming soon!');
+            const station = sampleContent.radio.find(s => s.id === id || s.id?.toString() === id);
+            if (!station) {
+                alert('Station not found');
+                return;
+            }
+
+            // Stop any existing radio playback
+            if (radioPlayer) {
+                radioPlayer.pause();
+                radioPlayer = null;
+            }
+
+            // Create or use existing radio player
+            radioPlayer = new Audio(station.stream_url);
+            radioPlayer.play().catch(e => {
+                console.error('Radio playback error:', e);
+                alert('Unable to play radio stream. Try again.');
+            });
+
+            // Show mini player notification
+            const notification = document.createElement('div');
+            notification.className = 'radio-notification';
+            notification.innerHTML = `
+                <div style="position:fixed;bottom:20px;right:20px;background:var(--primary);padding:15px 20px;border-radius:10px;z-index:1000;display:flex;align-items:center;gap:15px;box-shadow:0 5px 20px rgba(0,0,0,0.3);">
+                    <i class="fas fa-radio"></i>
+                    <div>
+                        <div style="font-weight:600;">${station.title}</div>
+                        <div style="font-size:0.85em;opacity:0.8;">${station.genre}</div>
+                    </div>
+                    <button onclick="stopRadio()" style="background:none;border:none;color:white;cursor:pointer;font-size:1.2em;"><i class="fas fa-times"></i></button>
+                </div>
+            `;
+            document.querySelector('.radio-notification')?.remove();
+            document.body.appendChild(notification);
+        }
+
+        function stopRadio() {
+            if (radioPlayer) {
+                radioPlayer.pause();
+                radioPlayer = null;
+            }
+            document.querySelector('.radio-notification')?.remove();
         }
 
         // Event Listeners
@@ -876,9 +1033,14 @@
             document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        // Initialize router
+        // Initialize app
         window.addEventListener('hashchange', router);
-        router();
+
+        // Load content from API then render
+        (async function init() {
+            await loadContent();
+            router();
+        })();
     </script>
 </body>
 </html>
