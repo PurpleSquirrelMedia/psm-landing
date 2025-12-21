@@ -39,7 +39,7 @@ const PSM_AUTH = {
     async signUp(email, password, name) {
         try {
             // Call Oracle API for registration
-            const response = await fetch('http://163.192.105.31:8080/api/v1/auth/register', {
+            const response = await fetch('https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, name })
@@ -61,7 +61,7 @@ const PSM_AUTH = {
     // Email/Password Sign In
     async signIn(email, password) {
         try {
-            const response = await fetch('http://163.192.105.31:8080/api/v1/auth/login', {
+            const response = await fetch('https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -83,12 +83,12 @@ const PSM_AUTH = {
     // Google OAuth
     async signInWithGoogle() {
         // Redirect to Google OAuth via Oracle API
-        window.location.href = 'http://163.192.105.31:8080/api/v1/auth/google';
+        window.location.href = 'https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/auth/google';
     },
 
     // Apple OAuth
     async signInWithApple() {
-        window.location.href = 'http://163.192.105.31:8080/api/v1/auth/apple';
+        window.location.href = 'https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/auth/apple';
     },
 
     // Solana Wallet Sign In
@@ -103,7 +103,7 @@ const PSM_AUTH = {
             const publicKey = resp.publicKey.toString();
 
             // Get nonce from server
-            const nonceResp = await fetch(`http://163.192.105.31:8080/api/v1/auth/solana/nonce?wallet=${publicKey}`);
+            const nonceResp = await fetch(`https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/auth/solana/nonce?wallet=${publicKey}`);
             const { nonce } = await nonceResp.json();
 
             // Sign message
@@ -112,7 +112,7 @@ const PSM_AUTH = {
             const signedMessage = await window.solana.signMessage(encodedMessage, 'utf8');
 
             // Verify with server
-            const verifyResp = await fetch('http://163.192.105.31:8080/api/v1/auth/solana/verify', {
+            const verifyResp = await fetch('https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/auth/solana/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -140,7 +140,7 @@ const PSM_AUTH = {
     // Sign Out
     async signOut() {
         try {
-            await fetch('http://163.192.105.31:8080/api/v1/auth/logout', {
+            await fetch('https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/auth/logout', {
                 method: 'POST',
                 headers: this.getAuthHeaders()
             });
@@ -251,7 +251,7 @@ const PSM_AUTH = {
 
         if (token) {
             // Fetch user data with token
-            const response = await fetch('http://163.192.105.31:8080/api/v1/auth/me', {
+            const response = await fetch('https://iowa-schema-cruise-tmp.trycloudflare.com/api/v1/auth/me', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
