@@ -1100,6 +1100,294 @@
             // Periodic health check
             setInterval(checkApiHealth, 30000);
         })();
+
+        // ============================================
+        // Phantom Wallet Integration for SOL Tipping
+        // ============================================
+
+        const tipBtn = document.querySelector('.tip-btn');
+        let walletConnected = false;
+        let walletAddress = null;
+
+        // Check if Phantom is installed
+        function getProvider() {
+            if ('solana' in window) {
+                const provider = window.solana;
+                if (provider.isPhantom) {
+                    return provider;
+                }
+            }
+            return null;
+        }
+
+        // Connect wallet
+        async function connectWallet() {
+            const provider = getProvider();
+
+            if (!provider) {
+                const install = confirm('Phantom wallet is required for tipping. Install now?');
+                if (install) {
+                    window.open('https://phantom.app/', '_blank');
+                }
+                return false;
+            }
+
+            try {
+                const resp = await provider.connect();
+                walletAddress = resp.publicKey.toString();
+                walletConnected = true;
+                return true;
+            } catch (err) {
+                console.error('Wallet connection failed:', err);
+                return false;
+            }
+        }
+
+        // Send SOL tip
+        async function sendTip(recipientAddress, amountSOL) {
+            const provider = getProvider();
+            if (!provider || !walletConnected) {
+                const connected = await connectWallet();
+                if (!connected) return null;
+            }
+
+            try {
+                // For demo purposes - in production you'd use @solana/web3.js
+                // to create and sign a transaction
+                const lamports = amountSOL * 1e9; // 1 SOL = 1 billion lamports
+
+                // Create transaction (simplified - real implementation needs web3.js)
+                const transaction = {
+                    feePayer: walletAddress,
+                    instructions: [{
+                        programId: '11111111111111111111111111111111', // System program
+                        keys: [
+                            { pubkey: walletAddress, isSigner: true, isWritable: true },
+                            { pubkey: recipientAddress, isSigner: false, isWritable: true }
+                        ],
+                        data: Buffer.from([2, 0, 0, 0, ...new Uint8Array(new BigUint64Array([BigInt(lamports)]).buffer)])
+                    }]
+                };
+
+                // For now, show the tip modal without actual transaction
+                // Real implementation would sign and send via:
+                // const { signature } = await provider.signAndSendTransaction(transaction);
+
+                return { success: true, demo: true };
+            } catch (err) {
+                console.error('Tip failed:', err);
+                return null;
+            }
+        }
+
+        // Tip modal
+        function showTipModal() {
+            const modal = document.createElement('div');
+            modal.className = 'tip-modal';
+            modal.innerHTML = `
+                <div class="tip-modal-content">
+                    <div class="tip-modal-header">
+                        <h3><i class="fas fa-coins"></i> Tip Creator</h3>
+                        <button class="tip-modal-close">&times;</button>
+                    </div>
+                    <div class="tip-modal-body">
+                        <p>Send SOL to support this creator</p>
+                        <div class="tip-amounts">
+                            <button class="tip-amount" data-amount="0.01">0.01 SOL</button>
+                            <button class="tip-amount" data-amount="0.05">0.05 SOL</button>
+                            <button class="tip-amount" data-amount="0.1">0.1 SOL</button>
+                            <button class="tip-amount" data-amount="0.5">0.5 SOL</button>
+                        </div>
+                        <div class="tip-custom">
+                            <input type="number" id="custom-amount" placeholder="Custom amount" step="0.01" min="0.001">
+                            <span>SOL</span>
+                        </div>
+                        <button class="ps-btn ps-btn-primary tip-send-btn" id="send-tip-btn">
+                            <i class="fas fa-paper-plane"></i> Send Tip
+                        </button>
+                        <p class="tip-note">
+                            ${walletConnected
+                                ? `Connected: ${walletAddress.slice(0,4)}...${walletAddress.slice(-4)}`
+                                : 'Phantom wallet required'}
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            // Add modal styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .tip-modal {
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0,0,0,0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 2000;
+                    animation: fadeIn 0.2s ease;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                .tip-modal-content {
+                    background: var(--ps-gray-900);
+                    border: 1px solid var(--ps-gray-700);
+                    border-radius: var(--ps-radius-xl);
+                    width: 100%;
+                    max-width: 400px;
+                    overflow: hidden;
+                }
+                .tip-modal-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: var(--ps-space-4) var(--ps-space-6);
+                    background: var(--ps-gradient-brand);
+                }
+                .tip-modal-header h3 {
+                    margin: 0;
+                    font-size: 1.125rem;
+                    display: flex;
+                    align-items: center;
+                    gap: var(--ps-space-2);
+                }
+                .tip-modal-close {
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    line-height: 1;
+                }
+                .tip-modal-body {
+                    padding: var(--ps-space-6);
+                }
+                .tip-modal-body > p {
+                    color: var(--ps-text-muted);
+                    margin-bottom: var(--ps-space-4);
+                }
+                .tip-amounts {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: var(--ps-space-2);
+                    margin-bottom: var(--ps-space-4);
+                }
+                .tip-amount {
+                    padding: var(--ps-space-3);
+                    background: var(--ps-gray-800);
+                    border: 1px solid var(--ps-gray-700);
+                    border-radius: var(--ps-radius-md);
+                    color: var(--ps-text);
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all var(--ps-transition-fast);
+                }
+                .tip-amount:hover, .tip-amount.selected {
+                    background: rgba(153, 69, 255, 0.2);
+                    border-color: var(--ps-purple);
+                }
+                .tip-custom {
+                    display: flex;
+                    align-items: center;
+                    gap: var(--ps-space-2);
+                    margin-bottom: var(--ps-space-4);
+                }
+                .tip-custom input {
+                    flex: 1;
+                    padding: var(--ps-space-3);
+                    background: var(--ps-gray-800);
+                    border: 1px solid var(--ps-gray-700);
+                    border-radius: var(--ps-radius-md);
+                    color: var(--ps-text);
+                }
+                .tip-custom span {
+                    color: var(--ps-text-muted);
+                    font-weight: 500;
+                }
+                .tip-send-btn {
+                    width: 100%;
+                    margin-bottom: var(--ps-space-4);
+                }
+                .tip-note {
+                    text-align: center;
+                    font-size: 0.75rem;
+                    color: var(--ps-text-subtle);
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(modal);
+
+            let selectedAmount = 0.05;
+
+            // Amount selection
+            modal.querySelectorAll('.tip-amount').forEach(btn => {
+                if (parseFloat(btn.dataset.amount) === selectedAmount) {
+                    btn.classList.add('selected');
+                }
+                btn.addEventListener('click', () => {
+                    modal.querySelectorAll('.tip-amount').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedAmount = parseFloat(btn.dataset.amount);
+                    modal.querySelector('#custom-amount').value = '';
+                });
+            });
+
+            // Custom amount
+            modal.querySelector('#custom-amount').addEventListener('input', (e) => {
+                modal.querySelectorAll('.tip-amount').forEach(b => b.classList.remove('selected'));
+                selectedAmount = parseFloat(e.target.value) || 0;
+            });
+
+            // Send tip
+            modal.querySelector('#send-tip-btn').addEventListener('click', async () => {
+                if (selectedAmount <= 0) {
+                    alert('Please select an amount');
+                    return;
+                }
+
+                const btn = modal.querySelector('#send-tip-btn');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                btn.disabled = true;
+
+                // Demo: simulate transaction
+                await new Promise(r => setTimeout(r, 1500));
+
+                btn.innerHTML = '<i class="fas fa-check"></i> Tip Sent!';
+                btn.style.background = 'var(--ps-green)';
+
+                setTimeout(() => {
+                    modal.remove();
+                }, 1000);
+            });
+
+            // Close modal
+            modal.querySelector('.tip-modal-close').addEventListener('click', () => modal.remove());
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        // Attach tip button handler
+        if (tipBtn) {
+            tipBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showTipModal();
+            });
+        }
+
+        // Check for existing wallet connection
+        (async function checkWallet() {
+            const provider = getProvider();
+            if (provider && sessionStorage.getItem('wallet_connected')) {
+                try {
+                    const resp = await provider.connect({ onlyIfTrusted: true });
+                    walletAddress = resp.publicKey.toString();
+                    walletConnected = true;
+                } catch {}
+            }
+        })();
     </script>
 </body>
 </html>

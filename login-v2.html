@@ -468,6 +468,103 @@
         if (window.location.hash === '#signup') {
             document.querySelector('[data-tab="signup"]').click();
         }
+
+        // Phantom Wallet Integration
+        const walletBtns = document.querySelectorAll('.social-btn.wallet');
+
+        async function connectPhantomWallet() {
+            // Check if Phantom is installed
+            const provider = window.solana;
+
+            if (!provider?.isPhantom) {
+                // Phantom not installed - redirect to install page
+                const install = confirm('Phantom wallet is not installed. Would you like to install it?');
+                if (install) {
+                    window.open('https://phantom.app/', '_blank');
+                }
+                return null;
+            }
+
+            try {
+                // Request wallet connection
+                const response = await provider.connect();
+                const publicKey = response.publicKey.toString();
+
+                // Store in session
+                sessionStorage.setItem('wallet_connected', 'true');
+                sessionStorage.setItem('wallet_address', publicKey);
+
+                // Show success
+                showWalletConnected(publicKey);
+
+                return publicKey;
+            } catch (err) {
+                console.error('Wallet connection error:', err);
+                if (err.code === 4001) {
+                    // User rejected
+                    alert('Connection cancelled by user');
+                }
+                return null;
+            }
+        }
+
+        function showWalletConnected(address) {
+            const shortAddr = `${address.slice(0, 4)}...${address.slice(-4)}`;
+
+            // Update wallet buttons to show connected state
+            walletBtns.forEach(btn => {
+                btn.innerHTML = `<i class="fas fa-check-circle"></i> ${shortAddr}`;
+                btn.style.background = 'linear-gradient(135deg, rgba(20, 241, 149, 0.3), rgba(153, 69, 255, 0.3))';
+                btn.style.borderColor = 'var(--ps-green)';
+            });
+
+            // Auto-redirect after short delay
+            setTimeout(() => {
+                window.location.href = 'dashboard-v2.html';
+            }, 1500);
+        }
+
+        // Check if already connected
+        async function checkExistingConnection() {
+            const provider = window.solana;
+            if (provider?.isPhantom && provider.isConnected) {
+                try {
+                    const response = await provider.connect({ onlyIfTrusted: true });
+                    showWalletConnected(response.publicKey.toString());
+                } catch (err) {
+                    // Not already trusted, that's fine
+                }
+            }
+        }
+
+        // Attach click handlers
+        walletBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                connectPhantomWallet();
+            });
+        });
+
+        // Check for existing connection on load
+        checkExistingConnection();
+
+        // Listen for account changes
+        if (window.solana) {
+            window.solana.on('accountChanged', (publicKey) => {
+                if (publicKey) {
+                    showWalletConnected(publicKey.toString());
+                } else {
+                    // Disconnected
+                    sessionStorage.removeItem('wallet_connected');
+                    sessionStorage.removeItem('wallet_address');
+                    walletBtns.forEach(btn => {
+                        btn.innerHTML = '<i class="fas fa-wallet"></i> Wallet';
+                        btn.style.background = '';
+                        btn.style.borderColor = '';
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
