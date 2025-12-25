@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Store | Purple Squirrel Media</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-purple: #6e40c9;
+            --accent-green: #238636;
+            --accent-blue: #58a6ff;
+            --accent-red: #f85149;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .nav {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .nav-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+        .nav-links a.active {
+            color: white;
+            background: var(--accent-purple);
+        }
+        .nav-cta {
+            background: var(--accent-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .nav-cta:hover { background: #2ea043; }
+        .main { flex: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .hero {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .hero p { opacity: 0.9; font-size: 1.1rem; }
+        .section-title {
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .product {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .product:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-purple);
+        }
+        .product-img {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .product-info { padding: 20px; }
+        .product h3 { font-size: 1.2rem; margin-bottom: 8px; }
+        .product p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 16px; }
+        .product .price { font-size: 1.5rem; font-weight: bold; color: #3fb950; margin-bottom: 8px; }
+        .product .alt-price { font-size: 0.9rem; color: var(--accent-purple); margin-bottom: 16px; }
+        .features { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .feature { background: var(--bg-tertiary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; color: var(--text-secondary); }
+        .badge { display: inline-block; background: var(--accent-red); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; margin-left: 8px; }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .btn-primary { background: var(--accent-green); color: white; }
+        .btn-primary:hover { background: #2ea043; }
+        .btn-secondary { background: var(--accent-purple); color: white; }
+        .btn-secondary:hover { background: #7c4ddb; }
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 40px 20px;
+            margin-top: auto;
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        .footer-section h4 { color: white; margin-bottom: 16px; font-size: 0.9rem; }
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 4px 0;
+            font-size: 0.85rem;
+        }
+        .footer-section a:hover { color: var(--accent-purple); }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .token-address {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+        .token-address code {
+            background: var(--bg-tertiary);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .footer-container { grid-template-columns: 1fr 1fr; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+            .hero h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">PS</div>
+                <span>Purple Squirrel Media</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/store.html" class="active">Store</a></li>
+                <li><a href="/mint.html">NFT Mint</a></li>
+                <li><a href="/portal.html">Portal</a></li>
+                <li><a href="http://163.192.105.31">Blog</a></li>
+            </ul>
+            <a href="http://163.192.105.31/ghost/#/portal" class="nav-cta">Subscribe</a>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="hero">
+            <h1>PSM Digital Store</h1>
+            <p>Premium Digital Products | Pay with Card or PURP Token</p>
+        </div>
+
+        <div class="container">
+            <h2 class="section-title">Color Grading</h2>
+            <div class="products">
+                <div class="product">
+                    <div class="product-img">🎬</div>
+                    <div class="product-info">
+                        <h3>Cinematic LUT Pack <span class="badge">HOLIDAY SALE</span></h3>
+                        <p>57 professional color grading LUTs for DaVinci Resolve, Premiere Pro, and Final Cut Pro. Includes Film Stocks, Creative Looks, and Technical LUTs.</p>
+                        <div class="features">
+                            <span class="feature">57 LUTs</span>
+                            <span class="feature">.cube format</span>
+                            <span class="feature">All NLEs</span>
+                        </div>
+                        <div class="price">$29 <s style="color:var(--text-secondary);font-size:0.8rem;">$49</s></div>
+                        <div class="alt-price">or 50 PURP tokens</div>
+                        <a href="#" class="btn btn-primary">Buy Now</a>
+                        <a href="#" class="btn btn-secondary">Pay with PURP</a>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-img">🎨</div>
+                    <div class="product-info">
+                        <h3>PowerGrades Collection</h3>
+                        <p>DaVinci Resolve PowerGrades for professional color correction. Includes Corrections, Effects, Looks, and Utilities.</p>
+                        <div class="features">
+                            <span class="feature">PowerGrades</span>
+                            <span class="feature">DaVinci Resolve</span>
+                            <span class="feature">Nodes included</span>
+                        </div>
+                        <div class="price">$19</div>
+                        <div class="alt-price">or 30 PURP tokens</div>
+                        <a href="#" class="btn btn-primary">Buy Now</a>
+                        <a href="#" class="btn btn-secondary">Pay with PURP</a>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">NFT Collections</h2>
+            <div class="products">
+                <div class="product">
+                    <div class="product-img">🐿️</div>
+                    <div class="product-info">
+                        <h3>Purple Squirrel Genesis</h3>
+                        <p>Generative art NFT collection on Solana. Each squirrel is unique with randomized traits.</p>
+                        <div class="features">
+                            <span class="feature">Solana</span>
+                            <span class="feature">Generative</span>
+                            <span class="feature">1000 Supply</span>
+                        </div>
+                        <div class="price">0.5 SOL</div>
+                        <div class="alt-price">Mint with Phantom Wallet</div>
+                        <a href="/mint.html" class="btn btn-primary">Mint Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Memberships</h2>
+            <div class="products">
+                <div class="product">
+                    <div class="product-img">⭐</div>
+                    <div class="product-info">
+                        <h3>PSM Pro Membership</h3>
+                        <p>Access to all digital products, exclusive tutorials, Discord community, and monthly new releases.</p>
+                        <div class="features">
+                            <span class="feature">All Products</span>
+                            <span class="feature">Tutorials</span>
+                            <span class="feature">Discord</span>
+                            <span class="feature">Monthly Updates</span>
+                        </div>
+                        <div class="price">$9.99/month</div>
+                        <div class="alt-price">or 150 PURP/month</div>
+                        <a href="http://163.192.105.31/ghost/#/portal" class="btn btn-primary">Subscribe</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="token-address">
+                <p style="color:var(--text-secondary);margin-bottom:10px;">PURP Token Address (Solana)</p>
+                <code>6z9oBZ84zSx2uPvPofyaAABmBaWUk1BmDkMQryiYorzk</code>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Products</h4>
+                <a href="/store.html">Cinematic LUT Pack</a>
+                <a href="/store.html">PowerGrades</a>
+                <a href="/mint.html">NFT Collection</a>
+                <a href="http://163.192.105.31/ghost/#/portal">Pro Membership</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="http://163.192.105.31">Blog</a>
+                <a href="#">Tutorials</a>
+                <a href="/portal.html">Documentation</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="/about.html">About</a>
+                <a href="/portal.html">Developer Portal</a>
+                <a href="/contact.html">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="/terms.html">Terms of Service</a>
+                <a href="/privacy.html">Privacy Policy</a>
+                <a href="#">Refund Policy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 Purple Squirrel Media. All rights reserved.</span>
+            <span>Built with multi-cloud infrastructure</span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Mint | Purple Squirrel Media</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-purple: #6e40c9;
+            --accent-green: #238636;
+            --accent-blue: #58a6ff;
+            --accent-red: #f85149;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .nav {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .nav-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+        .nav-links a.active {
+            color: white;
+            background: var(--accent-purple);
+        }
+        .nav-cta {
+            background: var(--accent-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .nav-cta:hover { background: #2ea043; }
+        .main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+        .mint-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .mint-preview {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+        }
+        .mint-info { padding: 30px; }
+        .mint-info h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        .mint-info p { color: var(--text-secondary); margin-bottom: 24px; }
+        .mint-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat {
+            text-align: center;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--accent-purple); }
+        .stat-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
+        .wallet-status {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .wallet-status.connected { border: 1px solid var(--accent-green); }
+        .wallet-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-red);
+        }
+        .wallet-dot.connected { background: var(--accent-green); }
+        .wallet-address { font-family: monospace; font-size: 0.9rem; color: var(--text-secondary); }
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-primary { background: var(--accent-green); color: white; }
+        .btn-primary:hover { background: #2ea043; }
+        .btn-secondary { background: var(--accent-purple); color: white; margin-top: 12px; }
+        .btn-secondary:hover { background: #7c4ddb; }
+        .btn:disabled {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 40px 20px;
+            margin-top: auto;
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        .footer-section h4 { color: white; margin-bottom: 16px; font-size: 0.9rem; }
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 4px 0;
+            font-size: 0.85rem;
+        }
+        .footer-section a:hover { color: var(--accent-purple); }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .footer-container { grid-template-columns: 1fr 1fr; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+            .mint-stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">PS</div>
+                <span>Purple Squirrel Media</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/store.html">Store</a></li>
+                <li><a href="/mint.html" class="active">NFT Mint</a></li>
+                <li><a href="/portal.html">Portal</a></li>
+                <li><a href="http://163.192.105.31">Blog</a></li>
+            </ul>
+            <a href="http://163.192.105.31/ghost/#/portal" class="nav-cta">Subscribe</a>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="mint-card">
+            <div class="mint-preview">🐿️</div>
+            <div class="mint-info">
+                <h1>Purple Squirrel Genesis</h1>
+                <p>Generative art NFT collection on Solana. Each squirrel is unique with randomized traits including backgrounds, accessories, and colors.</p>
+
+                <div class="mint-stats">
+                    <div class="stat">
+                        <div class="stat-value">0.5</div>
+                        <div class="stat-label">SOL</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="minted">0</div>
+                        <div class="stat-label">Minted</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1000</div>
+                        <div class="stat-label">Supply</div>
+                    </div>
+                </div>
+
+                <div class="wallet-status" id="walletStatus">
+                    <div class="wallet-dot" id="walletDot"></div>
+                    <span id="walletText">Wallet not connected</span>
+                </div>
+
+                <button class="btn btn-primary" id="connectBtn" onclick="connectWallet()">
+                    Connect Phantom Wallet
+                </button>
+                <button class="btn btn-secondary" id="mintBtn" onclick="mintNFT()" disabled>
+                    Mint NFT (0.5 SOL)
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Products</h4>
+                <a href="/store.html">Cinematic LUT Pack</a>
+                <a href="/store.html">PowerGrades</a>
+                <a href="/mint.html">NFT Collection</a>
+                <a href="http://163.192.105.31/ghost/#/portal">Pro Membership</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="http://163.192.105.31">Blog</a>
+                <a href="#">Tutorials</a>
+                <a href="/portal.html">Documentation</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="/about.html">About</a>
+                <a href="/portal.html">Developer Portal</a>
+                <a href="/contact.html">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="/terms.html">Terms of Service</a>
+                <a href="/privacy.html">Privacy Policy</a>
+                <a href="#">Refund Policy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 Purple Squirrel Media. All rights reserved.</span>
+            <span>Built with multi-cloud infrastructure</span>
+        </div>
+    </footer>
+
+    <script>
+        let walletAddress = null;
+
+        async function connectWallet() {
+            try {
+                if (!window.solana || !window.solana.isPhantom) {
+                    window.open('https://phantom.app/', '_blank');
+                    return;
+                }
+                const resp = await window.solana.connect();
+                walletAddress = resp.publicKey.toString();
+
+                document.getElementById('walletStatus').classList.add('connected');
+                document.getElementById('walletDot').classList.add('connected');
+                document.getElementById('walletText').innerHTML = `<span class="wallet-address">${walletAddress.slice(0,4)}...${walletAddress.slice(-4)}</span>`;
+                document.getElementById('connectBtn').textContent = 'Connected';
+                document.getElementById('connectBtn').disabled = true;
+                document.getElementById('mintBtn').disabled = false;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function mintNFT() {
+            if (!walletAddress) {
+                alert('Please connect your wallet first');
+                return;
+            }
+            alert('Minting coming soon! Collection not yet deployed to mainnet.');
+        }
+
+        if (window.solana && window.solana.isConnected) {
+            connectWallet();
+        }
+    </script>
+</body>
+</html>

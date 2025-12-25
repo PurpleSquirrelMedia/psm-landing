@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Portal | Purple Squirrel Media</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-purple: #6e40c9;
+            --accent-green: #238636;
+            --accent-blue: #58a6ff;
+            --accent-red: #f85149;
+            --accent-yellow: #d29922;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .nav {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .nav-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .nav-links { display: flex; gap: 8px; list-style: none; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+        .nav-links a.active { color: white; background: var(--accent-purple); }
+        .nav-cta {
+            background: var(--accent-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .nav-cta:hover { background: #2ea043; }
+        .main { flex: 1; }
+        .hero {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-green));
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        .hero p { opacity: 0.9; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-num { font-size: 2rem; font-weight: bold; color: var(--accent-purple); }
+        .stat-label { color: var(--text-secondary); font-size: 0.85rem; margin-top: 5px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .card:hover { transform: translateY(-4px); border-color: var(--accent-purple); }
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+        .card h3 { font-size: 1.1rem; }
+        .card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 16px; }
+        .card a {
+            display: inline-block;
+            background: var(--accent-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .card a:hover { background: #2ea043; }
+        .card a.secondary { background: var(--bg-tertiary); }
+        .card a.secondary:hover { background: var(--border); }
+        .status { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+        .status.green { background: var(--accent-green); }
+        .status.yellow { background: var(--accent-yellow); }
+        .status.red { background: var(--accent-red); }
+        .section-title {
+            font-size: 1.3rem;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 40px 20px;
+            margin-top: auto;
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        .footer-section h4 { color: white; margin-bottom: 16px; font-size: 0.9rem; }
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 4px 0;
+            font-size: 0.85rem;
+        }
+        .footer-section a:hover { color: var(--accent-purple); }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .footer-container { grid-template-columns: 1fr 1fr; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">PS</div>
+                <span>Purple Squirrel Media</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/store.html">Store</a></li>
+                <li><a href="/mint.html">NFT Mint</a></li>
+                <li><a href="/portal.html" class="active">Portal</a></li>
+                <li><a href="http://163.192.105.31">Blog</a></li>
+            </ul>
+            <a href="http://163.192.105.31/ghost/#/portal" class="nav-cta">Subscribe</a>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="hero">
+            <h1>PSM Developer Portal</h1>
+            <p>Multi-Cloud Infrastructure Dashboard</p>
+        </div>
+
+        <div class="container">
+            <div class="stats">
+                <div class="stat"><div class="stat-num">6</div><div class="stat-label">Cloud Providers</div></div>
+                <div class="stat"><div class="stat-num">18</div><div class="stat-label">Services</div></div>
+                <div class="stat"><div class="stat-num">2</div><div class="stat-label">Local VMs</div></div>
+                <div class="stat"><div class="stat-num">17</div><div class="stat-label">Pipeline Targets</div></div>
+                <div class="stat"><div class="stat-num">$0</div><div class="stat-label">Monthly Cost</div></div>
+            </div>
+
+            <h2 class="section-title">Production Services</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#0078d4;">A</div>
+                        <h3><span class="status green"></span>Main Website</h3>
+                    </div>
+                    <p>Azure Static Web Apps - Landing page and marketing</p>
+                    <a href="https://purplesquirrel.media" target="_blank">Visit Site</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#ee0000;">P</div>
+                        <h3><span class="status green"></span>Pipeline Dashboard</h3>
+                    </div>
+                    <p>OpenShift - Acquisition pipeline tracker with Redis</p>
+                    <a href="http://pipeline-purplesquirrel-dev.apps.rm3.7wse.p1.openshiftapps.com" target="_blank">Dashboard</a>
+                    <a href="http://pipeline-purplesquirrel-dev.apps.rm3.7wse.p1.openshiftapps.com/api/pipeline" class="secondary">API</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#3fb950;">$</div>
+                        <h3><span class="status green"></span>Digital Store</h3>
+                    </div>
+                    <p>Azure - LUT packs, NFTs, memberships with PURP token</p>
+                    <a href="/store.html">Store</a>
+                    <a href="/mint.html" class="secondary">Mint NFT</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#6e40c9;">D</div>
+                        <h3><span class="status green"></span>Data Room</h3>
+                    </div>
+                    <p>OpenShift - Acquisition data room landing page</p>
+                    <a href="http://dataroom-purplesquirrel-dev.apps.rm3.7wse.p1.openshiftapps.com" target="_blank">View</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#238636;">W</div>
+                        <h3><span class="status green"></span>Webhook API</h3>
+                    </div>
+                    <p>Knative Serverless - Auto-scaling webhook receiver</p>
+                    <a href="https://webhook-purplesquirrel-dev.apps.rm3.7wse.p1.openshiftapps.com" target="_blank">Test</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#f80000;">G</div>
+                        <h3><span class="status green"></span>Ghost Blog</h3>
+                    </div>
+                    <p>Oracle ARM - Blog with paid memberships</p>
+                    <a href="http://163.192.105.31" target="_blank">Blog</a>
+                    <a href="http://163.192.105.31/ghost" class="secondary">Admin</a>
+                </div>
+            </div>
+
+            <h2 class="section-title">Infrastructure</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#0078d4;">A</div>
+                        <h3><span class="status green"></span>Azure</h3>
+                    </div>
+                    <p>Static Web Apps (2), Free Tier</p>
+                    <a href="https://portal.azure.com" target="_blank">Portal</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#4285f4;">G</div>
+                        <h3><span class="status green"></span>Google Cloud</h3>
+                    </div>
+                    <p>Cloud Run (5), Firestore, Free Tier</p>
+                    <a href="https://console.cloud.google.com" target="_blank">Console</a>
+                    <a href="https://payment-intent-197728596068.us-central1.run.app" class="secondary">Payments</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#ee0000;">K</div>
+                        <h3><span class="status green"></span>OpenShift</h3>
+                    </div>
+                    <p>Red Hat - Kubernetes with Argo, Tekton</p>
+                    <a href="https://console-openshift-console.apps.rm3.7wse.p1.openshiftapps.com" target="_blank">Console</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#1a73e8;">I</div>
+                        <h3><span class="status yellow"></span>IBM Cloud</h3>
+                    </div>
+                    <p>Watson Speech, NLU, Assistant</p>
+                    <a href="https://cloud.ibm.com" target="_blank">Dashboard</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#f80000;">O</div>
+                        <h3><span class="status green"></span>Oracle Cloud</h3>
+                    </div>
+                    <p>ARM VM - 4 OCPU, 24GB RAM, 6 containers</p>
+                    <a href="http://163.192.105.31" target="_blank">Services</a>
+                    <a href="https://cloud.oracle.com" class="secondary">Console</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#333;">L</div>
+                        <h3><span class="status green"></span>OrbStack</h3>
+                    </div>
+                    <p>MinIO, PostgreSQL, Redis + 2 VMs</p>
+                    <a href="http://localhost:9001" target="_blank">MinIO</a>
+                </div>
+            </div>
+
+            <h2 class="section-title">Automation</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#ef7b4d;">A</div>
+                        <h3>Argo Workflows</h3>
+                    </div>
+                    <p>DAG-based outreach automation</p>
+                    <a href="#" class="secondary">outreach-workflow</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#0095d5;">T</div>
+                        <h3>Tekton CI/CD</h3>
+                    </div>
+                    <p>Automated deployments</p>
+                    <a href="#" class="secondary">pipeline-ci</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background:#d29922;">C</div>
+                        <h3>CronJob</h3>
+                    </div>
+                    <p>Daily 9am reminder</p>
+                    <a href="#" class="secondary">pipeline-reminder</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Products</h4>
+                <a href="/store.html">Digital Store</a>
+                <a href="/mint.html">NFT Collection</a>
+                <a href="http://163.192.105.31/ghost/#/portal">Pro Membership</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="http://163.192.105.31">Blog</a>
+                <a href="#">Documentation</a>
+                <a href="#">API Reference</a>
+            </div>
+            <div class="footer-section">
+                <h4>Infrastructure</h4>
+                <a href="https://portal.azure.com">Azure</a>
+                <a href="https://console.cloud.google.com">Google Cloud</a>
+                <a href="https://console-openshift-console.apps.rm3.7wse.p1.openshiftapps.com">OpenShift</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="/about.html">About</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/terms.html">Terms</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 Purple Squirrel Media. All rights reserved.</span>
+            <span>Multi-cloud infrastructure at $0/month</span>
+        </div>
+    </footer>
+</body>
+</html>
