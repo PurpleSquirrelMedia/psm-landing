@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PURPLEX NFT Collection | Purple Squirrel Media</title>
+    <meta name="description" content="Exclusive PURPLEX NFT collection. Premium access passes with real-world utility. Mint with credit card or Solana.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <link rel="apple-touch-icon" href="img/logo.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Crossmint SDK -->
+    <script src="https://unpkg.com/@crossmint/client-sdk-vanilla-ui@latest/lib/index.global.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .purplex-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0015 0%, #1a0a2e 30%, #2d1b4e 60%, #1a0a2e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .purplex-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        .purplex-hero {
+            padding: 120px 20px 60px;
+            text-align: center;
+            position: relative;
+        }
+        .purplex-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .purplex-title {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        .purplex-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+        .purplex-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+        .purplex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .nft-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .nft-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(168, 85, 247, 0.3);
+        }
+        .nft-card.featured {
+            border: 2px solid #f59e0b;
+            position: relative;
+        }
+        .nft-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+            padding: 5px 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            transform: rotate(45deg);
+            z-index: 10;
+        }
+        .nft-visual {
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .nft-visual.bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); }
+        .nft-visual.silver { background: linear-gradient(135deg, #c0c0c0, #808080); }
+        .nft-visual.gold { background: linear-gradient(135deg, #ffd700, #ff8c00); }
+        .nft-visual.diamond { background: linear-gradient(135deg, #b9f2ff, #00bfff, #9400d3); }
+        .nft-icon {
+            font-size: 6rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        .nft-tier-badge {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        .nft-info {
+            padding: 30px;
+            color: white;
+        }
+        .nft-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .nft-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .nft-perks {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+        .nft-perks li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+        }
+        .nft-perks li i {
+            color: #10b981;
+            width: 20px;
+        }
+        .nft-pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        .nft-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+        .nft-supply {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .mint-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn-crossmint {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        .btn-crossmint:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+        .btn-solana {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: linear-gradient(135deg, #14F195, #9945FF);
+            color: white;
+        }
+        .btn-solana:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(20, 241, 149, 0.4);
+        }
+        .seeker-banner {
+            background: linear-gradient(135deg, rgba(20, 241, 149, 0.1), rgba(153, 69, 255, 0.1));
+            border: 1px solid rgba(20, 241, 149, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .seeker-banner h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .seeker-banner p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+        .seeker-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #14F195, #9945FF);
+            padding: 12px 25px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+        }
+        .utility-section {
+            margin-top: 80px;
+        }
+        .utility-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .utility-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .utility-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-pink));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .utility-card h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .utility-card p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .purplex-grid {
+                grid-template-columns: 1fr;
+            }
+            .purplex-title {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="store.html">Store</a></li>
+                <li><a href="purplex.html" class="active">PURPLEX</a></li>
+                <li><a href="portal.html">Portal</a></li>
+                <li><a href="plans.html">Plans</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-login">Sign In</a>
+                <a href="signup.html" class="btn-signup">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="purplex-page">
+        <!-- Hero -->
+        <section class="purplex-hero">
+            <span class="purplex-badge"><i class="fas fa-gem"></i> Exclusive Collection</span>
+            <h1 class="purplex-title">PURPLEX</h1>
+            <p class="purplex-subtitle">Premium access passes with real-world utility. Unlock exclusive content, events, and rewards. Pay with credit card or crypto.</p>
+        </section>
+
+        <!-- NFT Tiers -->
+        <div class="purplex-container">
+            <div class="purplex-grid">
+                <!-- Bronze Tier -->
+                <div class="nft-card">
+                    <div class="nft-visual bronze">
+                        <span class="nft-icon">&#x1F3C6;</span>
+                        <span class="nft-tier-badge"><i class="fas fa-medal"></i> Bronze Pass</span>
+                    </div>
+                    <div class="nft-info">
+                        <h3>Bronze Pass</h3>
+                        <p>Entry-level access to the PURPLEX ecosystem with basic perks and community access.</p>
+                        <ul class="nft-perks">
+                            <li><i class="fas fa-check"></i> Discord VIP Access</li>
+                            <li><i class="fas fa-check"></i> Monthly Newsletter</li>
+                            <li><i class="fas fa-check"></i> 5% Store Discount</li>
+                            <li><i class="fas fa-check"></i> Early Announcements</li>
+                        </ul>
+                        <div class="nft-pricing">
+                            <span class="nft-price">$49</span>
+                            <span class="nft-supply">500 / 500 remaining</span>
+                        </div>
+                        <div class="mint-buttons">
+                            <button class="btn-crossmint" onclick="mintWithCrossmint('bronze')">
+                                <i class="fas fa-credit-card"></i> Pay with Card
+                            </button>
+                            <button class="btn-solana" onclick="mintWithSolana('bronze')">
+                                <i class="fas fa-wallet"></i> Pay with SOL
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silver Tier -->
+                <div class="nft-card featured">
+                    <div class="nft-visual silver">
+                        <span class="nft-icon">&#x1F3C6;</span>
+                        <span class="nft-tier-badge"><i class="fas fa-medal"></i> Silver Pass</span>
+                    </div>
+                    <div class="nft-info">
+                        <h3>Silver Pass</h3>
+                        <p>Enhanced access with streaming benefits and exclusive content drops.</p>
+                        <ul class="nft-perks">
+                            <li><i class="fas fa-check"></i> All Bronze Perks</li>
+                            <li><i class="fas fa-check"></i> OTT Streaming Access</li>
+                            <li><i class="fas fa-check"></i> Exclusive Content Drops</li>
+                            <li><i class="fas fa-check"></i> 15% Store Discount</li>
+                            <li><i class="fas fa-check"></i> Monthly AMAs</li>
+                        </ul>
+                        <div class="nft-pricing">
+                            <span class="nft-price">$149</span>
+                            <span class="nft-supply">250 / 250 remaining</span>
+                        </div>
+                        <div class="mint-buttons">
+                            <button class="btn-crossmint" onclick="mintWithCrossmint('silver')">
+                                <i class="fas fa-credit-card"></i> Pay with Card
+                            </button>
+                            <button class="btn-solana" onclick="mintWithSolana('silver')">
+                                <i class="fas fa-wallet"></i> Pay with SOL
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gold Tier -->
+                <div class="nft-card">
+                    <div class="nft-visual gold">
+                        <span class="nft-icon">&#x1F451;</span>
+                        <span class="nft-tier-badge"><i class="fas fa-crown"></i> Gold Pass</span>
+                    </div>
+                    <div class="nft-info">
+                        <h3>Gold Pass</h3>
+                        <p>Premium tier with full platform access, data analytics, and event invites.</p>
+                        <ul class="nft-perks">
+                            <li><i class="fas fa-check"></i> All Silver Perks</li>
+                            <li><i class="fas fa-check"></i> Shot Data Analytics</li>
+                            <li><i class="fas fa-check"></i> Course Data Access</li>
+                            <li><i class="fas fa-check"></i> 25% Store Discount</li>
+                            <li><i class="fas fa-check"></i> VIP Event Invites</li>
+                            <li><i class="fas fa-check"></i> 1-on-1 Coaching Sessions</li>
+                        </ul>
+                        <div class="nft-pricing">
+                            <span class="nft-price">$499</span>
+                            <span class="nft-supply">100 / 100 remaining</span>
+                        </div>
+                        <div class="mint-buttons">
+                            <button class="btn-crossmint" onclick="mintWithCrossmint('gold')">
+                                <i class="fas fa-credit-card"></i> Pay with Card
+                            </button>
+                            <button class="btn-solana" onclick="mintWithSolana('gold')">
+                                <i class="fas fa-wallet"></i> Pay with SOL
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diamond Tier - Full Width -->
+            <div class="nft-card" style="max-width: 600px; margin: 0 auto;">
+                <div class="nft-visual diamond">
+                    <span class="nft-icon">&#x1F48E;</span>
+                    <span class="nft-tier-badge"><i class="fas fa-gem"></i> Diamond Pass</span>
+                </div>
+                <div class="nft-info">
+                    <h3>Diamond Pass</h3>
+                    <p>Ultimate access. Lifetime benefits, revenue sharing, and founding member status.</p>
+                    <ul class="nft-perks">
+                        <li><i class="fas fa-check"></i> All Gold Perks (Lifetime)</li>
+                        <li><i class="fas fa-check"></i> Revenue Share (Ad Profits)</li>
+                        <li><i class="fas fa-check"></i> Founding Member NFT</li>
+                        <li><i class="fas fa-check"></i> Governance Voting Rights</li>
+                        <li><i class="fas fa-check"></i> Private Slack/Discord Channel</li>
+                        <li><i class="fas fa-check"></i> Annual In-Person Event Access</li>
+                        <li><i class="fas fa-check"></i> Free Seeker Phone Preorder</li>
+                    </ul>
+                    <div class="nft-pricing">
+                        <span class="nft-price">$1,999</span>
+                        <span class="nft-supply">25 / 25 remaining</span>
+                    </div>
+                    <div class="mint-buttons">
+                        <button class="btn-crossmint" onclick="mintWithCrossmint('diamond')">
+                            <i class="fas fa-credit-card"></i> Pay with Card
+                        </button>
+                        <button class="btn-solana" onclick="mintWithSolana('diamond')">
+                            <i class="fas fa-wallet"></i> Pay with SOL
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solana Mobile Banner -->
+            <div class="seeker-banner">
+                <h3><i class="fas fa-mobile-alt"></i> Solana Mobile Ready</h3>
+                <p>PURPLEX NFTs are fully compatible with the Solana Seeker phone. Manage your passes, stream content, and track data directly from your device.</p>
+                <span class="seeker-badge">
+                    <i class="fas fa-check-circle"></i> Seeker Compatible
+                </span>
+            </div>
+
+            <!-- Utility Section -->
+            <section class="utility-section">
+                <h2 class="utility-title">Real-World Utility</h2>
+                <div class="utility-grid">
+                    <div class="utility-card">
+                        <div class="utility-icon"><i class="fas fa-tv"></i></div>
+                        <h4>OTT Streaming</h4>
+                        <p>Live and on-demand video content. Exclusive shows, events, and behind-the-scenes access.</p>
+                    </div>
+                    <div class="utility-card">
+                        <div class="utility-icon"><i class="fas fa-chart-line"></i></div>
+                        <h4>Shot Data Analytics</h4>
+                        <p>Track your performance with detailed shot data, video analysis, and player statistics.</p>
+                    </div>
+                    <div class="utility-card">
+                        <div class="utility-icon"><i class="fas fa-golf-ball"></i></div>
+                        <h4>Course Data</h4>
+                        <p>Access detailed course information, layouts, and performance benchmarks.</p>
+                    </div>
+                    <div class="utility-card">
+                        <div class="utility-icon"><i class="fas fa-ad"></i></div>
+                        <h4>Ad Revenue Share</h4>
+                        <p>Diamond holders receive a share of platform advertising revenue.</p>
+                    </div>
+                    <div class="utility-card">
+                        <div class="utility-icon"><i class="fas fa-users"></i></div>
+                        <h4>Community</h4>
+                        <p>Join an exclusive community of enthusiasts, pros, and industry insiders.</p>
+                    </div>
+                    <div class="utility-card">
+                        <div class="utility-icon"><i class="fas fa-ticket-alt"></i></div>
+                        <h4>Event Access</h4>
+                        <p>VIP tickets to tournaments, meet-and-greets, and exclusive experiences.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-curve">
+            <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+                <path d="M0,0 Q360,100 720,50 T1440,0 L1440,100 L0,100 Z" fill="#1a0a2e"/>
+            </svg>
+        </div>
+        <div class="footer-content">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <div class="logo">
+                            <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                            <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+                        </div>
+                        <p>Created by the community for the community for enrichment and engagement.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fab fa-discord"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <div class="footer-col">
+                            <h4>Products</h4>
+                            <ul>
+                                <li><a href="store.html">Digital Store</a></li>
+                                <li><a href="purplex.html">PURPLEX NFTs</a></li>
+                                <li><a href="mint.html">Genesis Collection</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Company</h4>
+                            <ul>
+                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="portal.html">Developer Portal</a></li>
+                                <li><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Legal</h4>
+                            <ul>
+                                <li><a href="terms.html">Terms of Service</a></li>
+                                <li><a href="privacy.html">Privacy Policy</a></li>
+                                <li><a href="dmca.html">DMCA</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Purple Squirrel Media. All rights reserved.</p>
+                    <div class="payment-badges">
+                        <span><i class="fas fa-credit-card"></i> Crossmint</span>
+                        <span><i class="fas fa-wallet"></i> Solana</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Crossmint integration placeholder
+        // Replace with actual Crossmint collection IDs
+        const CROSSMINT_CONFIG = {
+            projectId: 'YOUR_CROSSMINT_PROJECT_ID',
+            collectionId: 'YOUR_COLLECTION_ID',
+            environment: 'production' // or 'staging'
+        };
+
+        function mintWithCrossmint(tier) {
+            const prices = {
+                bronze: 49,
+                silver: 149,
+                gold: 499,
+                diamond: 1999
+            };
+
+            // Crossmint checkout integration
+            // This will be replaced with actual Crossmint SDK calls
+            alert(`Crossmint checkout for ${tier.toUpperCase()} Pass ($${prices[tier]})\n\nIntegration pending - Configure CROSSMINT_CONFIG with your project credentials.`);
+
+            // Example Crossmint integration:
+            // CrossmintPayButton.render({
+            //     projectId: CROSSMINT_CONFIG.projectId,
+            //     collectionId: CROSSMINT_CONFIG.collectionId,
+            //     mintConfig: { tier: tier },
+            //     environment: CROSSMINT_CONFIG.environment
+            // }, '#crossmint-button');
+        }
+
+        async function mintWithSolana(tier) {
+            const prices = {
+                bronze: 0.5,
+                silver: 1.5,
+                gold: 5,
+                diamond: 20
+            };
+
+            try {
+                if (!window.solana || !window.solana.isPhantom) {
+                    window.open('https://phantom.app/', '_blank');
+                    return;
+                }
+
+                const resp = await window.solana.connect();
+                const walletAddress = resp.publicKey.toString();
+
+                alert(`Connected: ${walletAddress}\n\nMinting ${tier.toUpperCase()} Pass for ${prices[tier]} SOL\n\nSmart contract integration pending.`);
+
+            } catch (err) {
+                console.error(err);
+                alert('Wallet connection failed');
+            }
+        }
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        mobileMenuBtn?.addEventListener('click', () => {
+            navLinks?.classList.toggle('active');
+            mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
+            mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+        });
+    </script>
+</body>
+</html>
