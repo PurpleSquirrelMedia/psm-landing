@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PURPLEX Marketplace | Purple Squirrel Media</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --metaplex-bg: #0d0d0d;
+            --metaplex-card: #1a1a2e;
+            --metaplex-border: #2d2d44;
+            --metaplex-accent: #9945ff;
+            --metaplex-green: #14f195;
+            --metaplex-pink: #ff6b9d;
+            --metaplex-text: #ffffff;
+            --metaplex-muted: #888899;
+        }
+
+        body {
+            background: var(--metaplex-bg);
+            font-family: 'Poppins', sans-serif;
+            color: var(--metaplex-text);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Metaplex-style Header */
+        .marketplace-header {
+            background: linear-gradient(180deg, rgba(153, 69, 255, 0.15) 0%, transparent 100%);
+            border-bottom: 1px solid var(--metaplex-border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--metaplex-text);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--metaplex-accent), var(--metaplex-green));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--metaplex-accent), var(--metaplex-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--metaplex-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--metaplex-text);
+        }
+
+        .wallet-btn {
+            background: linear-gradient(135deg, var(--metaplex-accent), #7b3fe4);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(153, 69, 255, 0.4);
+        }
+
+        .wallet-btn.connected {
+            background: linear-gradient(135deg, var(--metaplex-green), #0fb97c);
+        }
+
+        /* Hero Banner */
+        .marketplace-hero {
+            background: linear-gradient(135deg, rgba(153, 69, 255, 0.2), rgba(20, 241, 149, 0.1));
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .marketplace-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(153,69,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(153, 69, 255, 0.2);
+            border: 1px solid var(--metaplex-accent);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-badge i {
+            color: var(--metaplex-green);
+        }
+
+        .marketplace-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, var(--metaplex-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .marketplace-hero p {
+            color: var(--metaplex-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Collection Stats */
+        .collection-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--metaplex-green);
+        }
+
+        .stat-label {
+            color: var(--metaplex-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Filters Bar */
+        .filters-bar {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--metaplex-card);
+            border: 1px solid var(--metaplex-border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            width: 300px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--metaplex-text);
+            width: 100%;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .search-box i {
+            color: var(--metaplex-muted);
+            margin-right: 0.75rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-tab {
+            background: var(--metaplex-card);
+            border: 1px solid var(--metaplex-border);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            color: var(--metaplex-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            background: var(--metaplex-accent);
+            border-color: var(--metaplex-accent);
+            color: white;
+        }
+
+        .sort-dropdown {
+            background: var(--metaplex-card);
+            border: 1px solid var(--metaplex-border);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            color: var(--metaplex-text);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* NFT Grid */
+        .nft-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .nft-card {
+            background: var(--metaplex-card);
+            border: 1px solid var(--metaplex-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .nft-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(153, 69, 255, 0.2);
+            border-color: var(--metaplex-accent);
+        }
+
+        .nft-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--metaplex-accent), var(--metaplex-green));
+        }
+
+        .nft-info {
+            padding: 1.25rem;
+        }
+
+        .nft-collection {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .nft-collection img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .nft-collection span {
+            color: var(--metaplex-muted);
+            font-size: 0.85rem;
+        }
+
+        .verified-badge {
+            color: var(--metaplex-accent);
+            font-size: 0.75rem;
+        }
+
+        .nft-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .nft-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nft-price {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sol-icon {
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, var(--metaplex-accent), var(--metaplex-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+        .price-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .price-usd {
+            color: var(--metaplex-muted);
+            font-size: 0.8rem;
+        }
+
+        .nft-tier {
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tier-bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); }
+        .tier-silver { background: linear-gradient(135deg, #c0c0c0, #808080); }
+        .tier-gold { background: linear-gradient(135deg, #ffd700, #b8860b); }
+        .tier-diamond { background: linear-gradient(135deg, #b9f2ff, #00bfff); color: #1a1a2e; }
+
+        /* Quick Actions */
+        .nft-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0 1.25rem 1.25rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, var(--metaplex-accent), #7b3fe4);
+            color: white;
+        }
+
+        .btn-buy:hover {
+            box-shadow: 0 5px 20px rgba(153, 69, 255, 0.4);
+        }
+
+        .btn-bid {
+            background: transparent;
+            border: 1px solid var(--metaplex-border);
+            color: var(--metaplex-text);
+        }
+
+        .btn-bid:hover {
+            border-color: var(--metaplex-accent);
+            color: var(--metaplex-accent);
+        }
+
+        /* Activity Feed */
+        .activity-section {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-header h2 i {
+            color: var(--metaplex-accent);
+        }
+
+        .activity-list {
+            background: var(--metaplex-card);
+            border: 1px solid var(--metaplex-border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--metaplex-border);
+            transition: background 0.3s;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background: rgba(153, 69, 255, 0.1);
+        }
+
+        .activity-nft {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-type {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-meta {
+            color: var(--metaplex-muted);
+            font-size: 0.85rem;
+        }
+
+        .activity-price {
+            text-align: right;
+        }
+
+        .activity-sol {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .activity-time {
+            color: var(--metaplex-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--metaplex-card);
+            border: 1px solid var(--metaplex-border);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--metaplex-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--metaplex-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-nft-preview {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-price-display {
+            background: rgba(153, 69, 255, 0.1);
+            border: 1px solid var(--metaplex-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-price-label {
+            color: var(--metaplex-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-price-value {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .modal-price-usd {
+            color: var(--metaplex-muted);
+            font-size: 0.9rem;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .payment-btn {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .payment-btn.phantom {
+            background: linear-gradient(135deg, var(--metaplex-accent), #7b3fe4);
+            color: white;
+        }
+
+        .payment-btn.crossmint {
+            background: linear-gradient(135deg, var(--metaplex-green), #0fb97c);
+            color: #1a1a2e;
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        .marketplace-footer {
+            background: var(--metaplex-card);
+            border-top: 1px solid var(--metaplex-border);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h4 {
+            color: var(--metaplex-text);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--metaplex-muted);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--metaplex-accent);
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-socials a {
+            width: 40px;
+            height: 40px;
+            background: var(--metaplex-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .footer-socials a:hover {
+            background: var(--metaplex-accent);
+            color: white;
+        }
+
+        .powered-by {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--metaplex-border);
+            color: var(--metaplex-muted);
+            font-size: 0.85rem;
+        }
+
+        .powered-by img {
+            height: 20px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .marketplace-hero h1 {
+                font-size: 2rem;
+            }
+
+            .collection-stats {
+                gap: 1.5rem;
+            }
+
+            .filters-bar {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .filter-tabs {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .nft-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="marketplace-header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-gem"></i></div>
+                <span class="logo-text">PURPLEX</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="marketplace.html" class="active">Marketplace</a>
+                <a href="purplex.html">Mint</a>
+                <a href="powerplay.html">POWER PLAY</a>
+                <a href="about.html">About</a>
+            </nav>
+            <button class="wallet-btn" id="walletBtn" onclick="connectWallet()">
+                <i class="fas fa-wallet"></i>
+                <span>Connect Wallet</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="marketplace-hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i>
+                <span>Powered by Solana & Metaplex</span>
+            </div>
+            <h1>PURPLEX NFT Marketplace</h1>
+            <p>Discover, collect, and trade exclusive PURPLEX membership NFTs. Unlock premium POWER PLAY access and exclusive golf analytics.</p>
+            <div class="collection-stats">
+                <div class="stat-item">
+                    <div class="stat-value">10,000</div>
+                    <div class="stat-label">Total Items</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2,847</div>
+                    <div class="stat-label">Owners</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1,245 SOL</div>
+                    <div class="stat-label">Volume Traded</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">0.25 SOL</div>
+                    <div class="stat-label">Floor Price</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search by name or ID..." id="searchInput" onkeyup="filterNFTs()">
+        </div>
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="setFilter('all', this)">All</button>
+            <button class="filter-tab" onclick="setFilter('bronze', this)">Bronze</button>
+            <button class="filter-tab" onclick="setFilter('silver', this)">Silver</button>
+            <button class="filter-tab" onclick="setFilter('gold', this)">Gold</button>
+            <button class="filter-tab" onclick="setFilter('diamond', this)">Diamond</button>
+        </div>
+        <select class="sort-dropdown" onchange="sortNFTs(this.value)">
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="recent">Recently Listed</option>
+            <option value="rarity">Rarity</option>
+        </select>
+    </div>
+
+    <!-- NFT Grid -->
+    <div class="nft-grid" id="nftGrid">
+        <!-- NFTs will be dynamically loaded -->
+    </div>
+
+    <!-- Activity Feed -->
+    <section class="activity-section">
+        <div class="section-header">
+            <h2><i class="fas fa-chart-line"></i> Recent Activity</h2>
+            <a href="#" style="color: var(--metaplex-accent); text-decoration: none;">View All</a>
+        </div>
+        <div class="activity-list" id="activityList">
+            <!-- Activity items will be dynamically loaded -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="marketplace-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Marketplace</h4>
+                <a href="marketplace.html">Explore</a>
+                <a href="purplex.html">Mint</a>
+                <a href="#">My Collection</a>
+                <a href="#">Create</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="about.html">About</a>
+                <a href="portal.html">Developers</a>
+                <a href="#">Docs</a>
+                <a href="contact.html">Support</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="terms.html">Terms of Service</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <div class="footer-socials">
+                    <a href="https://x.com/purplesquirrelm" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://discord.gg/purplesquirrel" target="_blank"><i class="fab fa-discord"></i></a>
+                    <a href="https://github.com/PurpleSquirrelMedia" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="powered-by">
+            Powered by <strong>Solana</strong> & <strong>Metaplex</strong> | Built by Purple Squirrel Media
+        </div>
+    </footer>
+
+    <!-- Purchase Modal -->
+    <div class="modal-overlay" id="purchaseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-shopping-cart"></i> Purchase NFT</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img src="" alt="NFT Preview" class="modal-nft-preview" id="modalNftImage">
+                <h3 id="modalNftName" style="margin-bottom: 0.5rem;"></h3>
+                <p id="modalNftTier" style="color: var(--metaplex-muted); margin-bottom: 1.5rem;"></p>
+
+                <div class="modal-price-display">
+                    <div class="modal-price-label">Current Price</div>
+                    <div class="modal-price-value">
+                        <span class="sol-icon">◎</span>
+                        <span id="modalPriceSol"></span>
+                    </div>
+                    <div class="modal-price-usd" id="modalPriceUsd"></div>
+                </div>
+
+                <div class="payment-options">
+                    <button class="payment-btn phantom" onclick="buyWithPhantom()">
+                        <i class="fas fa-wallet"></i>
+                        Pay with Phantom
+                    </button>
+                    <button class="payment-btn crossmint" onclick="buyWithCrossmint()">
+                        <i class="fas fa-credit-card"></i>
+                        Pay with Credit Card
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample NFT Data (would be loaded from Candy Machine / Metaplex in production)
+        const nftData = [
+            { id: 1, name: 'PURPLEX Bronze #0001', tier: 'bronze', price: 0.25, image: 'https://placehold.co/400x400/cd7f32/ffffff?text=Bronze+%230001' },
+            { id: 2, name: 'PURPLEX Bronze #0002', tier: 'bronze', price: 0.25, image: 'https://placehold.co/400x400/cd7f32/ffffff?text=Bronze+%230002' },
+            { id: 3, name: 'PURPLEX Silver #0001', tier: 'silver', price: 0.75, image: 'https://placehold.co/400x400/c0c0c0/333333?text=Silver+%230001' },
+            { id: 4, name: 'PURPLEX Silver #0002', tier: 'silver', price: 0.75, image: 'https://placehold.co/400x400/c0c0c0/333333?text=Silver+%230002' },
+            { id: 5, name: 'PURPLEX Gold #0001', tier: 'gold', price: 2.5, image: 'https://placehold.co/400x400/ffd700/333333?text=Gold+%230001' },
+            { id: 6, name: 'PURPLEX Gold #0002', tier: 'gold', price: 2.5, image: 'https://placehold.co/400x400/ffd700/333333?text=Gold+%230002' },
+            { id: 7, name: 'PURPLEX Diamond #0001', tier: 'diamond', price: 10, image: 'https://placehold.co/400x400/00bfff/ffffff?text=Diamond+%230001' },
+            { id: 8, name: 'PURPLEX Diamond #0002', tier: 'diamond', price: 10, image: 'https://placehold.co/400x400/00bfff/ffffff?text=Diamond+%230002' },
+            { id: 9, name: 'PURPLEX Bronze #0003', tier: 'bronze', price: 0.25, image: 'https://placehold.co/400x400/cd7f32/ffffff?text=Bronze+%230003' },
+            { id: 10, name: 'PURPLEX Silver #0003', tier: 'silver', price: 0.75, image: 'https://placehold.co/400x400/c0c0c0/333333?text=Silver+%230003' },
+            { id: 11, name: 'PURPLEX Gold #0003', tier: 'gold', price: 2.5, image: 'https://placehold.co/400x400/ffd700/333333?text=Gold+%230003' },
+            { id: 12, name: 'PURPLEX Bronze #0004', tier: 'bronze', price: 0.25, image: 'https://placehold.co/400x400/cd7f32/ffffff?text=Bronze+%230004' },
+        ];
+
+        const activityData = [
+            { type: 'Sale', nft: 'PURPLEX Diamond #0001', from: '8xK2...9fGh', to: '3mNp...7qRs', price: 10, time: '2 min ago', image: 'https://placehold.co/50x50/00bfff/ffffff?text=D' },
+            { type: 'Listed', nft: 'PURPLEX Gold #0003', from: '5yTr...2wXz', price: 2.5, time: '15 min ago', image: 'https://placehold.co/50x50/ffd700/333333?text=G' },
+            { type: 'Sale', nft: 'PURPLEX Silver #0002', from: '9pLk...4mNq', to: '7vBn...1cDf', price: 0.75, time: '1 hour ago', image: 'https://placehold.co/50x50/c0c0c0/333333?text=S' },
+            { type: 'Mint', nft: 'PURPLEX Bronze #0127', to: '2hJk...8pQr', price: 0.25, time: '2 hours ago', image: 'https://placehold.co/50x50/cd7f32/ffffff?text=B' },
+            { type: 'Sale', nft: 'PURPLEX Gold #0001', from: '4wXy...6zAb', to: '1cDe...9fGh', price: 2.5, time: '3 hours ago', image: 'https://placehold.co/50x50/ffd700/333333?text=G' },
+        ];
+
+        // SOL to USD rate (would be fetched from API in production)
+        const solToUsd = 175;
+        let currentFilter = 'all';
+        let walletConnected = false;
+        let walletAddress = null;
+        let selectedNft = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderNFTs(nftData);
+            renderActivity(activityData);
+        });
+
+        // Render NFT Grid
+        function renderNFTs(nfts) {
+            const grid = document.getElementById('nftGrid');
+            grid.innerHTML = nfts.map(nft => `
+                <div class="nft-card" data-tier="${nft.tier}" onclick="openPurchaseModal(${nft.id})">
+                    <img src="${nft.image}" alt="${nft.name}" class="nft-image">
+                    <div class="nft-info">
+                        <div class="nft-collection">
+                            <img src="https://placehold.co/20x20/9945ff/ffffff?text=P" alt="PURPLEX">
+                            <span>PURPLEX Collection</span>
+                            <i class="fas fa-check-circle verified-badge"></i>
+                        </div>
+                        <div class="nft-name">${nft.name}</div>
+                        <div class="nft-price-row">
+                            <div class="nft-price">
+                                <span class="sol-icon">◎</span>
+                                <span class="price-value">${nft.price}</span>
+                                <span class="price-usd">($${(nft.price * solToUsd).toFixed(0)})</span>
+                            </div>
+                            <span class="nft-tier tier-${nft.tier}">${nft.tier}</span>
+                        </div>
+                    </div>
+                    <div class="nft-actions">
+                        <button class="action-btn btn-buy" onclick="event.stopPropagation(); openPurchaseModal(${nft.id})">Buy Now</button>
+                        <button class="action-btn btn-bid" onclick="event.stopPropagation(); placeBid(${nft.id})">Bid</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Activity Feed
+        function renderActivity(activities) {
+            const list = document.getElementById('activityList');
+            list.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <img src="${activity.image}" alt="${activity.nft}" class="activity-nft">
+                    <div class="activity-details">
+                        <div class="activity-type">${activity.type}</div>
+                        <div class="activity-meta">
+                            ${activity.nft}
+                            ${activity.to ? `• To: ${activity.to}` : ''}
+                        </div>
+                    </div>
+                    <div class="activity-price">
+                        <div class="activity-sol">
+                            <span class="sol-icon">◎</span>
+                            ${activity.price}
+                        </div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter NFTs
+        function setFilter(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            filterNFTs();
+        }
+
+        function filterNFTs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = nftData.filter(nft => {
+                const matchesFilter = currentFilter === 'all' || nft.tier === currentFilter;
+                const matchesSearch = nft.name.toLowerCase().includes(searchTerm);
+                return matchesFilter && matchesSearch;
+            });
+            renderNFTs(filtered);
+        }
+
+        // Sort NFTs
+        function sortNFTs(sortBy) {
+            let sorted = [...nftData];
+            switch(sortBy) {
+                case 'price-low':
+                    sorted.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    sorted.sort((a, b) => b.price - a.price);
+                    break;
+                case 'recent':
+                    sorted.sort((a, b) => b.id - a.id);
+                    break;
+                case 'rarity':
+                    const rarityOrder = { diamond: 0, gold: 1, silver: 2, bronze: 3 };
+                    sorted.sort((a, b) => rarityOrder[a.tier] - rarityOrder[b.tier]);
+                    break;
+            }
+            renderNFTs(sorted);
+        }
+
+        // Wallet Connection
+        async function connectWallet() {
+            if (walletConnected) {
+                // Disconnect
+                walletConnected = false;
+                walletAddress = null;
+                updateWalletButton();
+                return;
+            }
+
+            if (typeof window.solana !== 'undefined' && window.solana.isPhantom) {
+                try {
+                    const resp = await window.solana.connect();
+                    walletAddress = resp.publicKey.toString();
+                    walletConnected = true;
+                    updateWalletButton();
+                } catch (err) {
+                    console.error('Wallet connection failed:', err);
+                    alert('Failed to connect wallet. Please try again.');
+                }
+            } else {
+                window.open('https://phantom.app/', '_blank');
+            }
+        }
+
+        function updateWalletButton() {
+            const btn = document.getElementById('walletBtn');
+            if (walletConnected) {
+                btn.classList.add('connected');
+                btn.innerHTML = `<i class="fas fa-wallet"></i><span>${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}</span>`;
+            } else {
+                btn.classList.remove('connected');
+                btn.innerHTML = `<i class="fas fa-wallet"></i><span>Connect Wallet</span>`;
+            }
+        }
+
+        // Purchase Modal
+        function openPurchaseModal(nftId) {
+            selectedNft = nftData.find(n => n.id === nftId);
+            if (!selectedNft) return;
+
+            document.getElementById('modalNftImage').src = selectedNft.image;
+            document.getElementById('modalNftName').textContent = selectedNft.name;
+            document.getElementById('modalNftTier').textContent = `${selectedNft.tier.charAt(0).toUpperCase() + selectedNft.tier.slice(1)} Tier Membership`;
+            document.getElementById('modalPriceSol').textContent = selectedNft.price;
+            document.getElementById('modalPriceUsd').textContent = `≈ $${(selectedNft.price * solToUsd).toFixed(2)} USD`;
+
+            document.getElementById('purchaseModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('purchaseModal').classList.remove('active');
+            selectedNft = null;
+        }
+
+        // Close modal on overlay click
+        document.getElementById('purchaseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Purchase with Phantom
+        async function buyWithPhantom() {
+            if (!walletConnected) {
+                await connectWallet();
+                if (!walletConnected) return;
+            }
+
+            if (!selectedNft) return;
+
+            // In production, this would interact with Metaplex / Candy Machine
+            alert(`Purchasing ${selectedNft.name} for ${selectedNft.price} SOL...\n\nThis would initiate a Solana transaction through Phantom wallet.`);
+            closeModal();
+        }
+
+        // Purchase with Crossmint
+        function buyWithCrossmint() {
+            if (!selectedNft) return;
+
+            // In production, this would open Crossmint checkout
+            const checkoutUrl = `https://www.crossmint.com/checkout?clientId=YOUR_CROSSMINT_CLIENT_ID&mintConfig=${encodeURIComponent(JSON.stringify({
+                type: 'candy-machine',
+                quantity: 1,
+                totalPrice: (selectedNft.price * solToUsd).toFixed(2)
+            }))}`;
+
+            alert(`Opening Crossmint checkout for ${selectedNft.name}...\n\nPrice: $${(selectedNft.price * solToUsd).toFixed(2)} USD\n\nIn production, this opens the Crossmint payment modal.`);
+            closeModal();
+        }
+
+        // Place Bid
+        function placeBid(nftId) {
+            const nft = nftData.find(n => n.id === nftId);
+            if (!nft) return;
+            alert(`Bidding on ${nft.name}\n\nAuction functionality coming soon!`);
+        }
+    </script>
+</body>
+</html>

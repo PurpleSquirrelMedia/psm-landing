@@ -1,0 +1,127 @@
+{
+  "$schema": "https://sugar.metaplex.com/schema/sugar-config-3.json",
+  "tokenStandard": "pnft",
+  "number": 10000,
+  "symbol": "PURPLEX",
+  "sellerFeeBasisPoints": 500,
+  "isMutable": true,
+  "isSequential": false,
+  "creators": [
+    {
+      "address": "YOUR_CREATOR_WALLET_ADDRESS",
+      "share": 100
+    }
+  ],
+  "uploadMethod": "bundlr",
+  "awsConfig": null,
+  "nftStorageAuthToken": null,
+  "shdwStorageAccount": null,
+  "pinataConfig": null,
+  "hiddenSettings": null,
+  "guards": {
+    "default": {
+      "botTax": {
+        "lamports": 10000000,
+        "lastInstruction": true
+      },
+      "solPayment": {
+        "value": 0.25,
+        "destination": "YOUR_TREASURY_WALLET_ADDRESS"
+      },
+      "startDate": {
+        "date": "2025-01-15T00:00:00Z"
+      },
+      "mintLimit": {
+        "id": 1,
+        "limit": 5
+      },
+      "redeemedAmount": {
+        "maximum": 10000
+      }
+    },
+    "groups": [
+      {
+        "label": "bronze",
+        "guards": {
+          "solPayment": {
+            "value": 0.25,
+            "destination": "YOUR_TREASURY_WALLET_ADDRESS"
+          },
+          "redeemedAmount": {
+            "maximum": 5000
+          },
+          "startDate": {
+            "date": "2025-01-15T00:00:00Z"
+          }
+        }
+      },
+      {
+        "label": "silver",
+        "guards": {
+          "solPayment": {
+            "value": 0.75,
+            "destination": "YOUR_TREASURY_WALLET_ADDRESS"
+          },
+          "redeemedAmount": {
+            "maximum": 3000
+          },
+          "startDate": {
+            "date": "2025-01-15T00:00:00Z"
+          },
+          "allowList": {
+            "merkleRoot": "SILVER_ALLOWLIST_MERKLE_ROOT"
+          }
+        }
+      },
+      {
+        "label": "gold",
+        "guards": {
+          "solPayment": {
+            "value": 2.5,
+            "destination": "YOUR_TREASURY_WALLET_ADDRESS"
+          },
+          "redeemedAmount": {
+            "maximum": 1500
+          },
+          "startDate": {
+            "date": "2025-01-15T00:00:00Z"
+          },
+          "tokenGate": {
+            "mint": "PURP_TOKEN_MINT_ADDRESS",
+            "amount": 100
+          }
+        }
+      },
+      {
+        "label": "diamond",
+        "guards": {
+          "solPayment": {
+            "value": 10,
+            "destination": "YOUR_TREASURY_WALLET_ADDRESS"
+          },
+          "redeemedAmount": {
+            "maximum": 500
+          },
+          "startDate": {
+            "date": "2025-01-15T00:00:00Z"
+          },
+          "nftGate": {
+            "requiredCollection": "GENESIS_COLLECTION_ADDRESS"
+          }
+        }
+      },
+      {
+        "label": "crossmint",
+        "guards": {
+          "thirdPartySigner": {
+            "signerKey": "CROSSMINT_SIGNER_ADDRESS"
+          },
+          "solPayment": {
+            "value": 0.25,
+            "destination": "YOUR_TREASURY_WALLET_ADDRESS"
+          }
+        }
+      }
+    ]
+  }
+}

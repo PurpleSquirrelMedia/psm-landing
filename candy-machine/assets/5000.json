@@ -1,0 +1,60 @@
+{
+  "name": "PURPLEX Silver #0001",
+  "symbol": "PURPLEX",
+  "description": "Silver tier PURPLEX membership NFT. Grants enhanced POWER PLAY streaming, advanced shot data analytics, and priority access to new features.",
+  "image": "5000.png",
+  "external_url": "https://purplesquirrel.media/purplex",
+  "attributes": [
+    {
+      "trait_type": "Tier",
+      "value": "Silver"
+    },
+    {
+      "trait_type": "Access Level",
+      "value": "Enhanced"
+    },
+    {
+      "trait_type": "Streaming",
+      "value": "HD Quality"
+    },
+    {
+      "trait_type": "Shot Data",
+      "value": "Advanced Analytics"
+    },
+    {
+      "trait_type": "Video Library",
+      "value": "Extended Access"
+    },
+    {
+      "trait_type": "Community",
+      "value": "Discord + Events"
+    },
+    {
+      "trait_type": "Exclusive Content",
+      "value": "Pro Tips Series"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Uncommon"
+    },
+    {
+      "trait_type": "Supply",
+      "value": "3000"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "5000.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image",
+    "creators": [
+      {
+        "address": "YOUR_CREATOR_WALLET_ADDRESS",
+        "share": 100
+      }
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "name": "PURPLEX Diamond #0001",
+  "symbol": "PURPLEX",
+  "description": "Diamond tier PURPLEX membership NFT. The ultimate Purple Squirrel experience with lifetime access, personal coaching sessions, exclusive hardware discounts, and governance voting rights.",
+  "image": "9500.png",
+  "external_url": "https://purplesquirrel.media/purplex",
+  "attributes": [
+    {
+      "trait_type": "Tier",
+      "value": "Diamond"
+    },
+    {
+      "trait_type": "Access Level",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Streaming",
+      "value": "4K + Multi-angle"
+    },
+    {
+      "trait_type": "Shot Data",
+      "value": "Enterprise Analytics"
+    },
+    {
+      "trait_type": "Video Library",
+      "value": "Lifetime Full Access"
+    },
+    {
+      "trait_type": "AI Analysis",
+      "value": "Unlimited AI Coaching"
+    },
+    {
+      "trait_type": "Personal Coaching",
+      "value": "Monthly 1-on-1 Session"
+    },
+    {
+      "trait_type": "Community",
+      "value": "Founders Club"
+    },
+    {
+      "trait_type": "Hardware",
+      "value": "50% Off Seeker Phone"
+    },
+    {
+      "trait_type": "Governance",
+      "value": "DAO Voting Rights"
+    },
+    {
+      "trait_type": "Tournament Access",
+      "value": "Free Entry + Perks"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Supply",
+      "value": "500"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "9500.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image",
+    "creators": [
+      {
+        "address": "YOUR_CREATOR_WALLET_ADDRESS",
+        "share": 100
+      }
+    ]
+  }
+}

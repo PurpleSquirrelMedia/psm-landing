@@ -1,0 +1,33 @@
+{
+  "name": "PURPLEX Membership Collection",
+  "symbol": "PURPLEX",
+  "description": "PURPLEX is the exclusive membership NFT collection from Purple Squirrel Media. Each NFT grants tiered access to POWER PLAY OTT streaming, shot data analytics, exclusive content, and premium features. Choose from Bronze, Silver, Gold, or Diamond tiers to unlock your golf media experience.",
+  "image": "collection.png",
+  "external_url": "https://purplesquirrel.media/purplex",
+  "seller_fee_basis_points": 500,
+  "attributes": [
+    {
+      "trait_type": "Collection",
+      "value": "PURPLEX"
+    },
+    {
+      "trait_type": "Platform",
+      "value": "POWER PLAY"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "collection.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image",
+    "creators": [
+      {
+        "address": "YOUR_CREATOR_WALLET_ADDRESS",
+        "share": 100
+      }
+    ]
+  }
+}

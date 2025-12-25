@@ -1,0 +1,68 @@
+{
+  "name": "PURPLEX Gold #0001",
+  "symbol": "PURPLEX",
+  "description": "Gold tier PURPLEX membership NFT. Premium POWER PLAY experience with 4K streaming, comprehensive analytics, AI swing analysis, and exclusive tournament access.",
+  "image": "8000.png",
+  "external_url": "https://purplesquirrel.media/purplex",
+  "attributes": [
+    {
+      "trait_type": "Tier",
+      "value": "Gold"
+    },
+    {
+      "trait_type": "Access Level",
+      "value": "Premium"
+    },
+    {
+      "trait_type": "Streaming",
+      "value": "4K Quality"
+    },
+    {
+      "trait_type": "Shot Data",
+      "value": "Full Analytics Suite"
+    },
+    {
+      "trait_type": "Video Library",
+      "value": "Full Access"
+    },
+    {
+      "trait_type": "AI Analysis",
+      "value": "Swing Analysis Included"
+    },
+    {
+      "trait_type": "Community",
+      "value": "VIP Discord + Events"
+    },
+    {
+      "trait_type": "Exclusive Content",
+      "value": "Pro Lessons + BTS"
+    },
+    {
+      "trait_type": "Tournament Access",
+      "value": "Priority Registration"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Supply",
+      "value": "1500"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "8000.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image",
+    "creators": [
+      {
+        "address": "YOUR_CREATOR_WALLET_ADDRESS",
+        "share": 100
+      }
+    ]
+  }
+}
