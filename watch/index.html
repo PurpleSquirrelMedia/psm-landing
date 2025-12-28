@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0;url=https://watch-this-v2-alpha.vercel.app/">
+    <title>Redirecting to Watch This...</title>
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a0a2e 0%, #0a0a0a 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .loader {
+            text-align: center;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(147, 51, 234, 0.3);
+            border-top-color: #9333ea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <p>Redirecting to Watch This...</p>
+    </div>
+    <script>
+        window.location.replace('https://watch-this-v2-alpha.vercel.app/');
+    </script>
+</body>
+</html>

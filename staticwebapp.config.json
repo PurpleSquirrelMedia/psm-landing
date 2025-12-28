@@ -1,6 +1,26 @@
 {
   "routes": [
     {
+      "route": "/watch",
+      "redirect": "https://watch-this-v2-alpha.vercel.app/",
+      "statusCode": 302
+    },
+    {
+      "route": "/watch/*",
+      "redirect": "https://watch-this-v2-alpha.vercel.app/*",
+      "statusCode": 302
+    },
+    {
+      "route": "/talent",
+      "redirect": "https://purple-squirrel-jobs.vercel.app/",
+      "statusCode": 302
+    },
+    {
+      "route": "/talent/*",
+      "redirect": "https://purple-squirrel-jobs.vercel.app/*",
+      "statusCode": 302
+    },
+    {
       "route": "/defi",
       "rewrite": "/defi/swap/index.html"
     },
