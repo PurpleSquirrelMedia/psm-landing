@@ -140,6 +140,10 @@ body {
     position: absolute;
     inset: 0;
     overflow: hidden;
+    background-image: url('../img/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .hero-bg-image {
