@@ -837,7 +837,7 @@
                 case 'youtube':
                     embedHtml = `
                         <iframe
-                            src="https://www.youtube.com/embed/${video.videoId}?autoplay=1&mute=${mute}&controls=0&modestbranding=1&rel=0&showinfo=0&loop=1&playlist=${video.videoId}&playsinline=1"
+                            src="https://www.youtube.com/embed/${video.videoId}?autoplay=1&mute=${mute}&controls=1&modestbranding=1&rel=0&loop=1&playlist=${video.videoId}&playsinline=1&enablejsapi=1&origin=${window.location.origin}"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
                         </iframe>
@@ -847,7 +847,7 @@
                 case 'vimeo':
                     embedHtml = `
                         <iframe
-                            src="https://player.vimeo.com/video/${video.videoId}?autoplay=1&muted=${mute}&loop=1&background=1&controls=0"
+                            src="https://player.vimeo.com/video/${video.videoId}?autoplay=1&muted=${mute}&loop=1&controls=1&quality=auto"
                             allow="autoplay; fullscreen; picture-in-picture"
                             allowfullscreen>
                         </iframe>
