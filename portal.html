@@ -186,24 +186,54 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar scrolled">
+        <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="logo">
                 <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
                 <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
             </a>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="powerplay.html">POWER PLAY</a></li>
-                <li><a href="purplex.html">PURPLEX</a></li>
-                <li><a href="marketplace.html">Marketplace</a></li>
-                <li><a href="store.html">Store</a></li>
-                <li><a href="portal.html" class="active">Portal</a></li>
-                <li><a href="about.html">About</a></li>
+                <li><a href="/" >Home</a></li>
+                <li>
+                    <a class="dropdown-toggle" >Watch</a>
+                    <div class="dropdown">
+                        <a href="/feed.html"><i class="fas fa-stream"></i> Feed</a>
+                        <a href="/stream"><i class="fas fa-film"></i> Stream</a>
+                        <a href="/watch"><i class="fas fa-robot"></i> AI Recommendations</a>
+                        <a href="/free-tv.html"><i class="fas fa-tv"></i> Free TV</a>
+                        <a href="/radio.html"><i class="fas fa-radio"></i> Radio</a>
+                    </div>
+                </li>
+                <li><a href="/talent" >Talent</a></li>
+                <li>
+                    <a class="dropdown-toggle" >DeFi</a>
+                    <div class="dropdown">
+                        <a href="/defi/swap/"><i class="fas fa-exchange-alt"></i> Swap</a>
+                        <a href="/defi/bridge/"><i class="fas fa-bridge"></i> Bridge</a>
+                    </div>
+                </li>
+                <li>
+                    <a class="dropdown-toggle" >Store</a>
+                    <div class="dropdown">
+                        <a href="/plans.html"><i class="fas fa-id-card"></i> Plans</a>
+                        <a href="/mint.html"><i class="fas fa-gem"></i> NFT Mint</a>
+                        <a href="/marketplace.html"><i class="fas fa-store"></i> Marketplace</a>
+                        <a href="/store.html"><i class="fas fa-shopping-bag"></i> Merch</a>
+                    </div>
+                </li>
+                <li>
+                    <a class="dropdown-toggle" >Games</a>
+                    <div class="dropdown">
+                        <a href="/games"><i class="fas fa-gamepad"></i> All Games</a>
+                        <a href="/powerplay.html"><i class="fas fa-bolt"></i> POWER PLAY</a>
+                        <a href="/purplex.html"><i class="fas fa-puzzle-piece"></i> PURPLEX</a>
+                    </div>
+                </li>
+                <li><a href="/about.html" >About</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="login.html" class="btn-login">Sign In</a>
-                <a href="signup.html" class="btn-signup">Get Started</a>
+                <a href="/login.html" class="btn-login">Sign In</a>
+                <a href="/signup.html" class="btn-signup">Get Started</a>
             </div>
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
@@ -427,59 +457,58 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-curve">
-            <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
-                <path d="M0,0 Q360,100 720,50 T1440,0 L1440,100 L0,100 Z" fill="#1a0a2e"/>
-            </svg>
-        </div>
-        <div class="footer-content">
-            <div class="container">
+            <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
                 <div class="footer-grid">
                     <div class="footer-brand">
-                        <div class="logo">
+                        <a href="/" class="logo">
                             <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
                             <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
-                        </div>
-                        <p>Created by the community for the community for enrichment and engagement.</p>
+                        </a>
+                        <p>The future of decentralized streaming, gaming, and digital entertainment.</p>
                         <div class="social-links">
                             <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
                             <a href="#"><i class="fab fa-discord"></i></a>
+                            <a href="#"><i class="fab fa-telegram"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                     <div class="footer-links">
                         <div class="footer-col">
-                            <h4>Products</h4>
+                            <h4>Platform</h4>
                             <ul>
-                                <li><a href="store.html">Digital Store</a></li>
-                                <li><a href="mint.html">NFT Collection</a></li>
-                                <li><a href="plans.html">Pricing</a></li>
+                                <li><a href="/watch">Watch</a></li>
+                                <li><a href="/talent">Talent</a></li>
+                                <li><a href="/defi/swap/">Swap</a></li>
+                                <li><a href="/games">Games</a></li>
                             </ul>
                         </div>
                         <div class="footer-col">
-                            <h4>Infrastructure</h4>
+                            <h4>Store</h4>
                             <ul>
-                                <li><a href="https://portal.azure.com" target="_blank">Azure</a></li>
-                                <li><a href="https://console.cloud.google.com" target="_blank">Google Cloud</a></li>
-                                <li><a href="https://console-openshift-console.apps.rm3.7wse.p1.openshiftapps.com" target="_blank">OpenShift</a></li>
+                                <li><a href="/plans.html">Plans</a></li>
+                                <li><a href="/mint.html">NFT Mint</a></li>
+                                <li><a href="/marketplace.html">Marketplace</a></li>
+                                <li><a href="/store.html">Merch</a></li>
                             </ul>
                         </div>
                         <div class="footer-col">
                             <h4>Company</h4>
                             <ul>
-                                <li><a href="about.html">About Us</a></li>
-                                <li><a href="contact.html">Contact</a></li>
-                                <li><a href="terms.html">Terms</a></li>
+                                <li><a href="/about.html">About</a></li>
+                                <li><a href="/contact.html">Contact</a></li>
+                                <li><a href="/terms.html">Terms</a></li>
+                                <li><a href="/privacy.html">Privacy</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="footer-bottom">
-                    <p>&copy; 2025 Purple Squirrel Media. All rights reserved.</p>
+                    <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
                     <div class="payment-badges">
-                        <span><i class="fas fa-cloud"></i> Multi-cloud at $0/month</span>
+                        <span><i class="fas fa-bolt"></i> Solana</span>
+                        <span><i class="fas fa-coins"></i> USDC</span>
                     </div>
                 </div>
             </div>

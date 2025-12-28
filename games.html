@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - Purple Squirrel Media</title>
+    <meta name="description" content="Play POWER PLAY and PURPLEX - blockchain-powered games from Purple Squirrel Media">
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <link rel="apple-touch-icon" href="img/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .games-hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .games-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="%238b5cf6" opacity="0.3"/></svg>');
+            background-size: 50px 50px;
+            opacity: 0.5;
+        }
+        .games-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+        .games-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .games-hero p {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .games-grid {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+        .game-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+        }
+        .game-preview {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+        }
+        .game-preview.powerplay {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+        }
+        .game-preview.purplex {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+        }
+        .game-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .game-badge i {
+            color: #22c55e;
+        }
+        .game-content {
+            padding: 2rem;
+        }
+        .game-content h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+        .game-content p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .game-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .game-feature {
+            background: rgba(139, 92, 246, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #a78bfa;
+        }
+        .game-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .game-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+        .coming-soon {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: rgba(139, 92, 246, 0.05);
+        }
+        .coming-soon h3 {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .coming-soon p {
+            color: rgba(255,255,255,0.6);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .newsletter-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 1.5rem;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 1rem;
+        }
+        .newsletter-form input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+        .newsletter-form button {
+            padding: 1rem 2rem;
+            background: #8b5cf6;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .newsletter-form button:hover {
+            background: #7c3aed;
+        }
+        @media (max-width: 500px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li>
+                    <a class="dropdown-toggle">Watch</a>
+                    <div class="dropdown">
+                        <a href="/feed.html"><i class="fas fa-stream"></i> Feed</a>
+                        <a href="/stream"><i class="fas fa-film"></i> Stream</a>
+                        <a href="/watch"><i class="fas fa-robot"></i> AI Recommendations</a>
+                        <a href="/free-tv.html"><i class="fas fa-tv"></i> Free TV</a>
+                        <a href="/radio.html"><i class="fas fa-radio"></i> Radio</a>
+                    </div>
+                </li>
+                <li><a href="/talent">Talent</a></li>
+                <li>
+                    <a class="dropdown-toggle">DeFi</a>
+                    <div class="dropdown">
+                        <a href="/defi/swap/"><i class="fas fa-exchange-alt"></i> Swap</a>
+                        <a href="/defi/bridge/"><i class="fas fa-bridge"></i> Bridge</a>
+                    </div>
+                </li>
+                <li>
+                    <a class="dropdown-toggle">Store</a>
+                    <div class="dropdown">
+                        <a href="/plans.html"><i class="fas fa-id-card"></i> Plans</a>
+                        <a href="/mint.html"><i class="fas fa-gem"></i> NFT Mint</a>
+                        <a href="/marketplace.html"><i class="fas fa-store"></i> Marketplace</a>
+                        <a href="/store.html"><i class="fas fa-shopping-bag"></i> Merch</a>
+                    </div>
+                </li>
+                <li>
+                    <a class="dropdown-toggle active">Games</a>
+                    <div class="dropdown">
+                        <a href="/powerplay.html"><i class="fas fa-bolt"></i> POWER PLAY</a>
+                        <a href="/purplex.html"><i class="fas fa-puzzle-piece"></i> PURPLEX</a>
+                    </div>
+                </li>
+                <li><a href="/about.html">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="/login.html" class="btn-login">Sign In</a>
+                <a href="/signup.html" class="btn-signup">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="games-hero">
+        <div class="games-hero-content">
+            <h1>Purple Squirrel Games</h1>
+            <p>Play-to-earn games powered by Solana. Compete, collect, and earn rewards in our blockchain gaming ecosystem.</p>
+        </div>
+    </section>
+
+    <section class="games-grid">
+        <div class="game-card">
+            <div class="game-preview powerplay">
+                <i class="fas fa-bolt"></i>
+                <span class="game-badge"><i class="fas fa-circle"></i> Live</span>
+            </div>
+            <div class="game-content">
+                <h2>POWER PLAY</h2>
+                <p>High-stakes competitive gaming with real-time tournaments. Battle your way to the top and earn SOL rewards.</p>
+                <div class="game-features">
+                    <span class="game-feature">PvP Battles</span>
+                    <span class="game-feature">SOL Rewards</span>
+                    <span class="game-feature">Tournaments</span>
+                    <span class="game-feature">Leaderboards</span>
+                </div>
+                <a href="/powerplay.html" class="game-btn">
+                    <i class="fas fa-play"></i> Play Now
+                </a>
+            </div>
+        </div>
+
+        <div class="game-card">
+            <div class="game-preview purplex">
+                <i class="fas fa-puzzle-piece"></i>
+                <span class="game-badge"><i class="fas fa-circle"></i> Live</span>
+            </div>
+            <div class="game-content">
+                <h2>PURPLEX</h2>
+                <p>Mind-bending puzzles with NFT collectibles. Solve challenges, unlock rare items, and trade with the community.</p>
+                <div class="game-features">
+                    <span class="game-feature">Puzzle Challenges</span>
+                    <span class="game-feature">NFT Rewards</span>
+                    <span class="game-feature">Daily Quests</span>
+                    <span class="game-feature">Collectibles</span>
+                </div>
+                <a href="/purplex.html" class="game-btn">
+                    <i class="fas fa-play"></i> Play Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="coming-soon">
+        <h3>More Games Coming Soon</h3>
+        <p>We're building an entire gaming ecosystem. Be the first to know when new games launch.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email">
+            <button type="submit">Notify Me</button>
+        </form>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <a href="/" class="logo">
+                            <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                            <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+                        </a>
+                        <p>The future of decentralized streaming, gaming, and digital entertainment.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-discord"></i></a>
+                            <a href="#"><i class="fab fa-telegram"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <div class="footer-col">
+                            <h4>Platform</h4>
+                            <ul>
+                                <li><a href="/watch">Watch</a></li>
+                                <li><a href="/talent">Talent</a></li>
+                                <li><a href="/defi/swap/">Swap</a></li>
+                                <li><a href="/games">Games</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Store</h4>
+                            <ul>
+                                <li><a href="/plans.html">Plans</a></li>
+                                <li><a href="/mint.html">NFT Mint</a></li>
+                                <li><a href="/marketplace.html">Marketplace</a></li>
+                                <li><a href="/store.html">Merch</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Company</h4>
+                            <ul>
+                                <li><a href="/about.html">About</a></li>
+                                <li><a href="/contact.html">Contact</a></li>
+                                <li><a href="/terms.html">Terms</a></li>
+                                <li><a href="/privacy.html">Privacy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
+                    <div class="payment-badges">
+                        <span><i class="fas fa-bolt"></i> Solana</span>
+                        <span><i class="fas fa-coins"></i> USDC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

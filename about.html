@@ -4,969 +4,293 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Purple Squirrel Media</title>
-    <meta name="description" content="Explore Purple Squirrel Studios - The Future of Streaming">
+    <meta name="description" content="Purple Squirrel Media - The Future of Streaming">
     <link rel="icon" type="image/png" href="img/logo.png">
     <link rel="apple-touch-icon" href="img/logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            overflow: hidden;
-            background: #0a0612;
-            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
-        }
-        #canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        .vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 99;
-            background: radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(0,0,0,0.5) 100%);
-        }
-
-        /* Top Navigation Bar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 500;
-            padding: 1rem 2rem;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        .about-hero {
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: white;
-        }
-        .logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-        }
-        .logo-text {
-            font-weight: 600;
-            font-size: 14px;
-            line-height: 1.2;
-        }
-        .logo-text small {
-            font-weight: 400;
-            opacity: 0.7;
-        }
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 0.5rem;
-            background: rgba(17, 17, 17, 0.5);
-            padding: 0.25rem;
-            border-radius: 12px;
-        }
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 0.5rem 1.25rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        .nav-links a:hover {
-            color: white;
-        }
-        .nav-links a.active {
-            background: rgba(139, 92, 246, 0.6);
-            color: white;
-        }
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .mobile-menu-btn { display: block; }
-            .navbar { padding: 0.75rem 1rem; }
-        }
-
-        .controls-hint {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 200;
-            text-align: center;
-            opacity: 0;
-            animation: fadeIn 2s ease 1s forwards;
-        }
-
-        .controls-hint h3 {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-        }
-
-        .key-hints {
-            display: flex;
-            gap: 1rem;
             justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .key {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-        }
-
-        .key span {
-            background: rgba(139, 92, 246, 0.3);
-            border: 1px solid rgba(139, 92, 246, 0.5);
-            padding: 0.3rem 0.6rem;
-            border-radius: 4px;
-            font-family: monospace;
-            font-weight: bold;
-        }
-
-        .logo-overlay {
-            position: fixed;
-            top: 6rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 200;
+            padding: 8rem 2rem 4rem;
             text-align: center;
-            opacity: 0;
-            animation: fadeInCenter 1.5s ease 0.5s forwards;
+            background: linear-gradient(180deg, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
         }
-
-        .logo-overlay h1 {
-            font-size: clamp(1.8rem, 5vw, 3.5rem);
-            font-weight: 900;
-            background: linear-gradient(180deg, #a78bfa 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 0.05em;
-            text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
-        }
-
-        .logo-overlay p {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.6);
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            margin-top: 0.5rem;
-        }
-
-        .score-panel {
-            position: fixed;
-            top: 6rem;
-            left: 2rem;
-            z-index: 200;
-            opacity: 0;
-            animation: fadeInLeft 2s ease 1.5s forwards;
-        }
-
-        @keyframes fadeInLeft {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes fadeInCenter {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        .score-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-            background: rgba(0,0,0,0.6);
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .score-icon { font-size: 1.2rem; }
-        .score-value { font-size: 1rem; font-weight: bold; color: white; }
-        .score-label {
-            font-size: 0.65rem;
-            color: rgba(255,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .speedometer {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 200;
-            width: 100px;
-            height: 100px;
-            opacity: 0;
-            animation: fadeInRight 2s ease 1.5s forwards;
-        }
-
-        .speed-ring { fill: none; stroke: rgba(139, 92, 246, 0.3); stroke-width: 4; }
-        .speed-progress {
-            fill: none;
-            stroke: url(#speedGradient);
-            stroke-width: 4;
-            stroke-linecap: round;
-            stroke-dasharray: 251;
-            stroke-dashoffset: 251;
-            transform: rotate(-90deg);
-            transform-origin: center;
-            transition: stroke-dashoffset 0.1s;
-        }
-        .speed-value { fill: white; font-size: 1.2rem; font-weight: bold; text-anchor: middle; }
-        .speed-label { fill: rgba(255,255,255,0.5); font-size: 0.5rem; text-anchor: middle; text-transform: uppercase; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        @keyframes fadeInRight {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .minimap {
-            position: fixed;
-            top: 6rem;
-            right: 2rem;
+        .about-logo {
             width: 120px;
             height: 120px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(139, 92, 246, 0.4);
-            border-radius: 10px;
-            z-index: 200;
-            opacity: 0;
-            animation: fadeInRight 2s ease 2s forwards;
+            border-radius: 24px;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 60px rgba(139, 92, 246, 0.4);
         }
-
-        #minimap-canvas { width: 100%; height: 100%; border-radius: 8px; }
-
-        .boost-indicator {
-            position: fixed;
-            bottom: 8rem;
-            right: 2rem;
-            z-index: 200;
-            opacity: 0;
-            animation: fadeInRight 2s ease 1.8s forwards;
+        .about-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
         }
-
-        .boost-bar {
-            width: 100px;
-            height: 8px;
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 4px;
-            overflow: hidden;
+        .about-hero .tagline {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 3rem;
+            max-width: 600px;
         }
-
-        .boost-fill {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
-            border-radius: 4px;
-            transition: width 0.1s;
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
         }
-
-        .boost-label {
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.3rem;
+        .about-section {
+            margin-bottom: 4rem;
         }
-
-        .pickup-notification {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 300;
-            font-size: 2rem;
-            font-weight: bold;
+        .about-section h2 {
+            font-size: 1.75rem;
             color: #a78bfa;
-            text-shadow: 0 0 20px rgba(139, 92, 246, 0.8);
-            opacity: 0;
-            pointer-events: none;
+            margin-bottom: 1.5rem;
         }
-
-        .pickup-notification.show { animation: pickupPop 1s ease forwards; }
-
-        @keyframes pickupPop {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-            100% { opacity: 0; transform: translate(-50%, -80%) scale(1); }
+        .about-section p {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+            margin-bottom: 1rem;
         }
-
-        .objective-panel {
-            position: fixed;
-            bottom: 6rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 200;
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .feature-card {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+            transform: translateY(-4px);
+        }
+        .feature-card h3 {
+            color: white;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .feature-card p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+        .studio-tour-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+        }
+        .studio-tour-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(139, 92, 246, 0.6);
+        }
+        .studio-tour-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        .team-note {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 3rem;
             text-align: center;
-            opacity: 0;
-            animation: fadeIn 2s ease 2.5s forwards;
         }
-
-        .objective-text {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.6);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
+        .team-note p {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 1rem;
         }
-
-        .objective-progress {
-            margin-top: 0.5rem;
-            width: 200px;
-            height: 4px;
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 2px;
-            overflow: hidden;
+        .team-note a {
+            color: #a78bfa;
+            text-decoration: none;
         }
-
-        .objective-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
-            border-radius: 2px;
-            transition: width 0.3s;
+        .team-note a:hover {
+            text-decoration: underline;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <!-- Top Navigation -->
-    <nav class="navbar">
-        <a href="/" class="logo">
-            <img src="img/logo.png" alt="Purple Squirrel Media">
-            <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
-        </a>
-        <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/defi/swap/">Swap</a></li>
-            <li><a href="/defi/bridge/">Bridge</a></li>
-            <li><a href="https://watch-this-v2-alpha.vercel.app/">Watch</a></li>
-            <li><a href="https://purple-squirrel-jobs.vercel.app/">Talent</a></li>
-            <li><a href="/about.html" class="active">About</a></li>
-        </ul>
-        <button class="mobile-menu-btn">&#9776;</button>
+            <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/" >Home</a></li>
+                <li>
+                    <a class="dropdown-toggle" >Watch</a>
+                    <div class="dropdown">
+                        <a href="/feed.html"><i class="fas fa-stream"></i> Feed</a>
+                        <a href="/stream"><i class="fas fa-film"></i> Stream</a>
+                        <a href="/watch"><i class="fas fa-robot"></i> AI Recommendations</a>
+                        <a href="/free-tv.html"><i class="fas fa-tv"></i> Free TV</a>
+                        <a href="/radio.html"><i class="fas fa-radio"></i> Radio</a>
+                    </div>
+                </li>
+                <li><a href="/talent" >Talent</a></li>
+                <li>
+                    <a class="dropdown-toggle" >DeFi</a>
+                    <div class="dropdown">
+                        <a href="/defi/swap/"><i class="fas fa-exchange-alt"></i> Swap</a>
+                        <a href="/defi/bridge/"><i class="fas fa-bridge"></i> Bridge</a>
+                    </div>
+                </li>
+                <li>
+                    <a class="dropdown-toggle" >Store</a>
+                    <div class="dropdown">
+                        <a href="/plans.html"><i class="fas fa-id-card"></i> Plans</a>
+                        <a href="/mint.html"><i class="fas fa-gem"></i> NFT Mint</a>
+                        <a href="/marketplace.html"><i class="fas fa-store"></i> Marketplace</a>
+                        <a href="/store.html"><i class="fas fa-shopping-bag"></i> Merch</a>
+                    </div>
+                </li>
+                <li>
+                    <a class="dropdown-toggle" >Games</a>
+                    <div class="dropdown">
+                        <a href="/games"><i class="fas fa-gamepad"></i> All Games</a>
+                        <a href="/powerplay.html"><i class="fas fa-bolt"></i> POWER PLAY</a>
+                        <a href="/purplex.html"><i class="fas fa-puzzle-piece"></i> PURPLEX</a>
+                    </div>
+                </li>
+                <li><a href="/about.html" class="active">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="/login.html" class="btn-login">Sign In</a>
+                <a href="/signup.html" class="btn-signup">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
     </nav>
 
-    <canvas id="canvas"></canvas>
-    <div class="vignette"></div>
+    <section class="about-hero">
+        <img src="img/logo.png" alt="Purple Squirrel Media" class="about-logo">
+        <h1>Purple Squirrel Media</h1>
+        <p class="tagline">Building the future of decentralized streaming, talent discovery, and digital entertainment.</p>
+        <a href="studio-tour.html" class="studio-tour-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Explore Our 3D Studio
+        </a>
+    </section>
 
-    <div class="logo-overlay">
-        <h1>PURPLE SQUIRREL STUDIOS</h1>
-        <p>Explore the Backlot</p>
-    </div>
+    <section class="about-content">
+        <div class="about-section">
+            <h2>Our Mission</h2>
+            <p>Purple Squirrel Media is pioneering the next generation of digital entertainment. We're combining blockchain technology, AI-powered discovery, and premium content to create experiences that put creators and viewers first.</p>
+            <p>Named after the rare "purple squirrel" - that perfect, hard-to-find match - we're building platforms that connect exceptional content with the audiences who will love it most.</p>
+        </div>
 
-    <div class="score-panel">
-        <div class="score-item">
-            <span class="score-icon">&#11088;</span>
-            <div>
-                <div class="score-value" id="starsCollected">0 / 8</div>
-                <div class="score-label">Stars</div>
+        <div class="about-section">
+            <h2>What We're Building</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Watch This</h3>
+                    <p>AI-powered streaming recommendations that actually understand your taste. No more endless scrolling - just great content, perfectly matched.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Purple Squirrel Talent</h3>
+                    <p>Revolutionizing tech recruiting with AI-powered matching. We aggregate opportunities and connect exceptional candidates with their dream roles.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>DeFi Tools</h3>
+                    <p>Seamless token swaps and cross-chain bridges. Making decentralized finance accessible to everyone in our ecosystem.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>NFT Memberships</h3>
+                    <p>Own your access. Our NFT-based memberships give you permanent, transferable access to premium features and content.</p>
+                </div>
             </div>
         </div>
-        <div class="score-item">
-            <span class="score-icon">&#127942;</span>
-            <div>
-                <div class="score-value" id="trophiesCollected">0 / 4</div>
-                <div class="score-label">Oscars</div>
+
+        <div class="team-note">
+            <p>Want to join the Purple Squirrel team?</p>
+            <a href="/talent">Check out our open positions</a>
+            <p style="margin-top: 1.5rem; margin-bottom: 0;">Questions? Reach out at <a href="mailto:hello@purplesquirrel.media">hello@purplesquirrel.media</a></p>
+        </div>
+    </section>
+
+            <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <a href="/" class="logo">
+                            <img src="img/logo.png" alt="Purple Squirrel Media" class="logo-icon-svg">
+                            <span class="logo-text">Purple Squirrel<br><small>Media</small></span>
+                        </a>
+                        <p>The future of decentralized streaming, gaming, and digital entertainment.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-discord"></i></a>
+                            <a href="#"><i class="fab fa-telegram"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <div class="footer-col">
+                            <h4>Platform</h4>
+                            <ul>
+                                <li><a href="/watch">Watch</a></li>
+                                <li><a href="/talent">Talent</a></li>
+                                <li><a href="/defi/swap/">Swap</a></li>
+                                <li><a href="/games">Games</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Store</h4>
+                            <ul>
+                                <li><a href="/plans.html">Plans</a></li>
+                                <li><a href="/mint.html">NFT Mint</a></li>
+                                <li><a href="/marketplace.html">Marketplace</a></li>
+                                <li><a href="/store.html">Merch</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Company</h4>
+                            <ul>
+                                <li><a href="/about.html">About</a></li>
+                                <li><a href="/contact.html">Contact</a></li>
+                                <li><a href="/terms.html">Terms</a></li>
+                                <li><a href="/privacy.html">Privacy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Purple Squirrel Media. All rights reserved.</p>
+                    <div class="payment-badges">
+                        <span><i class="fas fa-bolt"></i> Solana</span>
+                        <span><i class="fas fa-coins"></i> USDC</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="controls-hint">
-        <h3>Studio Tour Cart</h3>
-        <div class="key-hints">
-            <div class="key"><span>W</span> Forward</div>
-            <div class="key"><span>S</span> Brake</div>
-            <div class="key"><span>A</span><span>D</span> Steer</div>
-            <div class="key"><span>SPACE</span> Turbo</div>
-            <div class="key"><span>R</span> Reset</div>
-        </div>
-    </div>
-
-    <div class="objective-panel">
-        <div class="objective-text">Explore the studio lot!</div>
-        <div class="objective-progress">
-            <div class="objective-fill" id="objectiveFill" style="width: 0%"></div>
-        </div>
-    </div>
-
-    <svg class="speedometer" viewBox="0 0 100 100">
-        <defs>
-            <linearGradient id="speedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:#8b5cf6"/>
-                <stop offset="100%" style="stop-color:#06b6d4"/>
-            </linearGradient>
-        </defs>
-        <circle class="speed-ring" cx="50" cy="50" r="40"/>
-        <circle class="speed-progress" id="speedProgress" cx="50" cy="50" r="40"/>
-        <text class="speed-value" id="speedValue" x="50" y="52">0</text>
-        <text class="speed-label" x="50" y="65">MPH</text>
-    </svg>
-
-    <div class="boost-indicator">
-        <div class="boost-label">Turbo</div>
-        <div class="boost-bar">
-            <div class="boost-fill" id="boostFill"></div>
-        </div>
-    </div>
-
-    <div class="minimap">
-        <canvas id="minimap-canvas"></canvas>
-    </div>
-
-    <div class="pickup-notification" id="pickupNotification">+1 Star!</div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const canvas = document.getElementById('canvas');
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(1);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.BasicShadowMap;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.2;
-
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0a0612);
-        scene.fog = new THREE.Fog(0x0a0612, 40, 120);
-
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
-        const cameraOffset = new THREE.Vector3(0, 5, 10);
-        const cameraLookOffset = new THREE.Vector3(0, 1, 0);
-
-        const gameState = { starsCollected: 0, totalStars: 8, trophiesCollected: 0, totalTrophies: 4 };
-
-        const ambientLight = new THREE.AmbientLight(0x332244, 0.6);
-        scene.add(ambientLight);
-
-        const keyLight = new THREE.DirectionalLight(0x8866ff, 1.2);
-        keyLight.position.set(30, 40, 20);
-        keyLight.castShadow = true;
-        keyLight.shadow.mapSize.width = 1024;
-        keyLight.shadow.mapSize.height = 1024;
-        keyLight.shadow.camera.near = 1;
-        keyLight.shadow.camera.far = 100;
-        keyLight.shadow.camera.left = -60;
-        keyLight.shadow.camera.right = 60;
-        keyLight.shadow.camera.top = 60;
-        keyLight.shadow.camera.bottom = -60;
-        scene.add(keyLight);
-
-        const groundGeom = new THREE.PlaneGeometry(150, 150);
-        const groundMat = new THREE.MeshLambertMaterial({ color: 0x1a1520 });
-        const ground = new THREE.Mesh(groundGeom, groundMat);
-        ground.rotation.x = -Math.PI / 2;
-        ground.receiveShadow = true;
-        scene.add(ground);
-
-        const roadMat = new THREE.MeshBasicMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.3 });
-        const roadH = new THREE.Mesh(new THREE.PlaneGeometry(150, 6), roadMat);
-        roadH.rotation.x = -Math.PI / 2;
-        roadH.position.y = 0.01;
-        scene.add(roadH);
-        const roadV = new THREE.Mesh(new THREE.PlaneGeometry(6, 150), roadMat);
-        roadV.rotation.x = -Math.PI / 2;
-        roadV.position.y = 0.01;
-        scene.add(roadV);
-
-        const cartGroup = new THREE.Group();
-        const cartMat = new THREE.MeshLambertMaterial({ color: 0x8b5cf6 });
-        const cartBody = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.8, 4), cartMat);
-        cartBody.position.y = 0.8;
-        cartBody.castShadow = true;
-        cartGroup.add(cartBody);
-
-        const roofMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
-        const roof = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.1, 3.5), roofMat);
-        roof.position.set(0, 2, -0.2);
-        cartGroup.add(roof);
-
-        const wheelMat = new THREE.MeshLambertMaterial({ color: 0x111111 });
-        const wheelGeom = new THREE.CylinderGeometry(0.35, 0.35, 0.2, 8);
-        const wheels = [];
-        [[-1.1, -1.3], [1.1, -1.3], [-1.1, 1.3], [1.1, 1.3]].forEach(([x, z]) => {
-            const wheel = new THREE.Mesh(wheelGeom, wheelMat);
-            wheel.rotation.z = Math.PI / 2;
-            wheel.position.set(x, 0.35, z);
-            cartGroup.add(wheel);
-            wheels.push(wheel);
-        });
-
-        const headlightMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        [-0.8, 0.8].forEach(x => {
-            const headlight = new THREE.Mesh(new THREE.SphereGeometry(0.12, 6, 6), headlightMat);
-            headlight.position.set(x, 0.8, -2);
-            cartGroup.add(headlight);
-        });
-
-        const glowLight = new THREE.PointLight(0x8b5cf6, 1, 10);
-        glowLight.position.set(0, 0.3, 0);
-        cartGroup.add(glowLight);
-        scene.add(cartGroup);
-
-        const towerGroup = new THREE.Group();
-        const legMat = new THREE.MeshLambertMaterial({ color: 0x444444 });
-        for (let i = 0; i < 4; i++) {
-            const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
-            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.35, 12, 6), legMat);
-            leg.position.set(Math.cos(angle) * 3, 6, Math.sin(angle) * 3);
-            towerGroup.add(leg);
-        }
-        const tankMat = new THREE.MeshLambertMaterial({ color: 0x1a2a4c });
-        const tank = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 6, 12), tankMat);
-        tank.position.y = 15;
-        tank.castShadow = true;
-        towerGroup.add(tank);
-        const cone = new THREE.Mesh(new THREE.ConeGeometry(4.2, 2.5, 12), tankMat);
-        cone.position.y = 19.5;
-        towerGroup.add(cone);
-        const stripeMat = new THREE.MeshBasicMaterial({ color: 0x8b5cf6 });
-        const stripe = new THREE.Mesh(new THREE.CylinderGeometry(4.1, 4.1, 1.5, 12, 1, true), stripeMat);
-        stripe.position.y = 15;
-        towerGroup.add(stripe);
-        towerGroup.position.set(-50, 0, -50);
-        scene.add(towerGroup);
-
-        function createSoundStage(x, z, rotY = 0) {
-            const group = new THREE.Group();
-            const mat = new THREE.MeshLambertMaterial({ color: 0x3a3040 });
-            const building = new THREE.Mesh(new THREE.BoxGeometry(20, 14, 30), mat);
-            building.position.y = 7;
-            building.castShadow = true;
-            building.receiveShadow = true;
-            group.add(building);
-            const doorMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
-            const door = new THREE.Mesh(new THREE.BoxGeometry(8, 10, 0.3), doorMat);
-            door.position.set(0, 5, -15.1);
-            group.add(door);
-            const circleMat = new THREE.MeshBasicMaterial({ color: 0x8b5cf6 });
-            const circle = new THREE.Mesh(new THREE.CircleGeometry(1.2, 12), circleMat);
-            circle.position.set(7, 11, -15.1);
-            group.add(circle);
-            group.position.set(x, 0, z);
-            group.rotation.y = rotY;
-            return group;
-        }
-        scene.add(createSoundStage(-45, 25, 0));
-        scene.add(createSoundStage(45, 25, Math.PI));
-        scene.add(createSoundStage(-45, -25, 0));
-        scene.add(createSoundStage(45, -25, Math.PI));
-
-        function createWesternBuilding(x) {
-            const group = new THREE.Group();
-            const mat = new THREE.MeshLambertMaterial({ color: 0x6b5545 });
-            const facade = new THREE.Mesh(new THREE.BoxGeometry(8, 9, 1), mat);
-            facade.position.y = 4.5;
-            facade.castShadow = true;
-            group.add(facade);
-            const top = new THREE.Mesh(new THREE.BoxGeometry(8, 2, 0.8), mat);
-            top.position.y = 10;
-            group.add(top);
-            group.position.set(x, 0, 60);
-            return group;
-        }
-        for (let i = 0; i < 4; i++) {
-            scene.add(createWesternBuilding(-30 + i * 15));
-        }
-
-        function createNYBuilding(z) {
-            const group = new THREE.Group();
-            const mat = new THREE.MeshLambertMaterial({ color: 0x5a4030 });
-            const building = new THREE.Mesh(new THREE.BoxGeometry(10, 16, 2), mat);
-            building.position.y = 8;
-            building.castShadow = true;
-            group.add(building);
-            const windowMat = new THREE.MeshBasicMaterial({ color: 0x334455 });
-            for (let row = 0; row < 3; row++) {
-                for (let col = 0; col < 2; col++) {
-                    const w = new THREE.Mesh(new THREE.BoxGeometry(1.8, 2.2, 0.2), windowMat);
-                    w.position.set(-2.5 + col * 5, 4 + row * 4, -1.2);
-                    group.add(w);
-                }
-            }
-            group.position.set(60, 0, z);
-            return group;
-        }
-        for (let i = 0; i < 3; i++) {
-            scene.add(createNYBuilding(-30 + i * 20));
-        }
-
-        function createPalmTree(x, z) {
-            const group = new THREE.Group();
-            const trunk = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.25, 0.4, 8, 6),
-                new THREE.MeshLambertMaterial({ color: 0x6b5545 })
-            );
-            trunk.position.y = 4;
-            group.add(trunk);
-            const frondMat = new THREE.MeshLambertMaterial({ color: 0x228844, side: THREE.DoubleSide });
-            for (let i = 0; i < 6; i++) {
-                const frond = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 4), frondMat);
-                const angle = (i / 6) * Math.PI * 2;
-                frond.position.set(Math.cos(angle) * 1.2, 8, Math.sin(angle) * 1.2);
-                frond.rotation.x = -0.6;
-                frond.rotation.y = angle;
-                group.add(frond);
-            }
-            group.position.set(x, 0, z);
-            return group;
-        }
-        [[-20, -40], [20, -40], [-20, 40], [20, 40], [-60, 0], [0, -60]].forEach(([x, z]) => {
-            scene.add(createPalmTree(x, z));
-        });
-
-        const stars = [];
-        function createStar(x, z) {
-            const group = new THREE.Group();
-            const mat = new THREE.MeshBasicMaterial({ color: 0xa78bfa });
-            const star = new THREE.Mesh(new THREE.OctahedronGeometry(0.5, 0), mat);
-            group.add(star);
-            group.position.set(x, 2, z);
-            group.userData.collected = false;
-            return group;
-        }
-        const starPositions = [[0, -35], [0, 35], [-35, 0], [35, 0], [-25, -25], [25, -25], [-25, 25], [25, 25]];
-        starPositions.forEach(([x, z]) => {
-            const star = createStar(x, z);
-            stars.push(star);
-            scene.add(star);
-        });
-
-        const trophies = [];
-        function createOscar(x, z) {
-            const group = new THREE.Group();
-            const mat = new THREE.MeshLambertMaterial({ color: 0xffd700 });
-            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 0.25, 8), mat);
-            group.add(base);
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.25, 1, 8), mat);
-            body.position.y = 0.6;
-            group.add(body);
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), mat);
-            head.position.y = 1.3;
-            group.add(head);
-            group.position.set(x, 1.8, z);
-            group.userData.collected = false;
-            return group;
-        }
-        const trophyPositions = [[-45, -45], [45, -45], [-45, 45], [45, 45]];
-        trophyPositions.forEach(([x, z]) => {
-            const trophy = createOscar(x, z);
-            trophies.push(trophy);
-            scene.add(trophy);
-        });
-
-        const trailParticles = [];
-        function createTrailParticle(position) {
-            const particle = new THREE.Mesh(
-                new THREE.SphereGeometry(0.1, 4, 4),
-                new THREE.MeshBasicMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.8 })
-            );
-            particle.position.copy(position);
-            particle.userData.life = 1;
-            scene.add(particle);
-            trailParticles.push(particle);
-            if (trailParticles.length > 30) {
-                const old = trailParticles.shift();
-                scene.remove(old);
-            }
-        }
-
-        const cartState = {
-            position: new THREE.Vector3(0, 0, 10),
-            velocity: new THREE.Vector3(0, 0, 0),
-            rotation: 0,
-            angularVelocity: 0,
-            maxSpeed: 30,
-            acceleration: 18,
-            brakeForce: 25,
-            friction: 6,
-            turnSpeed: 3,
-            boost: 100,
-            boosting: false
-        };
-
-        const keys = { w: false, s: false, a: false, d: false, space: false, r: false };
-
-        document.addEventListener('keydown', (e) => {
-            const key = e.key.toLowerCase();
-            if (key in keys) keys[key] = true;
-            if (key === ' ') keys.space = true;
-        });
-
-        document.addEventListener('keyup', (e) => {
-            const key = e.key.toLowerCase();
-            if (key in keys) keys[key] = false;
-            if (key === ' ') keys.space = false;
-        });
-
-        const speedProgress = document.getElementById('speedProgress');
-        const speedValue = document.getElementById('speedValue');
-        const boostFill = document.getElementById('boostFill');
-        const starsCollectedEl = document.getElementById('starsCollected');
-        const trophiesCollectedEl = document.getElementById('trophiesCollected');
-        const objectiveFill = document.getElementById('objectiveFill');
-        const pickupNotification = document.getElementById('pickupNotification');
-
-        function showPickupNotification(text) {
-            pickupNotification.textContent = text;
-            pickupNotification.classList.remove('show');
-            void pickupNotification.offsetWidth;
-            pickupNotification.classList.add('show');
-        }
-
-        function updateUI() {
-            starsCollectedEl.textContent = `${gameState.starsCollected} / ${gameState.totalStars}`;
-            trophiesCollectedEl.textContent = `${gameState.trophiesCollected} / ${gameState.totalTrophies}`;
-            const progress = ((gameState.starsCollected + gameState.trophiesCollected) / (gameState.totalStars + gameState.totalTrophies)) * 100;
-            objectiveFill.style.width = progress + '%';
-        }
-
-        const minimapCanvas = document.getElementById('minimap-canvas');
-        const minimapCtx = minimapCanvas.getContext('2d');
-        minimapCanvas.width = 120;
-        minimapCanvas.height = 120;
-
-        let minimapFrame = 0;
-        function updateMinimap() {
-            minimapFrame++;
-            if (minimapFrame % 3 !== 0) return;
-
-            minimapCtx.fillStyle = 'rgba(10, 6, 18, 0.95)';
-            minimapCtx.fillRect(0, 0, 120, 120);
-
-            minimapCtx.strokeStyle = 'rgba(139, 92, 246, 0.4)';
-            minimapCtx.lineWidth = 3;
-            minimapCtx.beginPath();
-            minimapCtx.moveTo(60, 0);
-            minimapCtx.lineTo(60, 120);
-            minimapCtx.moveTo(0, 60);
-            minimapCtx.lineTo(120, 60);
-            minimapCtx.stroke();
-
-            stars.forEach(star => {
-                if (!star.userData.collected) {
-                    const x = 60 + (star.position.x / 70) * 55;
-                    const y = 60 + (star.position.z / 70) * 55;
-                    minimapCtx.fillStyle = '#a78bfa';
-                    minimapCtx.beginPath();
-                    minimapCtx.arc(x, y, 3, 0, Math.PI * 2);
-                    minimapCtx.fill();
-                }
-            });
-
-            trophies.forEach(trophy => {
-                if (!trophy.userData.collected) {
-                    const x = 60 + (trophy.position.x / 70) * 55;
-                    const y = 60 + (trophy.position.z / 70) * 55;
-                    minimapCtx.fillStyle = '#ffd700';
-                    minimapCtx.beginPath();
-                    minimapCtx.arc(x, y, 4, 0, Math.PI * 2);
-                    minimapCtx.fill();
-                }
-            });
-
-            const playerX = 60 + (cartState.position.x / 70) * 55;
-            const playerY = 60 + (cartState.position.z / 70) * 55;
-            minimapCtx.save();
-            minimapCtx.translate(playerX, playerY);
-            minimapCtx.rotate(cartState.rotation);
-            minimapCtx.fillStyle = '#8b5cf6';
-            minimapCtx.beginPath();
-            minimapCtx.moveTo(0, -6);
-            minimapCtx.lineTo(-4, 4);
-            minimapCtx.lineTo(4, 4);
-            minimapCtx.closePath();
-            minimapCtx.fill();
-            minimapCtx.restore();
-        }
-
-        function checkCollisions() {
-            const pos = cartState.position;
-
-            stars.forEach(star => {
-                if (!star.userData.collected && pos.distanceTo(star.position) < 2.5) {
-                    star.userData.collected = true;
-                    scene.remove(star);
-                    gameState.starsCollected++;
-                    showPickupNotification('+1 Star!');
-                    updateUI();
-                }
-            });
-
-            trophies.forEach(trophy => {
-                if (!trophy.userData.collected && pos.distanceTo(trophy.position) < 2.5) {
-                    trophy.userData.collected = true;
-                    scene.remove(trophy);
-                    gameState.trophiesCollected++;
-                    showPickupNotification('+1 Oscar!');
-                    updateUI();
-                }
-            });
-        }
-
-        const clock = new THREE.Clock();
-        let lastTime = 0;
-
-        function animate() {
-            const currentTime = clock.getElapsedTime();
-            const deltaTime = Math.min(currentTime - lastTime, 0.1);
-            lastTime = currentTime;
-
-            if (keys.r) {
-                cartState.position.set(0, 0, 10);
-                cartState.velocity.set(0, 0, 0);
-                cartState.rotation = 0;
-                cartState.angularVelocity = 0;
-            }
-
-            if (keys.space && cartState.boost > 0) {
-                cartState.boosting = true;
-                cartState.boost -= deltaTime * 25;
-                if (cartState.velocity.length() > 8) {
-                    createTrailParticle(cartState.position.clone().setY(0.3));
-                }
-            } else {
-                cartState.boosting = false;
-                cartState.boost = Math.min(100, cartState.boost + deltaTime * 20);
-            }
-            boostFill.style.width = cartState.boost + '%';
-
-            const currentMaxSpeed = cartState.boosting ? cartState.maxSpeed * 1.6 : cartState.maxSpeed;
-            const currentAccel = cartState.boosting ? cartState.acceleration * 1.5 : cartState.acceleration;
-
-            let accelerating = false, braking = false;
-
-            if (keys.w) {
-                accelerating = true;
-                const dir = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), cartState.rotation);
-                cartState.velocity.add(dir.multiplyScalar(currentAccel * deltaTime));
-            }
-
-            if (keys.s) {
-                braking = true;
-                const dir = new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0, 1, 0), cartState.rotation);
-                cartState.velocity.add(dir.multiplyScalar(cartState.brakeForce * deltaTime));
-            }
-
-            const speed = cartState.velocity.length();
-            if (speed > 0.5) {
-                const turnAmount = cartState.turnSpeed * deltaTime * Math.min(1, speed / 10);
-                if (keys.a) cartState.angularVelocity += turnAmount;
-                if (keys.d) cartState.angularVelocity -= turnAmount;
-            }
-
-            if (!accelerating && !braking) {
-                const friction = cartState.velocity.clone().normalize().multiplyScalar(-cartState.friction * deltaTime);
-                if (friction.length() < cartState.velocity.length()) {
-                    cartState.velocity.add(friction);
-                } else {
-                    cartState.velocity.set(0, 0, 0);
-                }
-            }
-
-            cartState.angularVelocity *= 0.9;
-
-            if (cartState.velocity.length() > currentMaxSpeed) {
-                cartState.velocity.normalize().multiplyScalar(currentMaxSpeed);
-            }
-
-            cartState.position.add(cartState.velocity.clone().multiplyScalar(deltaTime));
-            cartState.rotation += cartState.angularVelocity;
-
-            const boundary = 65;
-            cartState.position.x = Math.max(-boundary, Math.min(boundary, cartState.position.x));
-            cartState.position.z = Math.max(-boundary, Math.min(boundary, cartState.position.z));
-
-            cartGroup.position.copy(cartState.position);
-            cartGroup.rotation.y = cartState.rotation;
-
-            wheels.forEach(wheel => wheel.rotation.x += speed * deltaTime * 4);
-
-            const targetCameraPos = cartState.position.clone()
-                .add(cameraOffset.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), cartState.rotation));
-            camera.position.lerp(targetCameraPos, 0.06);
-            camera.lookAt(cartState.position.clone().add(cameraLookOffset));
-
-            speedValue.textContent = Math.round(speed * 2.2);
-            speedProgress.style.strokeDashoffset = 251 - (speed / currentMaxSpeed) * 251;
-
-            stars.forEach((star, i) => {
-                if (!star.userData.collected) {
-                    star.rotation.y = currentTime * 2 + i;
-                    star.position.y = 2 + Math.sin(currentTime * 2 + i) * 0.3;
-                }
-            });
-
-            trophies.forEach((trophy, i) => {
-                if (!trophy.userData.collected) {
-                    trophy.rotation.y = currentTime * 1.5 + i;
-                    trophy.position.y = 1.8 + Math.sin(currentTime * 1.5 + i) * 0.2;
-                }
-            });
-
-            for (let i = trailParticles.length - 1; i >= 0; i--) {
-                const p = trailParticles[i];
-                p.userData.life -= deltaTime * 3;
-                p.material.opacity = p.userData.life;
-                p.scale.setScalar(p.userData.life);
-                if (p.userData.life <= 0) {
-                    scene.remove(p);
-                    trailParticles.splice(i, 1);
-                }
-            }
-
-            glowLight.intensity = cartState.boosting ? 2 + Math.sin(currentTime * 20) : 1;
-
-            checkCollisions();
-            updateMinimap();
-
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    });
-    </script>
+    </footer>
 </body>
 </html>

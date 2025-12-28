@@ -1,0 +1,30 @@
+{
+  "trailingSlash": false,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/watch",
+      "destination": "https://watch-this-v2-alpha.vercel.app/"
+    },
+    {
+      "source": "/watch/",
+      "destination": "https://watch-this-v2-alpha.vercel.app/"
+    },
+    {
+      "source": "/watch/:path*",
+      "destination": "https://watch-this-v2-alpha.vercel.app/:path*"
+    },
+    {
+      "source": "/talent",
+      "destination": "https://purple-squirrel-jobs.vercel.app/"
+    },
+    {
+      "source": "/talent/",
+      "destination": "https://purple-squirrel-jobs.vercel.app/"
+    },
+    {
+      "source": "/talent/:path*",
+      "destination": "https://purple-squirrel-jobs.vercel.app/:path*"
+    }
+  ]
+}

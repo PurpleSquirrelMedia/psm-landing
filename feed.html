@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Feed - Purple Squirrel Media</title>
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <link rel="apple-touch-icon" href="img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --accent: #22c55e;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(30, 30, 50, 0.9);
+            --text: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-dark);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+        }
+
+        /* Header */
+        .feed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 1rem;
+            padding-top: max(1rem, env(safe-area-inset-top));
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .header-actions a {
+            color: var(--text);
+            font-size: 1.2rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .header-actions a:hover {
+            opacity: 1;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .category-tab:hover {
+            border-color: var(--primary);
+            color: var(--text);
+        }
+
+        .category-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--text);
+        }
+
+        /* Feed Container */
+        .feed-container {
+            height: 100vh;
+            height: 100dvh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .feed-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Video Item */
+        .video-item {
+            height: 100vh;
+            height: 100dvh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        .video-wrapper iframe,
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            object-fit: contain;
+            border: none;
+        }
+
+        /* For vertical videos on desktop */
+        @media (min-width: 768px) {
+            .video-wrapper {
+                max-width: 400px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Video Overlay - Bottom Info */
+        .video-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 80px 16px 24px;
+            padding-bottom: max(24px, env(safe-area-inset-bottom));
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .video-info {
+                max-width: 400px;
+                left: 50%;
+                transform: translateX(-50%);
+                right: auto;
+                width: 100%;
+            }
+        }
+
+        .channel-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .channel-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .channel-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .channel-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .video-title {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-top: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .video-tag {
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        /* Action Buttons - Right Side */
+        .video-actions {
+            position: absolute;
+            right: 12px;
+            bottom: 160px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .video-actions {
+                right: calc(50% - 220px);
+            }
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .action-btn i {
+            font-size: 1.8rem;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .action-btn span {
+            font-size: 0.75rem;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        .action-btn.liked i {
+            color: #ef4444;
+        }
+
+        /* Live Badge */
+        .live-badge {
+            position: absolute;
+            top: 100px;
+            left: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .live-badge {
+                left: calc(50% - 184px);
+            }
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255,255,255,0.2);
+            z-index: 20;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Loading State */
+        .video-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mute Indicator */
+        .mute-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            padding: 16px 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            z-index: 15;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .mute-indicator.visible {
+            opacity: 1;
+        }
+
+        .mute-indicator i {
+            font-size: 1.5rem;
+        }
+
+        /* Swipe Hint */
+        .swipe-hint {
+            position: fixed;
+            bottom: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            z-index: 50;
+            animation: bounce 2s infinite;
+            pointer-events: none;
+        }
+
+        .swipe-hint i {
+            font-size: 2rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Source Badge */
+        .source-badge {
+            position: absolute;
+            top: 100px;
+            right: 16px;
+            background: rgba(0,0,0,0.6);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (min-width: 768px) {
+            .source-badge {
+                right: calc(50% - 184px);
+            }
+        }
+
+        .source-badge i {
+            font-size: 1rem;
+        }
+
+        .source-badge.youtube { color: #ff0000; }
+        .source-badge.vimeo { color: #1ab7ea; }
+        .source-badge.self-hosted { color: var(--accent); }
+
+        /* Empty State */
+        .empty-state {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            opacity: 0.5;
+        }
+
+        /* Mobile menu button */
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            margin: -8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="feed-header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <img src="img/logo.png" alt="PSM" onerror="this.style.display='none'">
+                <span class="logo-text">Feed</span>
+            </a>
+            <div class="header-actions">
+                <a href="/free-tv.html" title="TV Guide"><i class="fas fa-th"></i></a>
+                <a href="#" id="muteToggle" title="Toggle Sound"><i class="fas fa-volume-up"></i></a>
+                <a href="/login.html" title="Account"><i class="fas fa-user"></i></a>
+            </div>
+        </div>
+        <div class="category-tabs" id="categoryTabs">
+            <button class="category-tab active" data-category="all">For You</button>
+            <button class="category-tab" data-category="music">Music</button>
+            <button class="category-tab" data-category="news">News</button>
+            <button class="category-tab" data-category="nature">Nature</button>
+            <button class="category-tab" data-category="entertainment">Entertainment</button>
+            <button class="category-tab" data-category="kids">Learning</button>
+        </div>
+    </header>
+
+    <!-- Feed -->
+    <main class="feed-container" id="feedContainer">
+        <!-- Videos loaded dynamically -->
+    </main>
+
+    <!-- Swipe Hint (first visit) -->
+    <div class="swipe-hint" id="swipeHint" style="display: none;">
+        <i class="fas fa-chevron-up"></i>
+        <span>Swipe up for more</span>
+    </div>
+
+    <!-- Mute Indicator -->
+    <div class="mute-indicator" id="muteIndicator">
+        <i class="fas fa-volume-mute"></i>
+        <span>Tap to unmute</span>
+    </div>
+
+    <script>
+        // ============================================
+        // FEED DATA - Multi-source video content
+        // ============================================
+        const FEED_CONTENT = [
+            // YouTube Embeds (Live streams)
+            {
+                id: 1,
+                type: 'youtube',
+                videoId: 'jfKfPfyJRdk',
+                title: 'lofi hip hop radio - beats to relax/study to',
+                channel: 'Lofi Girl',
+                avatar: '🎧',
+                category: 'music',
+                isLive: true,
+                likes: '2.1M',
+                tags: ['#lofi', '#chill', '#study']
+            },
+            {
+                id: 2,
+                type: 'youtube',
+                videoId: 'w_Ma8oQLmSM',
+                title: 'ABC News Live - 24/7 Breaking News Coverage',
+                channel: 'ABC News',
+                avatar: '📰',
+                category: 'news',
+                isLive: true,
+                likes: '890K',
+                tags: ['#news', '#live', '#breaking']
+            },
+            {
+                id: 3,
+                type: 'youtube',
+                videoId: 'ydYDqZQpim8',
+                title: 'African Wildlife Safari - Live Animal Cam',
+                channel: 'Explore Africa',
+                avatar: '🦁',
+                category: 'nature',
+                isLive: true,
+                likes: '456K',
+                tags: ['#wildlife', '#safari', '#nature']
+            },
+            {
+                id: 4,
+                type: 'youtube',
+                videoId: '4xDzrJKXOOY',
+                title: 'Synthwave Radio - Retro Electronic Music',
+                channel: 'Synthwave City',
+                avatar: '🌆',
+                category: 'music',
+                isLive: true,
+                likes: '1.3M',
+                tags: ['#synthwave', '#retro', '#80s']
+            },
+            {
+                id: 5,
+                type: 'youtube',
+                videoId: 'nCAH2Sgj5V0',
+                title: 'CBS News 24/7 - Latest Headlines',
+                channel: 'CBS News',
+                avatar: '📺',
+                category: 'news',
+                isLive: true,
+                likes: '1.1M',
+                tags: ['#news', '#cbs', '#headlines']
+            },
+            {
+                id: 6,
+                type: 'youtube',
+                videoId: 'xRPTBhmcyXY',
+                title: 'NASA Live - Earth from Space (ISS)',
+                channel: 'NASA',
+                avatar: '🚀',
+                category: 'nature',
+                isLive: true,
+                likes: '3.2M',
+                tags: ['#space', '#nasa', '#earth']
+            },
+            {
+                id: 7,
+                type: 'youtube',
+                videoId: '5yx6BWlEVcY',
+                title: 'Chillhop Radio - jazzy & lofi beats',
+                channel: 'Chillhop Music',
+                avatar: '☕',
+                category: 'music',
+                isLive: true,
+                likes: '890K',
+                tags: ['#chillhop', '#jazz', '#lofi']
+            },
+            {
+                id: 8,
+                type: 'youtube',
+                videoId: 'gCNeDWCI0vo',
+                title: 'Al Jazeera English - Live News',
+                channel: 'Al Jazeera',
+                avatar: '🌍',
+                category: 'news',
+                isLive: true,
+                likes: '2.4M',
+                tags: ['#world', '#news', '#aljazeera']
+            },
+            {
+                id: 9,
+                type: 'youtube',
+                videoId: 'gFRtAAmiFbE',
+                title: 'Tokyo Live Camera - Shibuya Crossing',
+                channel: 'Tokyo Vibes',
+                avatar: '🗼',
+                category: 'entertainment',
+                isLive: true,
+                likes: '567K',
+                tags: ['#tokyo', '#japan', '#cityscape']
+            },
+            {
+                id: 10,
+                type: 'youtube',
+                videoId: 'Dx5qFachd3A',
+                title: 'Smooth Jazz Radio - 24/7 Relaxing Music',
+                channel: 'Jazz Cafe',
+                avatar: '🎷',
+                category: 'music',
+                isLive: true,
+                likes: '1.8M',
+                tags: ['#jazz', '#smooth', '#relax']
+            },
+            {
+                id: 11,
+                type: 'youtube',
+                videoId: '21X5lGlDOfg',
+                title: 'NASA TV - Space Missions Live',
+                channel: 'NASA TV',
+                avatar: '🛸',
+                category: 'kids',
+                isLive: true,
+                likes: '4.1M',
+                tags: ['#nasa', '#space', '#science']
+            },
+            {
+                id: 12,
+                type: 'youtube',
+                videoId: 'WHPEKLQID4U',
+                title: 'Beach Waves - Ocean Sounds for Sleep',
+                channel: 'Nature Sounds',
+                avatar: '🏖️',
+                category: 'nature',
+                isLive: true,
+                likes: '2.9M',
+                tags: ['#beach', '#waves', '#relax']
+            },
+            // Vimeo Example
+            {
+                id: 100,
+                type: 'vimeo',
+                videoId: '824804225',
+                title: 'Creative Showcase - Motion Design',
+                channel: 'Purple Squirrel Studio',
+                avatar: '🎨',
+                category: 'entertainment',
+                isLive: false,
+                likes: '12K',
+                tags: ['#design', '#motion', '#creative']
+            },
+            // Self-hosted Example
+            {
+                id: 200,
+                type: 'self-hosted',
+                videoUrl: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                posterUrl: 'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=800',
+                title: 'Big Buck Bunny - Sample Video',
+                channel: 'Demo Content',
+                avatar: '🐰',
+                category: 'entertainment',
+                isLive: false,
+                likes: '5K',
+                tags: ['#sample', '#demo']
+            }
+        ];
+
+        // ============================================
+        // STATE
+        // ============================================
+        let currentCategory = 'all';
+        let currentIndex = 0;
+        let isMuted = true; // Start muted for autoplay
+        let hasInteracted = false;
+        let observer = null;
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        function init() {
+            setupCategoryTabs();
+            renderFeed();
+            setupIntersectionObserver();
+            setupKeyboardNav();
+            setupMuteToggle();
+            showSwipeHintIfNeeded();
+            setupTouchUnmute();
+        }
+
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+        function getFilteredContent() {
+            if (currentCategory === 'all') {
+                // Shuffle for "For You" feed
+                return [...FEED_CONTENT].sort(() => Math.random() - 0.5);
+            }
+            return FEED_CONTENT.filter(v => v.category === currentCategory);
+        }
+
+        function renderFeed() {
+            const container = document.getElementById('feedContainer');
+            const content = getFilteredContent();
+
+            if (content.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-video-slash"></i>
+                        <p>No content in this category yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = content.map((video, index) => `
+                <div class="video-item" data-index="${index}" data-id="${video.id}" data-type="${video.type}">
+                    <div class="video-wrapper" id="player-${video.id}">
+                        <div class="video-loading"><div class="spinner"></div></div>
+                    </div>
+
+                    ${video.isLive ? `
+                        <div class="live-badge">
+                            <span class="live-dot"></span>
+                            LIVE
+                        </div>
+                    ` : ''}
+
+                    <div class="source-badge ${video.type}">
+                        <i class="fab fa-${video.type === 'youtube' ? 'youtube' : video.type === 'vimeo' ? 'vimeo-v' : 'fas fa-play-circle'}"></i>
+                        ${video.type === 'self-hosted' ? 'HD' : video.type.charAt(0).toUpperCase() + video.type.slice(1)}
+                    </div>
+
+                    <div class="video-actions">
+                        <button class="action-btn" onclick="toggleLike(${video.id})">
+                            <i class="fas fa-heart"></i>
+                            <span>${video.likes}</span>
+                        </button>
+                        <button class="action-btn" onclick="shareVideo(${video.id})">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </button>
+                        <button class="action-btn" onclick="openChannel('${video.channel}')">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Follow</span>
+                        </button>
+                        <button class="action-btn" onclick="showComments(${video.id})">
+                            <i class="fas fa-comment"></i>
+                            <span>Chat</span>
+                        </button>
+                    </div>
+
+                    <div class="video-info">
+                        <div class="channel-badge">
+                            <div class="channel-avatar">${video.avatar}</div>
+                            <div>
+                                <div class="channel-name">${video.channel}</div>
+                                <div class="channel-meta">${video.isLive ? 'Streaming now' : 'Video'}</div>
+                            </div>
+                        </div>
+                        <p class="video-title">${video.title}</p>
+                        <div class="video-tags">
+                            ${video.tags.map(tag => `<span class="video-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-${video.id}"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Reset observer
+            if (observer) {
+                observer.disconnect();
+            }
+            setupIntersectionObserver();
+        }
+
+        function loadVideo(videoItem) {
+            const id = videoItem.dataset.id;
+            const type = videoItem.dataset.type;
+            const video = FEED_CONTENT.find(v => v.id === parseInt(id));
+            const wrapper = document.getElementById(`player-${id}`);
+
+            if (!video || wrapper.dataset.loaded) return;
+
+            let embedHtml = '';
+            const autoplay = isMuted ? '1' : '0';
+            const mute = isMuted ? '1' : '0';
+
+            switch (type) {
+                case 'youtube':
+                    embedHtml = `
+                        <iframe
+                            src="https://www.youtube.com/embed/${video.videoId}?autoplay=1&mute=${mute}&controls=0&modestbranding=1&rel=0&showinfo=0&loop=1&playlist=${video.videoId}&playsinline=1"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    `;
+                    break;
+
+                case 'vimeo':
+                    embedHtml = `
+                        <iframe
+                            src="https://player.vimeo.com/video/${video.videoId}?autoplay=1&muted=${mute}&loop=1&background=1&controls=0"
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    `;
+                    break;
+
+                case 'self-hosted':
+                    embedHtml = `
+                        <video
+                            src="${video.videoUrl}"
+                            poster="${video.posterUrl || ''}"
+                            autoplay
+                            ${isMuted ? 'muted' : ''}
+                            loop
+                            playsinline
+                            id="video-${id}">
+                        </video>
+                    `;
+                    break;
+            }
+
+            wrapper.innerHTML = embedHtml;
+            wrapper.dataset.loaded = 'true';
+
+            // Handle self-hosted video play/pause
+            if (type === 'self-hosted') {
+                const videoEl = wrapper.querySelector('video');
+                if (videoEl) {
+                    videoEl.muted = isMuted;
+                    videoEl.play().catch(e => console.log('Autoplay prevented'));
+                }
+            }
+        }
+
+        function unloadVideo(videoItem) {
+            const id = videoItem.dataset.id;
+            const wrapper = document.getElementById(`player-${id}`);
+
+            if (wrapper && wrapper.dataset.loaded) {
+                // Keep the player but pause it
+                const video = wrapper.querySelector('video');
+                if (video) {
+                    video.pause();
+                }
+                // For iframes, we could reload with autoplay=0, but leaving them
+                // loaded is better for smooth scrolling back
+            }
+        }
+
+        // ============================================
+        // INTERSECTION OBSERVER (Auto-play/pause)
+        // ============================================
+        function setupIntersectionObserver() {
+            const options = {
+                root: document.getElementById('feedContainer'),
+                rootMargin: '0px',
+                threshold: 0.7
+            };
+
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        currentIndex = parseInt(entry.target.dataset.index);
+                        loadVideo(entry.target);
+
+                        // Update URL hash for sharing
+                        const id = entry.target.dataset.id;
+                        history.replaceState(null, '', `#v=${id}`);
+                    } else {
+                        unloadVideo(entry.target);
+                    }
+                });
+            }, options);
+
+            document.querySelectorAll('.video-item').forEach(item => {
+                observer.observe(item);
+            });
+
+            // Load first video immediately
+            const firstItem = document.querySelector('.video-item');
+            if (firstItem) {
+                loadVideo(firstItem);
+            }
+        }
+
+        // ============================================
+        // CATEGORY TABS
+        // ============================================
+        function setupCategoryTabs() {
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentCategory = tab.dataset.category;
+                    renderFeed();
+
+                    // Scroll to top
+                    document.getElementById('feedContainer').scrollTo(0, 0);
+                });
+            });
+        }
+
+        // ============================================
+        // KEYBOARD NAVIGATION
+        // ============================================
+        function setupKeyboardNav() {
+            document.addEventListener('keydown', (e) => {
+                const container = document.getElementById('feedContainer');
+                const items = document.querySelectorAll('.video-item');
+
+                switch(e.key) {
+                    case 'ArrowDown':
+                    case 'j':
+                        e.preventDefault();
+                        if (currentIndex < items.length - 1) {
+                            items[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+                        }
+                        break;
+                    case 'ArrowUp':
+                    case 'k':
+                        e.preventDefault();
+                        if (currentIndex > 0) {
+                            items[currentIndex - 1].scrollIntoView({ behavior: 'smooth' });
+                        }
+                        break;
+                    case 'm':
+                        toggleMute();
+                        break;
+                    case 'l':
+                        toggleLike(FEED_CONTENT[currentIndex]?.id);
+                        break;
+                }
+            });
+        }
+
+        // ============================================
+        // MUTE/UNMUTE
+        // ============================================
+        function setupMuteToggle() {
+            document.getElementById('muteToggle').addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleMute();
+            });
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            hasInteracted = true;
+
+            const icon = document.querySelector('#muteToggle i');
+            icon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+
+            // Update all loaded videos
+            document.querySelectorAll('.video-wrapper[data-loaded="true"]').forEach(wrapper => {
+                const iframe = wrapper.querySelector('iframe');
+                const video = wrapper.querySelector('video');
+
+                if (video) {
+                    video.muted = isMuted;
+                }
+
+                // For iframes, we need to reload with new mute state
+                if (iframe) {
+                    const src = iframe.src;
+                    if (src.includes('youtube.com')) {
+                        iframe.src = src.replace(/mute=[01]/, `mute=${isMuted ? '1' : '0'}`);
+                    } else if (src.includes('vimeo.com')) {
+                        iframe.src = src.replace(/muted=[01]/, `muted=${isMuted ? '1' : '0'}`);
+                    }
+                }
+            });
+
+            showMuteIndicator();
+        }
+
+        function showMuteIndicator() {
+            const indicator = document.getElementById('muteIndicator');
+            const icon = indicator.querySelector('i');
+            const text = indicator.querySelector('span');
+
+            icon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+            text.textContent = isMuted ? 'Sound off' : 'Sound on';
+
+            indicator.classList.add('visible');
+            setTimeout(() => {
+                indicator.classList.remove('visible');
+            }, 1500);
+        }
+
+        function setupTouchUnmute() {
+            document.getElementById('feedContainer').addEventListener('click', (e) => {
+                // Don't unmute if clicking on action buttons
+                if (e.target.closest('.action-btn') || e.target.closest('.video-info')) return;
+
+                if (!hasInteracted) {
+                    hasInteracted = true;
+                    if (isMuted) {
+                        toggleMute();
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // SWIPE HINT
+        // ============================================
+        function showSwipeHintIfNeeded() {
+            const hasVisited = localStorage.getItem('psm_feed_visited');
+            if (!hasVisited) {
+                const hint = document.getElementById('swipeHint');
+                hint.style.display = 'flex';
+
+                setTimeout(() => {
+                    hint.style.display = 'none';
+                    localStorage.setItem('psm_feed_visited', 'true');
+                }, 4000);
+            }
+        }
+
+        // ============================================
+        // ACTION HANDLERS
+        // ============================================
+        function toggleLike(videoId) {
+            const btn = event.currentTarget;
+            btn.classList.toggle('liked');
+
+            // Animate
+            btn.style.transform = 'scale(1.3)';
+            setTimeout(() => btn.style.transform = '', 200);
+
+            // Track
+            console.log('Liked video:', videoId);
+        }
+
+        function shareVideo(videoId) {
+            const video = FEED_CONTENT.find(v => v.id === videoId);
+            if (!video) return;
+
+            const shareUrl = `${window.location.origin}${window.location.pathname}#v=${videoId}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: video.title,
+                    text: `Check out "${video.title}" on Purple Squirrel Media`,
+                    url: shareUrl
+                }).catch(console.log);
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('Link copied to clipboard!');
+                });
+            }
+        }
+
+        function openChannel(channelName) {
+            console.log('Open channel:', channelName);
+            alert(`Following ${channelName}!`);
+        }
+
+        function showComments(videoId) {
+            console.log('Show comments for:', videoId);
+            alert('Chat coming soon!');
+        }
+
+        // ============================================
+        // DEEP LINKING
+        // ============================================
+        function handleDeepLink() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#v=')) {
+                const videoId = parseInt(hash.replace('#v=', ''));
+                const content = getFilteredContent();
+                const index = content.findIndex(v => v.id === videoId);
+
+                if (index !== -1) {
+                    setTimeout(() => {
+                        document.querySelectorAll('.video-item')[index]?.scrollIntoView();
+                    }, 100);
+                }
+            }
+        }
+
+        // ============================================
+        // START
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            handleDeepLink();
+        });
+    </script>
+</body>
+</html>
