@@ -1,0 +1,273 @@
+/* ========================================
+   Purple Squirrel Media - Design System
+   Unified brand styles across all pages
+   ======================================== */
+
+/* ========================================
+   CSS Custom Properties (Design Tokens)
+   ======================================== */
+:root {
+    /* Brand Colors */
+    --psm-purple-900: #1a0a2e;
+    --psm-purple-800: #2d1b4e;
+    --psm-purple-700: #4c1d95;
+    --psm-purple-600: #6B2D8B;
+    --psm-purple-500: #7c3aed;
+    --psm-purple-400: #9333ea;
+    --psm-purple-300: #a855f7;
+    --psm-purple-200: #c084fc;
+    --psm-purple-100: #e9d5ff;
+
+    /* Accent Colors */
+    --psm-gold: #d4a574;
+    --psm-gold-light: #f0c674;
+    --psm-pink: #e91e63;
+    --psm-blue: #3b82f6;
+    --psm-cyan: #06b6d4;
+    --psm-green: #10b981;
+
+    /* Neutral Colors */
+    --psm-black: #0a0a0a;
+    --psm-gray-900: #111111;
+    --psm-gray-800: #1a1a1a;
+    --psm-gray-700: #2d2d2d;
+    --psm-gray-600: #4b5563;
+    --psm-gray-500: #6b7280;
+    --psm-gray-400: #9ca3af;
+    --psm-gray-300: #d1d5db;
+    --psm-gray-200: #e5e7eb;
+    --psm-gray-100: #f3f4f6;
+    --psm-white: #ffffff;
+
+    /* Semantic Colors */
+    --psm-bg-dark: var(--psm-purple-900);
+    --psm-bg-light: var(--psm-white);
+    --psm-text-primary: var(--psm-white);
+    --psm-text-secondary: rgba(255, 255, 255, 0.7);
+    --psm-text-muted: rgba(255, 255, 255, 0.5);
+    --psm-text-dark: #333333;
+
+    /* Gradients */
+    --psm-gradient-brand: linear-gradient(135deg, var(--psm-purple-600) 0%, var(--psm-purple-400) 100%);
+    --psm-gradient-dark: linear-gradient(135deg, var(--psm-purple-900) 0%, var(--psm-black) 100%);
+    --psm-gradient-glow: linear-gradient(135deg, var(--psm-purple-400) 0%, var(--psm-pink) 100%);
+    --psm-gradient-gold: linear-gradient(135deg, var(--psm-gold) 0%, var(--psm-gold-light) 100%);
+
+    /* Typography */
+    --psm-font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --psm-font-display: 'Poppins', sans-serif;
+    --psm-font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+
+    /* Font Sizes */
+    --psm-text-xs: 0.75rem;
+    --psm-text-sm: 0.875rem;
+    --psm-text-base: 1rem;
+    --psm-text-lg: 1.125rem;
+    --psm-text-xl: 1.25rem;
+    --psm-text-2xl: 1.5rem;
+    --psm-text-3xl: 1.875rem;
+    --psm-text-4xl: 2.25rem;
+    --psm-text-5xl: 3rem;
+    --psm-text-6xl: 3.75rem;
+
+    /* Font Weights */
+    --psm-font-light: 300;
+    --psm-font-normal: 400;
+    --psm-font-medium: 500;
+    --psm-font-semibold: 600;
+    --psm-font-bold: 700;
+
+    /* Spacing */
+    --psm-space-1: 0.25rem;
+    --psm-space-2: 0.5rem;
+    --psm-space-3: 0.75rem;
+    --psm-space-4: 1rem;
+    --psm-space-5: 1.25rem;
+    --psm-space-6: 1.5rem;
+    --psm-space-8: 2rem;
+    --psm-space-10: 2.5rem;
+    --psm-space-12: 3rem;
+    --psm-space-16: 4rem;
+    --psm-space-20: 5rem;
+
+    /* Border Radius */
+    --psm-radius-sm: 4px;
+    --psm-radius-md: 8px;
+    --psm-radius-lg: 12px;
+    --psm-radius-xl: 16px;
+    --psm-radius-2xl: 24px;
+    --psm-radius-full: 9999px;
+
+    /* Shadows */
+    --psm-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --psm-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --psm-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --psm-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --psm-shadow-glow: 0 0 40px rgba(147, 51, 234, 0.3);
+    --psm-shadow-glow-lg: 0 0 60px rgba(147, 51, 234, 0.4);
+
+    /* Transitions */
+    --psm-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --psm-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --psm-duration-fast: 150ms;
+    --psm-duration-normal: 300ms;
+    --psm-duration-slow: 500ms;
+
+    /* Z-Index Scale */
+    --psm-z-dropdown: 100;
+    --psm-z-sticky: 200;
+    --psm-z-fixed: 500;
+    --psm-z-modal-backdrop: 900;
+    --psm-z-modal: 1000;
+    --psm-z-tooltip: 1100;
+}
+
+/* ========================================
+   Base Reset & Typography
+   ======================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--psm-font-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+/* Text Colors */
+.text-purple { color: var(--psm-purple-400); }
+.text-gold { color: var(--psm-gold); }
+.text-white { color: var(--psm-white); }
+.text-muted { color: var(--psm-text-secondary); }
+
+/* Background Colors */
+.bg-dark { background: var(--psm-bg-dark); }
+.bg-purple { background: var(--psm-purple-600); }
+.bg-gradient { background: var(--psm-gradient-brand); }
+
+/* ========================================
+   Common Components
+   ======================================== */
+
+/* Buttons */
+.psm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--psm-space-2);
+    padding: var(--psm-space-3) var(--psm-space-6);
+    font-family: var(--psm-font-primary);
+    font-size: var(--psm-text-sm);
+    font-weight: var(--psm-font-semibold);
+    text-decoration: none;
+    border: none;
+    border-radius: var(--psm-radius-md);
+    cursor: pointer;
+    transition: all var(--psm-duration-normal) var(--psm-ease-out);
+}
+
+.psm-btn-primary {
+    background: var(--psm-gradient-brand);
+    color: var(--psm-white);
+    box-shadow: var(--psm-shadow-glow);
+}
+
+.psm-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--psm-shadow-glow-lg);
+}
+
+.psm-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--psm-white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.psm-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--psm-purple-400);
+}
+
+/* Cards */
+.psm-card {
+    background: var(--psm-gray-800);
+    border-radius: var(--psm-radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    transition: all var(--psm-duration-normal) var(--psm-ease-out);
+}
+
+.psm-card:hover {
+    border-color: var(--psm-purple-400);
+    box-shadow: var(--psm-shadow-glow);
+}
+
+/* Logo */
+.psm-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--psm-space-3);
+    text-decoration: none;
+    color: var(--psm-white);
+}
+
+.psm-logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--psm-radius-full);
+    object-fit: cover;
+}
+
+.psm-logo-text {
+    font-weight: var(--psm-font-semibold);
+    font-size: var(--psm-text-sm);
+    line-height: 1.2;
+}
+
+.psm-logo-text span {
+    color: var(--psm-purple-400);
+}
+
+/* Section Titles */
+.psm-section-title {
+    font-family: var(--psm-font-display);
+    font-size: var(--psm-text-3xl);
+    font-weight: var(--psm-font-bold);
+    margin-bottom: var(--psm-space-4);
+}
+
+.psm-section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.5em;
+    background: var(--psm-gradient-brand);
+    border-radius: 2px;
+    margin-right: var(--psm-space-3);
+    vertical-align: middle;
+}
+
+/* ========================================
+   Responsive Breakpoints Reference
+   ======================================== */
+/*
+   Mobile: < 640px
+   Tablet: 640px - 1024px
+   Desktop: > 1024px
+
+   @media (max-width: 640px) { }
+   @media (max-width: 1024px) { }
+*/
