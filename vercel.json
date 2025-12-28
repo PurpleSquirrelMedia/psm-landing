@@ -3,6 +3,22 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/feed",
+      "destination": "/feed.html"
+    },
+    {
+      "source": "/free-tv",
+      "destination": "/free-tv.html"
+    },
+    {
+      "source": "/stream",
+      "destination": "/stream.html"
+    },
+    {
+      "source": "/radio",
+      "destination": "/radio.html"
+    },
+    {
       "source": "/watch",
       "destination": "https://watch-this-v2-alpha.vercel.app/"
     },
@@ -25,6 +41,10 @@
     {
       "source": "/talent/:path*",
       "destination": "https://purple-squirrel-jobs.vercel.app/:path*"
+    },
+    {
+      "source": "/games",
+      "destination": "/games.html"
     }
   ]
 }
