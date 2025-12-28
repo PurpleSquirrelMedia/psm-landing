@@ -373,6 +373,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="/defi/swap/">Swap</a></li>
             <li><a href="/defi/bridge/">Bridge</a></li>
+            <li><a href="https://watch-this-v2-alpha.vercel.app/">Watch</a></li>
             <li><a href="/about.html" class="active">About</a></li>
         </ul>
         <button class="mobile-menu-btn">&#9776;</button>
@@ -449,6 +450,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
         const canvas = document.getElementById('canvas');
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -963,6 +965,7 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+    });
     </script>
 </body>
 </html>
